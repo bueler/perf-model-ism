@@ -77,7 +77,7 @@
 
 \begin{document}
 
-\title[Performance modeling of glacier simulations]{Letter: Performance modeling of glacier simulations}
+\title[Performance models of glacier simulations]{Letter: Performance models of glacier simulations}
 
 %\abstract{\today. FIXME}
 
@@ -112,9 +112,9 @@ On the other hand, an unconditionally-stable implicit geometric-update scheme, e
 
 At each time step the geometry is updated, for example the old surface elevation values are replaced by new ones.  For an explicit stepping scheme the work in this update is small, specifically $O(n)$ because, once the ice velocity is computed from fixed geometry by the chosen momentum balance model, each grid point requires $O(1)$ work to update.  The nMCD method proposed in this paper is more expensive, and in fact our model for the performance of this process is that each simultaneous geometry/velocity update takes $O(n^{1+\eps})$ for $\eps > 0$ small, or optimistically $O(n \log n)$, but in any case with a large constant.  The \cite{Bueler2016} geometry-update method, which is fundamentally not a multigrid method, is $O(n^{1+\eps})$ with a larger value of $\eps$.
 
-\begin{table}
+\begin{table*}
 \begin{center}
-\begin{tabular}{c|l}
+\begin{tabular}{cl}
 \emph{name} & \emph{meaning} \\ \hline
 $D$ & typical geometric diffusivity of glacier (equation FIXME) \\
 $\delta$ & one Stokes/HO velocity solution requires $O(n^{1+\delta})$ work\\
@@ -131,7 +131,7 @@ $T$ & simulation duration, in model years \\
 \medskip
 \caption{Notation for glacier model performance analysis.  (\emph{Subsection only.})}
 \label{tab:performanceconstants}
-\end{table}
+\end{table*}
 
 Table \ref{tab:performanceconstants} shows our notation, coming from the above considerations.
 
@@ -144,9 +144,9 @@ Noting that $n$ is the number of horizontal grid points, the work estimate does 
 \setlength{\tabcolsep}{5pt}
 \newcommand{\tabshow}[1]{{\small $\ds #1$}}
 \renewcommand{\arraystretch}{1.5}
-\begin{table}
+\begin{table*}
 \begin{center}
-\begin{tabular}{lc|cc}
+\begin{tabular}{lccc}
 \emph{scheme} & & \multicolumn{2}{c}{\emph{work (flops)}} \\
                              & & \emph{1D hor.} & \emph{2D hor.} \\ \hline
 expl.~SIA       & & {\Large $\strut$} \dbox{\tabshow{(DL^2)^{-1} T n^3}} & \tabshow{(DL^2)^{-1} T n^2} \\
@@ -160,7 +160,7 @@ impl.~Stokes & & \multicolumn{2}{c}{\tabshow{Q T n^{1+\eps+\delta}}}
 \medskip
 \caption{Estimated scaling of computational work for high-resolution ($n\to\infty$) time-stepping numerical glacier simulations, over duration $T$ and horizontal domain width $L$.  Our nMCD method is shown to reduce $\eps$ to near zero in the 1D implicit SIA case (boxed), significantly-improving previous performance (dashed box).  See Table \ref{tab:performanceconstants} and the text for notation.}
 \label{tab:performancemodel}
-\end{table}
+\end{table*}
 
 FIXME also cite \citep{Chengetal2017,LofgrenAhlkronaHelanow2021,WirbelJarosch2020}
 
