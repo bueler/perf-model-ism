@@ -1,0 +1,171 @@
+\documentclass[twocolumn,letterpaper]{igs}
+%\documentclass[twocolumn]{igs}  % A4 paper needs no option
+%\documentclass[review,letterpaper]{igs}
+
+\usepackage{verbatim,xspace,amsmath,amssymb,bm,multirow,dashbox}
+\usepackage{tikz}
+\usetikzlibrary{arrows}
+\usepackage{igsnatbib,lineno}
+
+\usepackage[kw]{pseudo}
+\pseudoset{left-margin=0mm,topsep=5mm,idfont=\texttt}
+
+\usepackage{hyperref}
+\hypersetup{pdfauthor={Ed Bueler},
+            pdfcreator={pdflatex},
+            colorlinks=true,
+            citecolor=purple,
+            linkcolor=red,
+            urlcolor=blue,
+            }
+
+% math macros
+\newcommand\bb{\mathbf{b}}
+\newcommand\bc{\mathbf{c}}
+\newcommand\bbf{\mathbf{f}}
+\newcommand\bg{\mathbf{g}}
+\newcommand\bn{\mathbf{n}}
+\newcommand\bq{\mathbf{q}}
+\newcommand\bu{\mathbf{u}}
+\newcommand\bv{\mathbf{v}}
+\newcommand\bx{\mathbf{x}}
+\newcommand\by{\mathbf{y}}
+
+\newcommand\bA{\mathbf{A}}
+\newcommand\bF{\mathbf{F}}
+\newcommand\bH{\mathbf{H}}
+\newcommand\bN{\mathbf{N}}
+\newcommand\bQ{\mathbf{Q}}
+\newcommand\bU{\mathbf{U}}
+\newcommand\bV{\mathbf{V}}
+\newcommand\bW{\mathbf{W}}
+\newcommand\bX{\mathbf{X}}
+
+\newcommand\bzero{\bm{0}}
+
+\newcommand{\Div}{\nabla\cdot}
+\newcommand\eps{\epsilon}
+\newcommand{\grad}{\nabla}
+\newcommand{\ip}[2]{\ensuremath{\left<#1,#2\right>}}
+\newcommand\lam{\lambda}
+\newcommand\lap{\triangle}
+\newcommand\RR{\mathbb{R}}
+\newcommand{\half}{\tfrac{1}{2}}
+
+\newcommand{\rhoi}{\rho_{\text{i}}}
+\newcommand{\pp}{{\text{p}}}
+\newcommand{\qq}{{\text{q}}}
+\newcommand{\rr}{{\text{r}}}
+
+\newcommand{\mR}{R^{\bm{\oplus}}}
+\newcommand{\iR}{R^{\bullet}}
+
+\newcommand{\sold}{s_{\text{o}}}
+\newcommand{\told}{t_{\text{o}}}
+
+\newcommand{\byold}{\by_{\text{o}}}
+
+\newcommand{\onecol}[1]{\includegraphics[width=86mm]{#1}}
+\newcommand{\onecolless}[1]{\includegraphics[width=80mm]{#1}}
+\newcommand{\onecolthin}[1]{\includegraphics[width=75mm]{#1}}
+
+%\newcommand{\twocol}[1]{\includegraphics[width=178mm]{#1}}
+\newcommand{\twocol}[1]{\includegraphics[width=165mm]{#1}}
+\newcommand{\twocolless}[1]{\includegraphics[width=140mm]{#1}}
+
+\newcommand{\ds}{\displaystyle}
+
+\begin{document}
+
+\title{Correspondence: Performance modeling of glacier simulations}
+
+%\abstract{\today. FIXME}
+
+\author{Ed Bueler}
+
+\affiliation{Department of Mathematics and Statistics, University of Alaska Fairbanks, USA \\
+E-mail: \emph{\texttt{elbueler\@@alaska.edu}}}
+
+%\keywords{}
+
+\maketitle
+
+\sectionsize
+
+We expect that time-stepping glacier and ice-sheet numerical models become faster, and thus more useful tools for glaciologists, when multigrid is applied to the solution of the problem(s) solved at each time-step.  This claim can be understood and assessed by a \emph{performance model} for the scheme, one which combines simplified computational work estimates for subproblems into an asymptotic (in the limit of highly-refined computational grids) description of of the work required for the overall simulation task.
+
+Consider numerical simulations based on $n$ mesh nodes in the map-plane, i.e.~$n$ total horizontal grid points.  Such a simulation uses $O(n)$ surface elevation variables, the \emph{degrees of freedom} in our analysis.  Indeed it requires $O(n)$ memory to store the instantaneous model state, including geometry, velocity, and thermodynamical variables, once we assume that the vertical grid/mesh has an \emph{a priori} bounded vertical resolution, a common \citep[for example]{Brinkerhoffetal2017,Hoffmanetal2018}, though not universal \citep{IsaacStadlerGhattas2015}, property of such models.
+
+The glacier simulation covers a model domain of horizontal span $L>0$.  For concreteness, in 1D the domain is an interval $[0,L]$, while in 2D it is $[0,L]^2$, or a subset thereof.  Let $h_x$ be the characteristic width of the grid cells, thus $h_x = O(L n^{-1})$ in 1D and $h_x = O(L n^{-1/2})$ in 2D.
+
+We assume that the simulation is over a time interval $[0,T]$; $T>0$ is the \emph{duration} in model years.  Ignoring issues of stability, scientific application of glacier and ice sheet models climate interaction, especially through the SMB, which is dominated by the annual cycle.  Let $Q$ be the number of time steps per year needed to incorporate this climate interaction; typical values $Q=1,12,365 \,\text{a}^{-1}$ correspond to yearly, monthly, and daily climatic interation frequency.
+
+Almost all current-technology glacier and ice-sheet models use explicit time-stepping which is only conditionally stable \citep[for example]{LeVeque2007}.  In that case we assume that for the resolutions used in scientific applications maintenance of model stability requires more than $Q$ time steps per year.
+
+For an explicit SIA model the well-known stability restriction is $\Delta t < D h_x^2$ where $D$ is a representative effective diffusivity in $\text{km}^2\,\text{a}^{-1}$ \citep{Bueleretal2005,Robinsonetal2022}.
+
+For Stokes the question of explicit time-stepping stability is largely unexplored.  We propose a \emph{pessimistic} stability paradigm, namely the above SIA restriction $\Delta t < D h_x^2$, motivated by the small geometric aspect ratio analysis of the Stokes model leading to the SIA model \citep{GreveBlatter2009}.  Alternatively one might subscribe to an \emph{optimistic} paradigm supposing that stability is controlled by the advective restriction $\Delta t < u_0^{-1} h_x$ for some typical horizontal velocity scale $u_0$ in $\text{km}\,\text{a}^{-1}$.  So-called ``higher-order'' and ``hybrid'' are better-studied than numerical Stokes models, especially over a large range of horizontal resolutions.  Certain ``hybrid'' schemes simply use the SIA-type stability restriction \citep{Winkelmannetal2011}.  The optimistic concept is partially supported by a recent analysis of a certain higher-order scheme (``DIVA'') for which $\Delta t < \min\left\{C,u_0^{-1} h_x\right\}$ \citep[equations (52) and (56)]{Robinsonetal2022}, wherein $C>0$ is independent of $h_x$.  However, practical Greenland DIVA simulations suggest $\Delta t \sim O(h_x^{1.6})$ instead \citep[Figure 3(a)]{Robinsonetal2022}.
+
+For fixed geometry, as in an explicit simulation, the momentum balance equations generally require nontrivial solutions as PDEs.  For the Stokes model we suppose one such solution requires $O(n^{1+\delta})$ work to, in particular, determine the surface velocity appearing in the SKE.  However, the value of $\delta \ge 0$ depends radically on velocity/pressure solver implementation.  Naive solution might involve $\delta=2$, for example if dense linear algebra is involved, but application of geometric multigrid methods by \cite{IsaacStadlerGhattas2015} suggest that $\delta \approx 0$ is perhaps attainable with an solver specifically adapted to ice sheets and a high-resolution simulation.  (In any case the constant $C$ in $(\text{work}) \sim C n^{1+\delta}$ is large.)  On the other hand, the SIA model velocity computation is a trivialization of the Stokes problem.  Each velocity unknown is computed in $O(1)$ work, thus the velocity solution is attained (from fixed geometry) in $O(n)$ work.
+
+On the other hand, an unconditionally-stable implicit geometric-update scheme, e.g.~as demostrated in \citep{Bueler2016} and the current paper for the SIA, will take at most $Q$ steps per model year in order to follow the climate forcing.  For such an implicit scheme, our stability model is that there is no restriction, equivalently that $\Delta t < O(T)$ in the fine-resolution limit ($h_x \to 0$).  Let $M=QT$ is the total number of steps.  The steady-state SIA solver by \cite{Bueler2016} uses $M=1$ when $T=+\infty$, with $Q=0.01 \, \leftrightarrow \Delta t = 100 \,\text{a}$ as a solver-recovery strategy.
+
+At each time step the geometry is updated, for example the old surface elevation values are replaced by new ones.  For an explicit stepping scheme the work in this update is small, specifically $O(n)$ because, once the ice velocity is computed from fixed geometry by the chosen momentum balance model, each grid point requires $O(1)$ work to update.  The nMCD method proposed in this paper is more expensive, and in fact our model for the performance of this process is that each simultaneous geometry/velocity update takes $O(n^{1+\eps})$ for $\eps > 0$ small, or optimistically $O(n \log n)$, but in any case with a large constant.  The \cite{Bueler2016} geometry-update method, which is fundamentally not a multigrid method, is $O(n^{1+\eps})$ with a larger value of $\eps$.
+
+\begin{table}
+\begin{center}
+\begin{tabular}{c|l}
+\emph{name} & \emph{meaning} \\ \hline
+$D$ & typical geometric diffusivity of glacier (equation FIXME) \\
+$\delta$ & one Stokes/HO velocity solution requires $O(n^{1+\delta})$ work\\
+$\Delta t$ & length of time step, in model years \\
+$h_x$ & characteristic width of grid cells, in km \\
+$\eps$ & one geometry-update solution requires $O(n^{1+\eps})$ work \\
+$L$ & width of simulation domain, in km \\
+$n$ & degrees of freedom: number of horizontal grid points \\
+$Q$ & fixed time steps per model year in implicit simulations \\
+$T$ & simulation duration, in model years \\
+\end{tabular}
+\end{center}
+
+\medskip
+\caption{Notation for glacier model performance analysis.  (\emph{Subsection only.})}
+\label{tab:performanceconstants}
+\end{table}
+
+Table \ref{tab:performanceconstants} shows our notation, coming from the above considerations.
+
+How much work, then, is the entire simulation?  For explicit methods note $\Delta t = T/m$ for $m$ actual (i.e.~stability-limited) time steps.  Combining this with our observations about $h_x$, we have $m \gtrsim (DL^2)^{-1} T n^2$ in the 1D SIA and pessimistic-Stokes cases, and $m \gtrsim (DL^2)^{-1} T n$ in the 1D optimistic-Stokes case.  The power on $n$ is lower in the realistic 2D cases because $h_x = L/\sqrt{n}$, but of course the simulations themselves are much more expensive for a given resolution $h_x$.  The $m$ value is multiplied by the per-step expense to give a total work estimate.  The resulting scaling estimates, e.g.~$m O(n) = (DL^2)^{-1} T n^3$ for explicit SIA models in 1D, are shown in the ``expl.'' rows of Table \ref{tab:performancemodel}.
+
+For implicit methods, however, $\Delta t$ does not scale with grid resolution; it has fixed value $\Delta t = T / M = 1/Q$ years.  Thus the work of the entire implicit SIA simulation is $M n^{1+\eps} = Q^{-1} n^{1+\eps}$.  For an implicit Stokes simulation the geometry/velocity solve is supposed to be, in the absense of constraining research, $O(n^{1+\delta+\eps})$, with corresponding total simulation work estimate; see Table \ref{tab:performancemodel}.
+
+Noting that $n$ is the number of horizontal grid points, the work estimate does not depend on the dimension unless $\eps$ and/or $\delta$ depend on dimension; such a difference is indeed likely to be revealed by further research.  Furthermore, the estimate reported in Table \ref{tab:performancemodel} is only at leading order, and must be multiplied by a potentially very large scheme-dependent constant.  On the other hand, the promise of multigrid methods for the velocity and geometry-update problems is to make $\delta \approx 0$ and $\eps \approx 0$, respectively.
+
+\setlength{\tabcolsep}{5pt}
+\newcommand{\tabshow}[1]{{\small $\ds #1$}}
+\renewcommand{\arraystretch}{1.5}
+\begin{table}
+\begin{center}
+\begin{tabular}{lc|cc}
+\emph{scheme} & & \multicolumn{2}{c}{\emph{work (flops)}} \\
+                             & & \emph{1D hor.} & \emph{2D hor.} \\ \hline
+expl.~SIA       & & {\Large $\strut$} \dbox{\tabshow{(DL^2)^{-1} T n^3}} & \tabshow{(DL^2)^{-1} T n^2} \\
+\multirow{2}{*}{expl.~Stokes} & \emph{pessim.} & \tabshow{(DL^2)^{-1} T n^{3+\delta}} & \tabshow{(DL^2)^{-1} T n^{2+\delta}} \\
+                              & \emph{optim.} & \tabshow{u_0 L^{-1} T n^{2+\delta}} & \tabshow{u_0 L^{-1} T n^{1.5+\delta}} \\ \hline
+impl.~SIA & & \multicolumn{2}{c}{{\Large $\strut$} \fbox{\tabshow{Q T n^{1+\eps}}}} \\
+impl.~Stokes & & \multicolumn{2}{c}{\tabshow{Q T n^{1+\eps+\delta}}}
+\end{tabular}
+\end{center}
+
+\medskip
+\caption{Estimated scaling of computational work for high-resolution ($n\to\infty$) time-stepping numerical glacier simulations, over duration $T$ and horizontal domain width $L$.  Our nMCD method is shown to reduce $\eps$ to near zero in the 1D implicit SIA case (boxed), significantly-improving previous performance (dashed box).  See Table \ref{tab:performanceconstants} and the text for notation.}
+\label{tab:performancemodel}
+\end{table}
+
+
+
+%         References
+\bibliography{perfmod}
+\bibliographystyle{igs}
+
+\end{document}
