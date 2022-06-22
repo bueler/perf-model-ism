@@ -77,7 +77,7 @@
 
 \begin{document}
 
-\title[Performance models of ice sheet simulations]{Letter: Performance models of ice sheet simulations}
+\title[Performance models for high-resolution ice sheet simulations]{Letter: Performance models for \\ high-resolution ice sheet simulations}
 
 \abstract{\today. FIXME}
 
@@ -103,26 +103,21 @@ FIXME We expect that time-stepping glacier and ice-sheet numerical models will b
 Consider numerical simulations based on $n$ mesh nodes in the map-plane, i.e.~$n$ total horizontal grid points.  (Table \ref{tab:notation} lists all of our notation.)  Such a simulation uses $O(n)$ surface elevation variables, the \emph{degrees of freedom} in our analysis.  It requires $O(n)$ memory to store the instantaneous model state, including geometry, velocity, and thermodynamical variables, if we assume that the vertical grid/mesh has an \emph{a priori} bounded vertical resolution, a common \citep[for example]{Brinkerhoffetal2017,Hoffmanetal2018}, though not universal \citep{IsaacStadlerGhattas2015}, property of such models.
 
 \begin{table*}[ht]
-\begin{center}
 \begin{tabular}{cll}
 \emph{name} & \emph{meaning} & \emph{units} \\ \hline
+$\alpha$    & one fixed-geometry Stokes velocity solution requires $O(n^{1+\alpha})${\large \strut} work\\
+$\beta$     & one implicit SIA geometry-update requires $O(n^{1+\beta})$ work \\
+$\gamma$    & one implicit Stokes geometry-update plus velocity solution requires $O(n^{1+\gamma})$ work \\
 $D$         & representative geometric (shallow ice approximation) diffusivity of an ice sheet & $\text{km}^2 \text{a}^{-1}$ \\
-$\delta$    & one velocity solution requires $O(n^{1+\delta})$ work\\
-$\eps$      & one geometry-update solution requires $O(n^{1+\eps})$ work \\
 $L$         & width of simulation domain & km \\
-$m$         & total number of stability-limited time steps in actual simulation \\
-$m_c$       & total number of time steps needed to resolve modeled climate interactions ($m_c=qT$) \\
-$n$         & degrees of freedom: number of horizontal grid points \\
+$n$         & degrees of freedom: number of nodes in the horizontal (flowline or map-plane) mesh \\
 $q$         & time steps per model year needed to resolve modeled climate interactions & $\text{a}^{-1}$ \\
 $T$         & simulation duration in model years & a \\
 $\Delta t$  & length of time step in model years & a \\
 $U$         & representative horizontal ice velocity & $\text{km}\,\text{a}^{-1}$ \\
 $\Delta x$  & representative width (diameter) of map-plane mesh cells & km
 \end{tabular}
-\end{center}
-
-\medskip
-\caption{Notation for performance modeling.  Parameters $\delta,\eps,m, m_c,n$ are pure numbers.}
+\caption{Notation for performance modeling.  Parameters $\alpha,\beta,\gamma,n$ are pure numbers.}
 \label{tab:notation}
 \end{table*}
 
@@ -153,22 +148,19 @@ How much work, then, is the entire simulation?  Table \ref{tab:performancemodel}
 \newcommand{\oo}[1]{{\LARGE \strut} \displaystyle O\left(#1\right)}
 \setlength{\tabcolsep}{5pt}
 \renewcommand{\arraystretch}{1.5}
-\begin{table*}[ht]
-\begin{center}
-\begin{tabular}{lllll}
-\emph{time-stepping} & \emph{dynamics} & \emph{work in 1D} & \emph{work in 2D} & \emph{caveat} \\ \hline
-explicit & SIA    & $\oo{\frac{D}{L^2} n^3}$       & $\oo{\frac{D}{L^2} n^2}$ \\
-explicit & Stokes & $\oo{\frac{D}{L^2} n^{3+\delta}}$ & $\oo{\frac{D}{L^2} n^{2+\delta}}$ &  $D$ effects dominant \\
-explicit & Stokes & $\oo{\frac{U}{L} n^{2+\delta}}$    & $\oo{\frac{U}{L} n^{1.5+\delta}}$  & $U$ effects dominant \\
-implicit & SIA    & \multicolumn{2}{c}{$\oo{q\, n^{1+\eps}}$} \\
-implicit & Stokes & \multicolumn{2}{c}{$\oo{q\, n^{1+\eps+\delta}}$}
+\begin{table}[ht]
+\begin{tabular}{lll}
+\emph{time-stepping} & \emph{dynamics} & \emph{work (flops per model year)} \\ \hline
+explicit & SIA    & 1D:\quad $\oo{\frac{D}{L^2} n^3}$ \\
+         &        & 2D:\quad $\oo{\frac{D}{L^2} n^2}$ \\
+explicit & Stokes & 1D:\quad $\oo{\frac{D}{L^2} n^{3+\alpha} + \frac{U}{L} n^{2+\alpha}}$ \\
+         &        & 2D:\quad $\oo{\frac{D}{L^2} n^{2+\alpha} + \frac{U}{L} n^{1.5+\alpha}}$ \\
+implicit & SIA    & $\oo{q\, n^{1+\beta}}$ \\
+implicit & Stokes & $\oo{q\, n^{1+\gamma}}$
 \end{tabular}
-\end{center}
-
-\medskip
-\caption{Asymptotic scaling of computational work, in flops per model year, for time-stepping numerical ice sheet simulations over domain width $L$, as the degrees of freedom $n$ go to infinity (high horizontal resolution).  See Table \ref{tab:notation} for remaining notation; \emph{1D} and \emph{2D} refer to flow-line and map-plane simulations, respectively.}
+\caption{Asymptotic scaling of computational work for time-stepping numerical ice sheet simulations as the degrees of freedom $n$ go to infinity (high horizontal resolution).  Note 1D and 2D refer to flow-line and map-plane simulations, respectively.  See Table \ref{tab:notation} for remaining notation.}
 \label{tab:performancemodel}
-\end{table*}
+\end{table}
 
 For explicit methods note that $\Delta t = T/m$ for $m$ actual, stability-limited time steps in the simulation.  Combining this with our observations about $\Delta x$, we have $m \gtrsim (DL^2)^{-1} T n^2$ in the 1D SIA and pessimistic-Stokes cases, and $m \gtrsim (DL^2)^{-1} T n$ in the 1D optimistic-Stokes case.  The power on $n$ is lower in the realistic 2D cases because $h_x = L/\sqrt{n}$, but of course the simulations themselves are much more expensive for a given resolution $h_x$.
 
