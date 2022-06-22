@@ -96,6 +96,8 @@ E-mail: \emph{\texttt{elbueler\@@alaska.edu}}}
 
 FIXME INCREASING UNDERSTANDING OF TIME STEP LIMITS \citep{Chengetal2017,Robinsonetal2022}; MORE THAN SIA CASE \citep[for comparison]{HindmarshPayne1996}, POSSIBILITY OF IMPLICIT SOLVERS \citep{Bueler2016,WirbelJarosch2020}, NEED PERFORMANCE MODEL TO UNDERSTAND TRADE-OFFS
 
+FIXME \citep{GreveBlatter2009,SchoofHewitt2013} for SIA and Stokes equations
+
 FIXME We expect that time-stepping glacier and ice-sheet numerical models will become faster, and thus more useful tools for glaciologists, when multigrid is applied to the solution of the problem(s) solved at each time-step.  This hope can be understood and assessed by a \emph{performance model} for the scheme, one which combines computational work estimates for subproblems into an asymptotic, in the limit of highly-refined meshes, description of of the work required for a given simulation task.
 
 \subsection{Performance models}
@@ -123,57 +125,75 @@ $\Delta x$  & representative width (diameter) of map-plane mesh cells & km
 
 The glacier simulation covers a model domain of horizontal span $L>0$.  For concreteness, in 1D the domain is an interval $[0,L]$, while in 2D it is $[0,L]^2$, or a subset thereof.  Let $\Delta x$ be the characteristic width (diameter) of map-plane mesh cells, thus $\Delta x = O(L n^{-1})$ in 1D and $\Delta x = O(L n^{-1/2})$ in 2D.
 
-We assume that the simulation is over a time interval $[0,T]$ where $T>0$ is the \emph{duration} in model years.  Momentarily ignoring issues of stability, ice sheet models with climate interaction, especially SMB, the interaction is dominated by the annual cycle.  Let $q$ be the number of time steps per year needed to incorporate this climate interaction.  (Typical values $q=1,12,365 \,\text{a}^{-1}$ correspond to yearly, monthly, and daily climatic interation frequency.)  The number of time steps imposed by the need to resolve climatic interaction is $m_c=qT$.
+Ice sheet models involve climate interaction, especially SMB, and the interaction is dominated by the annual cycle.  Let $q$ be the number of time steps per year needed to incorporate this climate interaction.  Typical values $q=1,12,365 \,\text{a}^{-1}$ correspond to yearly, monthly, and daily climatic interaction frequency.
 
 Almost all current-technology glacier and ice-sheet models use explicit time-stepping which is only conditionally stable \citep{LeVeque2007}.  We will assume that for the resolutions used in scientific applications, maintenance of the stability of explicit time-stepping requires substantially more than $Q$ time steps per year.
 
-For an explicit SIA model the well-known stability restriction is $\Delta t < D \Delta x^2$ where $D$ is a representative effective diffusivity in $\text{km}^2\,\text{a}^{-1}$ \citep{Bueleretal2005,HindmarshPayne1996}.
+For an explicit SIA model the well-known stability restriction is $\Delta t < O(D^{-1} \Delta x^2)$ where $D$ is a representative effective diffusivity in $\text{km}^2\,\text{a}^{-1}$ \citep{Bueleretal2005,HindmarshPayne1996}.\footnote{Recall $\displaystyle D = \frac{2 A (\rho g)^n}{n+2} H^{n+2} |\grad s|^{n-1}$ where $A$ is ice softness, $\rho$ is ice density, $g$ is gravity, $H$ is ice thickness, and $s$ is ice surface elevation.}
+For Stokes dynamics the question of explicit time-stepping stability is largely unexplored.  We propose a \emph{pessimistic} explicit time-step stability paradigm, namely the above SIA restriction $\Delta t < O(D^{-1} \Delta x^2)$.  This is motivated by the small geometric aspect ratio analysis of the Stokes model leading to the SIA model \citep{GreveBlatter2009}.  Alternatively one might subscribe to an \emph{optimistic} paradigm supposing that stability is controlled by the advective restriction $\Delta t < O(U^{-1} \Delta x)$ for some typical horizontal velocity scale $U$ in $\text{km}\,\text{a}^{-1}$.
 
-For Stokes dynamics the question of explicit time-stepping stability is largely unexplored.  We propose a \emph{pessimistic} explicit time-step stability paradigm, namely the above SIA restriction $\Delta t < D \Delta x^2$.  This is motivated by the small geometric aspect ratio analysis of the Stokes model leading to the SIA model \citep{GreveBlatter2009}.  Alternatively one might subscribe to an \emph{optimistic} paradigm supposing that stability is controlled by the advective restriction $\Delta t < U^{-1} \Delta x$ for some typical horizontal velocity scale $U$ in $\text{km}\,\text{a}^{-1}$.
+So-called ``higher-order'' and ``hybrid'' are perhaps better-studied than numerical Stokes models, especially over a large range of horizontal resolutions.  Certain ``hybrid'' schemes simply use the SIA-type stability restriction \citep{Winkelmannetal2011}.  The optimistic concept above is partially supported by a recent analysis of a certain higher-order scheme (``DIVA'') for which $\Delta t < \min\left\{C,O(U^{-1} \Delta x)\right\}$ \citep[equations (52) and (56)]{Robinsonetal2022}, wherein $C>0$ is independent of $\Delta x$.  However, practical Greenland DIVA simulations in the same work actually suggest $\Delta t = O(\Delta x^{1.6})$ instead \citep[Figure 3(a)]{Robinsonetal2022}.
 
-So-called ``higher-order'' and ``hybrid'' are perhaps better-studied than numerical Stokes models, especially over a large range of horizontal resolutions.  Certain ``hybrid'' schemes simply use the SIA-type stability restriction \citep{Winkelmannetal2011}.  The optimistic concept above is partially supported by a recent analysis of a certain higher-order scheme (``DIVA'') for which $\Delta t < \min\left\{C,U^{-1} h_x\right\}$ \citep[equations (52) and (56)]{Robinsonetal2022}, wherein $C>0$ is independent of $\Delta x$.  However, practical Greenland DIVA simulations in the same work actually suggest $\Delta t \sim O(\Delta x^{1.6})$ instead \citep[Figure 3(a)]{Robinsonetal2022}.
+For fixed geometry, as in each time step of an explicit simulation, the momentum balance equations generally require nontrivial solutions as PDEs.  For the Stokes model we suppose one such solution requires $O(n^{1+\alpha})$ work.  Note that such a scheme will determine the surface velocity appearing in the SKE.  However, the value of $\alpha \ge 0$ depends strongly on the numerical velocity/pressure solver implementation, that is, the numerics by which the Stokes momentum balance is actually solved.  Naive solution might involve $\alpha=2$, for example if dense linear algebra is involved, but application of geometric multigrid methods by \cite{IsaacStadlerGhattas2015}, with a solver specifically adapted to the geometry and flow law applicable to ice sheets, suggest that $\alpha \approx 0$ is potentially attainable.  (Of course, the constant $C$ in $(\text{work}) \le C n^{1+\alpha}$ is large.)  Geometric multigrid methods have also been applied to the higher-order (hydrostatic) momentum balance equations \citep{BrownSmithAhmadia2013}, a shallow approximation which resolves both vertical shear stresses and membrane stresses, and in this case a velocity solution work estimate $O(n^{1+\alpha})$ with $\alpha \approx 0$ is a reasonable aspiration.
 
-For fixed geometry, as in each time step of an explicit simulation, the momentum balance equations generally require nontrivial solutions as PDEs.  For the Stokes model we suppose one such solution requires $O(n^{1+\delta})$ work.  Note that such a scheme will determine the surface velocity appearing in the SKE.  However, the value of $\delta \ge 0$ depends strongly on the numerical velocity/pressure solver implementation, that is, the numerics by which the Stokes momentum balance is actually solved.  Naive solution might involve $\delta=2$, for example if dense linear algebra is involved, but application of geometric multigrid methods by \cite{IsaacStadlerGhattas2015} suggest that $\delta \approx 0$ is perhaps attainable with an solver specifically adapted to ice sheets and a high-resolution simulation.  (In any case the constant $C$ in $(\text{work}) \sim C n^{1+\delta}$ is large.)
+The SIA model velocity computation is a trivialization of the Stokes problem.  Each velocity unknown is computed in $O(1)$ work, thus the velocity solution is attained (from fixed geometry) in $O(n)$ work.
 
-On the other hand, the SIA model velocity computation is a trivialization of the Stokes problem.  Each velocity unknown is computed in $O(1)$ work, thus the velocity solution is attained (from fixed geometry) in $O(n)$ work.
+FIXME \citep{LofgrenAhlkronaHelanow2021} suggest how to reduce the constant in explicit methods for Stokes geometry updates
 
 On the other hand, an unconditionally-stable implicit geometric-update scheme, e.g.~as demonstrated in \citep{Bueler2016} for the SIA, will take at most $Q$ steps per model year in order to follow the climate forcing.  For such an implicit scheme, our stability model is that there is no restriction in the fine-resolution limit ($\Delta x \to 0$).  For example, the steady-state SIA solver in \cite{Bueler2016} uses $\Delta t=+\infty$, with $\Delta t = 100 \,\text{a}$ as a recovery strategy in the case of solver non-convergence.
 
-At each time step of an ice sheet simulation the geometry is updated, for example the old surface elevation values are replaced by new ones.  For an explicit stepping scheme the work in this update is small, specifically $O(n)$, because, once the ice velocity is computed from fixed geometry by the chosen momentum balance model, each grid point requires $O(1)$ work to update.  The \cite{Bueler2016} geometry-update method, which is fundamentally not a multigrid method, is $O(n^{1+\eps})$ with a larger value of $\eps$.
+At each time step of an ice sheet simulation the geometry is updated, for example the old surface elevation values are replaced by new ones.  For an explicit stepping scheme the work in this update is small, specifically $O(n)$, because, once the ice velocity is computed from fixed geometry by the chosen momentum balance model, each grid point requires $O(1)$ work to update.
 
-FIXME The nMCD method proposed in [Bueler 2022] is more expensive, and in fact our model for the performance of this process is that each simultaneous geometry/velocity update takes $O(n^{1+\eps})$ for $\eps > 0$ small, or optimistically $O(n \log n)$, but in any case with a large constant.
-
-How much work, then, is the entire simulation?  Table \ref{tab:performancemodel} summarizes our performance models.
+Table \ref{tab:performancemodel} summarizes our performance models.
 
 \newcommand{\oo}[1]{{\LARGE \strut} \displaystyle O\left(#1\right)}
 \setlength{\tabcolsep}{5pt}
 \renewcommand{\arraystretch}{1.5}
-\begin{table}[ht]
+\begin{table*}[ht]
 \begin{tabular}{lll}
 \emph{time-stepping} & \emph{dynamics} & \emph{work (flops per model year)} \\ \hline
 explicit & SIA    & 1D:\quad $\oo{\frac{D}{L^2} n^3}$ \\
          &        & 2D:\quad $\oo{\frac{D}{L^2} n^2}$ \\
-explicit & Stokes & 1D:\quad $\oo{\frac{D}{L^2} n^{3+\alpha} + \frac{U}{L} n^{2+\alpha}}$ \\
-         &        & 2D:\quad $\oo{\frac{D}{L^2} n^{2+\alpha} + \frac{U}{L} n^{1.5+\alpha}}$ \\
+explicit & Stokes & 1D:\quad $\oo{\frac{U}{L} n^{2+\alpha}}$ \quad $\left[\oo{\frac{D}{L^2} n^{3+\alpha}} \text{if pessimistic}\right]$ \\
+         &        & 2D:\quad $\oo{\frac{U}{L} n^{1.5+\alpha}}$ \quad $\left[\oo{\frac{D}{L^2} n^{2+\alpha}} \text{if pessimistic}\right]$ \\
 implicit & SIA    & $\oo{q\, n^{1+\beta}}$ \\
 implicit & Stokes & $\oo{q\, n^{1+\gamma}}$
 \end{tabular}
-\caption{Asymptotic scaling of computational work for time-stepping numerical ice sheet simulations as the degrees of freedom $n$ go to infinity (high horizontal resolution).  Note 1D and 2D refer to flow-line and map-plane simulations, respectively.  See Table \ref{tab:notation} for remaining notation.}
+\caption{Asymptotic scaling of computational work for time-stepping numerical ice sheet simulations as the degrees of freedom $n$ goes to infinity (high horizontal resolution).  Note 1D and 2D refer to flow-line and map-plane simulations, respectively.  See Table \ref{tab:notation} for remaining notation.}
 \label{tab:performancemodel}
-\end{table}
+\end{table*}
 
-For explicit methods note that $\Delta t = T/m$ for $m$ actual, stability-limited time steps in the simulation.  Combining this with our observations about $\Delta x$, we have $m \gtrsim (DL^2)^{-1} T n^2$ in the 1D SIA and pessimistic-Stokes cases, and $m \gtrsim (DL^2)^{-1} T n$ in the 1D optimistic-Stokes case.  The power on $n$ is lower in the realistic 2D cases because $h_x = L/\sqrt{n}$, but of course the simulations themselves are much more expensive for a given resolution $h_x$.
+We assume that the simulation is over a time interval $[0,T]$ where $T>0$ is the \emph{duration} in model years.  For explicit methods note that $\Delta t = T/m$ for $m$ actual, stability-limited time steps in the simulation.  That is, we may define $m=T/\Delta t$ as the number of actual time steps taken.
 
-This $m$ value is multiplied by the per-step expense to give a total work estimate.  The resulting scaling estimates, e.g.~$m O(n) = (DL^2)^{-1} T n^3$ for explicit SIA models in 1D, are shown in the ``explicit'' rows of Table \ref{tab:performancemodel}.
+Combining our observations about the scaling of $\Delta x$ with $n$, for explicit schemes we have
+\begin{equation}
+\Delta t^{-1} = \frac{m}{T} > O\left(\frac{D n^2}{L^2}\right)
+\end{equation}
+in the 1D SIA and pessimistic-Stokes cases and
+\begin{equation}
+\Delta t^{-1} > O\left(\frac{D n}{L^2}\right)
+\end{equation}
+in the corresponding 2D cases.  (Recall that the power on $n$ is lower in 2D cases because $\Delta x = L/\sqrt{n}$.)  In the optimistic-Stokes case these estimates become
+\begin{equation}
+\Delta t^{-1} > O\left(\frac{U n}{L}\right), O\left(\frac{U \sqrt{n}}{L}\right)
+\end{equation}
+in 1D and 2D respectively.
 
-For implicit methods, however, $\Delta t$ does not scale with grid resolution; it has fixed value $\Delta t = T / m_c = 1/Q$ years.  That is, $m=m_c$ because the number of time steps is determined only by the need to resolve climatic interactions.  Thus the work of the entire implicit SIA simulation is $m_c n^{1+\eps} = q T n^{1+\eps}$.  For an implicit Stokes simulation the geometry/velocity solve is assumed to be, in the absense of constraining research, $O(n^{1+\delta+\eps})$, with corresponding total simulation work estimate; see Table \ref{tab:performancemodel}.
+This estimate of $\Delta t^{-1}$ is multiplied by the per-step expense to give a work estimate for each model year in a simulation.  The results are shown in the ``explicit'' rows of Table \ref{tab:performancemodel}.  Note that 2D simulationsare much more expensive for a given resolution $\Delta x$ because $n$ is so much larger; $n = O(\Delta x^{-1})$ in 1D while $n = O(\Delta x^{-2})$ in 2D.
 
-Noting that $n$ is the number of horizontal grid points, the work estimate does not depend on the dimension unless $\eps$ and/or $\delta$ depend on dimension; such a difference is indeed likely to be revealed by further research.  Furthermore, the estimate reported in Table \ref{tab:performancemodel} is only at leading order, and must be multiplied by a potentially very large scheme-dependent constant.  On the other hand, the promise of multigrid methods for the velocity and geometry-update problems is to make $\delta \approx 0$ and $\eps \approx 0$, respectively.
+For unconditionally-stable implicit methods, however, $\Delta t$ does not need scale with grid resolution; it has fixed value $\Delta t = 1/q$ model years.  That is, the time steps are determined only by the need to resolve climatic interactions.
+
+We suppose that the work per geometry-update solution of an implicit SIA simulation is $O(n^{1+\beta})$ for some $\beta>0$.  The \cite{Bueler2016} geometry-update method is fundamentally not a multigrid method, and it has FIXME WHAT $\beta$?
+
+For an implicit Stokes simulation the geometry/velocity solve is assumed to be, in the absense of constraining research, $O(n^{1+\gamma})$ for some $\gamma>0$ to be determined.  The nMCD method proposed in [Bueler 2022] is expensive but multigrid, so it may turn out that $\gamma$ is small.
+
+Noting that $n$ is the number of horizontal grid points, the work estimate for an implicit time step may not depend on the dimension, but in fact it is likely that $\alpha,\beta,\gamma$ each depend on dimension in some manner; this should be informed by further research.  Furthermore, the estimate reported in Table \ref{tab:performancemodel} must be multiplied by a potentially very large scheme-dependent constant.
 
 \subsection{Discussion and Conclusion}
 
-FIXME also cite \citep{LofgrenAhlkronaHelanow2021}
+Existing multigrid methods for the velocity solution process show $\alpha$ is close to zero.  That is, the evidence shows that $\alpha$ is small for well-engineered Stokes \citep{IsaacStadlerGhattas2015} and higher-order \citep{BrownSmithAhmadia2013} solvers.
 
+The promise of multigrid methods for the implicit, coupled geometry-update plus velocity solution problems is to also make $\beta,\gamma$ smaller.  However, this aspiration is long-term because work is barely started on it.
 
 %         References
 \bibliography{perfmod}
