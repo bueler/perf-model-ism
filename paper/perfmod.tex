@@ -52,6 +52,9 @@
 \newcommand\RR{\mathbb{R}}
 \newcommand{\half}{\tfrac{1}{2}}
 
+\newcommand{\Divx}{\nabla_\bx \cdot}
+\newcommand{\gradx}{\nabla_\bx}
+
 \newcommand{\rhoi}{\rho_{\text{i}}}
 \newcommand{\pp}{{\text{p}}}
 \newcommand{\qq}{{\text{q}}}
@@ -79,7 +82,7 @@
 
 \title[Performance models for high-resolution ice sheet simulations]{Letter: Performance models for \\ high-resolution ice sheet simulations}
 
-\abstract{Modern numerical ice sheet models, with horizontal resolutions of a few kilometers or less, compute evolving ice geometry and velocity fields using various widely-discussed stress-balance approximations and boundary conditions.  The practical performance of such numerical models is, however, often dominated by the stability restrictions of currently-standard explicit time-stepping.  Such models take many short, stability-limited time steps because ice thickness is updated following each velocity solution.  We clarify the performance of numerical model choices, in the high-resolution limit, by quantifying computational effort in terms of major parameters.  The potential performance of coming generations of Stokes dynamics and/or implicit time-stepping numerical models is assessed.}
+\abstract{High-resolution numerical ice sheet models, with horizontal resolutions of a few kilometers or less, compute evolving ice geometry and velocity fields using various stress-balance approximations and boundary conditions.  These models usually require many short, stability-limited time steps because ice thickness is updated following each velocity solution.  Practical performance in the high-spatial-resolution limit is degraded by the stability conditions of such explicit time-stepping.  In this short note, which considers the shallow ice approximation and Stokes models as end members, we attempt to clarify numerical model performance by quantifying the simulation cost per model year in terms of the number of degrees of freedom.  The performance of coming generations of implicit time-stepping numerical models is then assessed.}
 
 \author{Ed Bueler}
 
@@ -92,24 +95,45 @@ E-mail: \emph{\texttt{elbueler\@@alaska.edu}}}
 
 \sectionsize
 
-\subsection{Introduction}
+\section{Introduction}
 
-Numerical ice sheet models with evolving ice geometry are now in common use for scientific questions such as quantification of future sea level rise from changes in the Antarctic \citep{Seroussietal2020} and Greenland \citep{Goelzeretal2020} ice sheets, interpretation of the paleoglacial record \citep{Weberetal2021}, and quantification of long-term glacial erosion \citep{SeguinotDelaney2021}.  It is generally accepted that horizontal mesh or grid cells must be smaller than about 10 km in order to generate valid results.  Whether using local mesh refinement \citep[for example]{Hoffmanetal2018} or not, resolutions of a few kilometers to one kilometer \citep{SeguinotDelaney2021} or less \citep{Aschwandenetal2019} have been used at ice sheet scale.  With available computational resources, sub-kilometer meshes will become increasingly common even for long-term, whole ice sheet scale studies.
+Numerical ice sheet (glacier) models with evolving ice geometry are now in common use for scientific questions such as quantification of future sea level rise from changes in the Antarctic \citep{Seroussietal2020} and Greenland \citep{Goelzeretal2020} ice sheets, interpretation of the paleoglacial record \citep{Weberetal2021}, and quantification of long-term glacial erosion \citep{SeguinotDelaney2021}, among other applications.  It is generally accepted that horizontal mesh (grid) cells must be smaller than about 10 km in order to generate valid results.  Whether using local mesh refinement \citep[for example]{Hoffmanetal2018} or not, resolutions of a few kilometers to one kilometer \citep{SeguinotDelaney2021} or less \citep{Aschwandenetal2019} are increasingly used at ice sheet scale.  With currently-available computational resources, sub-kilometer meshes should become common for long-duration, whole ice sheet studies.
 
-The current generation of ice sheet models use a variety of stress balances, from simple approximations like the shallow ice approximation (SIA), through ``hybrid'' \citep[for example]{Winkelmannetal2011} and higher-order approximations \citep{GreveBlatter2009}, to the non-shallow Stokes approximation.  With very few exceptions, however, current models alternate between solving the stress balance for velocity, using geometry from the previous time step, and then updating the ice thickness and/or surface elevation.  The latter geometry-update operation, using the mass continuity or surface kinematical equations \cite{GreveBlatter2009}, is where interaction between the ice sheet and the climate is (primarily) simulated, especially through surface mass balance (SMB) and calving processes.  Such schemes are called \emph{explicit time-stepping} for the coupled mass and momentum system which describes ice dynamics.
+Current-generation ice sheet models use a variety of stress balances, from simple approximations like the shallow ice approximation (SIA), through ``hybrid'' \citep{Robinsonetal2022,Winkelmannetal2011} and higher-order balances, to the non-shallow Stokes approximation.  With very few exceptions, however, current models alternate between solving the stress balance for velocity, over the geometry determined by the previous time step, and then updating the geometry, i.e.~the ice thickness and/or surface elevation.  The geometry-update operation, using the mass continuity or surface kinematical equations \citep{GreveBlatter2009}, is where interaction between the ice sheet and the climate is (primarily) simulated, especially through surface mass balance, sub-shelf (basal) mass balance, and calving processes.  Such schemes are using \emph{explicit} time-stepping for the coupled mass and momentum system which describes ice dynamics.
 
-For simpler partial differential equation problems, the conditional stability of explicit time-stepping schemes is well-understood \citep{LeVeque2007}.  The stability limitations of SIA numerical models have been understood, at least empirically, for some time \citep{HindmarshPayne1996}.  More recent studies have focussed on time-step limits applicable to models using hybrid, higher-order, and Stokes dynamics \citep{Chengetal2017,Robinsonetal2022} or on techniques to mitigate such limits \citep{LofgrenAhlkronaHelanow2021}.
+For simpler partial differential equation problems, the conditional stability of explicit time-stepping schemes is well-understood \citep{LeVeque2007}.  The stability limitations of explicit SIA models have also been understood for some time \citep{HindmarshPayne1996}, but recent studies have focussed on the time-step limits of hybrid, higher-order, and Stokes dynamics models \citep{Chengetal2017,Robinsonetal2022}, or on lengthening the steps \citep{LofgrenAhlkronaHelanow2021}.
 
-FIXME POSSIBILITY OF IMPLICIT SOLVERS \citep{Bueler2016,WirbelJarosch2020}
+However, \emph{implicit} time-stepping should also be considered.  Here the velocity and geometry (thickness or surface elevation) are updated simultaneously by solving a coupled mass-momentum problem.  While implicit time-stepping is a routine solution process for certain simpler partial differential equations \citep[for example]{LeVeque2007}, for ice sheets the implicit step must simultaneously compute the velocity and the \emph{domain on which the velocity is defined}.  The problem is of free-boundary type in map-plane (horizontal) directions \citep{SchoofHewitt2013}, as well as in the easily-resolved vertical direction.  An implicit strategy has been demonstrated at high-resolution in the simplest frozen-base, isothermal SIA case \citep{Bueler2016}.  The same reference shows how the steady-state problem \citep{JouvetBueler2012} can often be solved; steady-state solutions are an implicit time step of infinite duration.  Early work applying a semi-implicit time step using Stokes dynamics \citep{WirbelJarosch2020} illuminates some of the techniques, and difficulties, needed to make such a free-boundary problem work with a membrane-stress-resolving balance.
 
-FIXME see \citep{GreveBlatter2009,SchoofHewitt2013} for SIA and Stokes equations; CONFUSION FROM TWO FORMATS
-    $$\frac{\partial H}{\partial t} + \Div \left(U H\right) = a$$
-    $$\frac{\partial H}{\partial t} = \Div \left(D \grad s \right) + a$$
-where FIXME; Recall $\displaystyle D = \frac{2 A (\rho g)^n}{n+2} H^{n+2} |\grad s|^{n-1}$ where $A$ is ice softness, $\rho$ is ice density, $g$ is gravity, $H$ is ice thickness, and $s$ is ice surface elevation; TSUNAMI WAVES EXAMPLE OF FORMER NOT LATER; NOTHING LIKE TSUNMAMIS IN ICE BECAUSE ICE FLOWS DOWNHILL WITH RARE EXCEPTIONS
+This is the context in which we will relate time-stepping and stress-balance choices to overall computational effort.  The reader is assumed to have access to the SIA and Stokes stress-balance equations \citep{GreveBlatter2009,SchoofHewitt2013}, regarded here as end members of current-usage stress-balance approximations \citep{Robinsonetal2022}, and familiarity with the mass continuity and surface kinematical equations \citep{GreveBlatter2009}.
+
+However, the manner of presenting the mass continuity equation should first be examined.  For an incompressible ice sheet with thickness $H(t,\bx)$, vertically-averaged velocity $\bu(t,\bx)$, and climatic-basal mass balance $a(t,\bx)$, this equation says
+\begin{equation}
+\frac{\partial H}{\partial t} + \Divx \left(\bu H\right) = a, \label{eq:masscontinuity}
+\end{equation}
+where $\bx=(x,y)$ denotes horizontal coordinates.
+
+Equation \eqref{eq:masscontinuity} suggests that ice sheets change geometry in an essentially advective manner, but this appearance is deceiving, or at least over-simplified, regarding the growth of numerical instabilities.  This is because ice flows dominantly downhill.  Thus, as addressed by linearized analysis \citep{Chengetal2017,Robinsonetal2022}, when thickness perturbations grow unstably under explicit time-stepping, i.e.~with too large a step, they do so by a mix of advective and diffusive mechanisms.
+
+Let $s(t,\bx)=H(t,\bx)+b(\bx)$ denote the surface elevation for bed elevation $b(\bx)$.  If the numerical thickness is perturbed then the velocity $\bu$ often responds by growing in the downhill direction $-\gradx s$, a direction often correlated to $-\gradx H$.  In membrane-stress-resolving models this happens through the nonlocal solution of the stress balance; the driving stress is along $\gradx s$.  Equation \eqref{eq:masscontinuity} has velocity $\bu$ which is really a non-local function ``$\bu(H,\grad_x s)$''; a solution of the stress balance equations is required to evaluate this function.
+
+Thus the mass continuity equation is substantially, though not wholely, diffusive.  The diffusive nature dominates in the small-parameter limit which generates the SIA, in which a revised form of the mass continuity equation holds:
+\begin{equation}
+\frac{\partial H}{\partial t} = \Divx \left(D \gradx s \right) + a  \label{eq:siamasscontinuity}
+\end{equation}
+where
+\begin{equation}
+D = \Gamma H^{n+2} |\gradx s|^{n-1} \label{eq:siadiffusivity}
+\end{equation}
+is the nonlinear diffusivity.  Here $\Gamma = 2 A (\rho g)^n/(n+2)$ is a positive constant in the isothermal case, with $A$ the ice softness, $\rho$ the ice density, $g$ gravity, and $n$ the Glen exponent in the flow law \citep{GreveBlatter2009}.
+
+Unlike equation \eqref{eq:masscontinuity}, equation \eqref{eq:siamasscontinuity} does not hold for all models, but the essentially-geometric diffusivity $D$ can be computed from equation \eqref{eq:siadiffusivity}, regardless.  In any numerical model of grounded ice sheets, large values of $D$ will coincide with locations of unstable mode growth if explicit time-steps are chosen too large.
+
+FIXME no characteristics
 
 FIXME SITUATION COMPLICATED AND PRONE TO MISUNDERSTANDING; NEED PERFORMANCE MODEL TO UNDERSTAND TRADE-OFFS; We expect that time-stepping glacier and ice-sheet numerical models will become faster, and thus more useful tools for glaciologists, when multigrid is applied to the solution of the problem(s) solved at each time-step.  This hope can be understood and assessed by a \emph{performance model} for the scheme, one which combines computational work estimates for subproblems into an asymptotic, in the limit of highly-refined meshes, description of of the work required for a given simulation task.
 
-\subsection{Performance models}
+\section{Performance models}
 
 Consider numerical simulations based on $n$ mesh nodes in the map-plane, i.e.~$n$ total horizontal grid points.  (Table \ref{tab:notation} lists all of our notation.)  Such a simulation uses $O(n)$ surface elevation variables, the \emph{degrees of freedom} in our analysis.  It requires $O(n)$ memory to store the instantaneous model state, including geometry, velocity, and thermodynamical variables, if we assume that the vertical grid/mesh has an \emph{a priori} bounded vertical resolution, a common \citep[for example]{Brinkerhoffetal2017,Hoffmanetal2018}, though not universal \citep{IsaacStadlerGhattas2015}, property of such models.
 
@@ -198,7 +222,7 @@ For an implicit Stokes simulation the geometry/velocity solve is assumed to be, 
 
 Noting that $n$ is the number of horizontal grid points, the work estimate for an implicit time step may not depend on the dimension, but in fact it is likely that $\alpha,\beta,\gamma$ each depend on dimension in some manner; this should be informed by further research.  Furthermore, the estimate reported in Table \ref{tab:performancemodel} must be multiplied by a potentially very large scheme-dependent constant.
 
-\subsection{Discussion and Conclusion}
+\section{Discussion and Conclusion}
 
 Existing multigrid methods for the velocity solution process show $\alpha$ is close to zero.  That is, the evidence shows that $\alpha$ is small for well-engineered Stokes \citep{IsaacStadlerGhattas2015} and higher-order \citep{BrownSmithAhmadia2013} solvers.
 
