@@ -174,10 +174,7 @@ Unconditionally-stable implicit schemes also have a maximum time step restrictio
 Regardless of time-stepping design, for each explicit time step the velocity (or velocity/pressure) solution of the stress balance equations requires effort, namely the solution of (spatial) partial differential equations.  For the Stokes model we suppose one such solution requires $O(n^{1+\alpha})$ work, which we describe the the number floating point operations in our simple performance analysis.
 
 Of course, the power $\alpha$ depends on the design of the stress balance solver.  A direct linear algebra Stokes solver implementation might yield $\alpha=3$, or $\alpha \approx 2$ when exploiting sparsity, but a multigrid method, such as the algebraic multigrid \citep{Trottenbergetal2001} solver by \cite{IsaacStadlerGhattas2015}, reduces $\alpha$.  Their Antarctic ice sheet results show Newton-Krylov iterations \citep{Bueler2021} growing only slowly under mesh refinement, suggesting perhaps $\alpha\approx 0.2$ \citep[see Table 8.1]{IsaacStadlerGhattas2015}.
-% from Table 8.1:
-% [7*66 10*75 11*90] = [462 750 990]
-%>> polyfit(log([1 8 64]),log([462 750 990]),1)
-%ans = 0.18326   6.17004
+% see data/scalingisaac.m
 A geometric multigrid method applied to the higher-order stress balance equations \citep{BrownSmithAhmadia2013} suggests $\alpha$ also close to zero for certain simplified geometries.\footnote{The \cite{IsaacStadlerGhattas2015} and \cite{BrownSmithAhmadia2013} results also show good parallel scaling, something not considered in our simplified analysis.}  At the even easier end, the isothermal SIA velocity computation is a trivialization of the Stokes problem in which the vertically-averaged velocity at each node is computed by a pointwise formula, $O(1)$ work; a velocity solution requires only $O(n)$ work ($\alpha=0$).
 
 When analyzing solver scaling in this simple manner, one must be aware that the constant in $O(n^{1+\alpha})$ can be very large.  Furthermore it will vary greatly based on solver design.
@@ -202,19 +199,19 @@ implicit & Stokes & $\oo{\frac{q\, L^{2+2\gamma}}{\Delta x^{2+2\gamma}}} = \oo{q
 \end{table*}
 
 Now suppose that a numerical model takes time steps of $\Delta t$ model years, equivalently $\Delta t^{-1}$ time steps per model year.  Recalling the scaling of $\Delta x$ with $n$, namely that $\Delta x = O(L n^{-1/2})$, equivalently $n=O(L^2 \Delta x^{-2})$, for explicit schemes we may write the stability restriction as a required number of time-steps per model year in order to maintain stability, namely
-% $\Delta t < O(D^{-1} \Delta x^2)$
 \begin{equation}
 \frac{1}{\Delta t} > \oo{\frac{D}{\Delta x^2}} = \oo{\frac{D n}{L^2}} \label{eq:explicitsiarequired}
 \end{equation}
 in the SIA and pessimistic-Stokes cases.  In the optimistic-Stokes case the estimate becomes
-% $\Delta t < O(U^{-1} \Delta x)$
 \begin{equation}
 \frac{1}{\Delta t} > \oo{\frac{U}{\Delta x}} = \oo{\frac{U n^{1/2}}{L}}. \label{eq:explicitoptstokesrequired}
 \end{equation}
 
 The number of time steps per model year is multiplied by the per-step computational cost to give a work estimate for each model year in a simulation.  The results so far are shown in the ``explicit'' rows of Table \ref{tab:performancemodel}.
 
-For unconditionally-stable implicit methods, however, $\Delta t$ does not scale with grid resolution; it has fixed value $\Delta t = 1/q$ determined by the need to resolve climatic interactions.  On the other hand, the per-step expense is much greater because nontrivial equations, indeed a free-boundary problem, must be solved.  FIXME for the unconditionally-stable implicit geometric-update scheme in the SIA, as demonstrated by \cite{Bueler2016}, $O(n^{1+\beta})$ work; it is not multigrid; indeed the steady-state SIA solver in \cite{Bueler2016} allows $\Delta t=+\infty$, with $\Delta t = 100 \,\text{a}$ as a recovery strategy in the case of solver non-convergence
+For unconditionally-stable implicit methods, however, $\Delta t$ does not scale with grid resolution; it has fixed value $\Delta t = 1/q$ determined by the need to resolve climatic interactions.  On the other hand, the per-step expense is much greater because nontrivial equations, indeed a free-boundary problem, must be solved.  FIXME for the unconditionally-stable implicit geometric-update scheme in the SIA $O(n^{1+\beta})$ work; \cite{Bueler2016} simplified dome geometry case has $\beta=1.8$, which is not adequate; it is not multigrid
+% see data/bueler.perf and data/scalingbueler.m
+the steady-state SIA solver in \cite{Bueler2016} allows $\Delta t=+\infty$, with $\Delta t = 100 \,\text{a}$ as a recovery strategy in the case of solver non-convergence
 
 For an implicit Stokes simulation the geometry/velocity solve is assumed to be, in the absense of constraining research, $O(n^{1+\gamma})$ for some $\gamma>0$ to be determined.  The nMCD method proposed in [Bueler 2022] is expensive but multigrid, so it may turn out that $\gamma$ is small.
 
