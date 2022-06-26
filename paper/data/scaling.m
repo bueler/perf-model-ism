@@ -17,18 +17,18 @@ subplot(2,1,1)
 loglog(nb, flopsb, 'bo')
 xlabel('degrees of freedom')
 ylabel('flops')
-title('bueler')
+title('Bueler')
 hold on
 loglog(nb, exp(pb(1) * log(nb) + pb(2)), 'b--')
 hold off
-legend(sprintf('O(n^{%.2d})',pb(1)))
+legend(sprintf('O(n^{%.3d})',pb(1)))
 
 subplot(2,1,2)
 loglog(ni, itsi, 'ro')
 xlabel('degrees of freedom')
-ylabel('krylov iterations')
-title('isaac')
+ylabel('total krylov iterations')
+title('Isaac')
 hold on
 loglog(ni, exp(pi(1) * log(ni) + pi(2)), 'r--')
 hold off
-legend(sprintf('O(n^{%.2d})',pi(1)))
+legend(sprintf('O(n^{%.3d})',pi(1)))
