@@ -137,8 +137,8 @@ Here $d = C H^{\nn+2} |\gradx s|^{\nn-1}$ is the nonlinear diffusivity and $C$ i
 \begin{tabular}{cll}
 \emph{name} & \emph{meaning} & \emph{units} \\ \hline
 $\alpha$    & one fixed-geometry Stokes velocity solution requires $O(n^{1+\alpha})${\large \strut} work\\
-$\beta$     & one implicit SIA geometry-update requires $O(n^{1+\beta})$ work \\
-$\gamma$    & one implicit Stokes geometry/velocity solution requires $O(n^{1+\gamma})$ work \\
+$\beta$     & one implicit SIA geometry-update solution requires $O(n^{1+\beta})$ work \\
+$\gamma$    & one implicit Stokes geometry-update and velocity solution requires $O(n^{1+\gamma})$ work \\
 $D$         & representative geometric (SIA) diffusivity of an ice sheet & $\text{km}^2 \text{a}^{-1}$ \\
 $L$         & width of simulation domain & km \\
 $n$         & degrees of freedom: number of nodes in the horizontal mesh \\
@@ -155,9 +155,13 @@ $\Delta x$  & representative width (diameter) of map-plane mesh cells & km
 
 \section{Performance analysis}
 
-We parameterize simulation performance using either $\Delta x$, the representative horizontal mesh/grid cell diameter, i.e.~the resolution, or $n$, the number of nodes or vertices in the horizontal mesh or grid.  The model domain is of (horizontal) width $L$ so $\Delta x = O(L n^{-1/2})$; there are $O(\sqrt{n})$ mesh cells in each horizontal dimension.\footnote{In flow-line models $\Delta x = O(L n^{-1})$, but our analysis focusses on spatially-3D models with map-plane horizontal meshes or grids.}  Table \ref{tab:notation} lists the parameters used in our analysis.  Big-O notation applies only in the high resolution limit where $\Delta x \to 0$ and $n\to \infty$.  
+Table \ref{tab:notation} lists the parameters used in our simulation performance  analysis.  Our primary parameters are $\Delta x$, a representative value for the horizontal mesh (grid) cell diameter, and $n$, the number of nodes (vertices) in the horizontal mesh.  \emph{High resolution} refers to the equivalent $\Delta x\to 0$ and $n\to\infty$ limits, and big-O notation is only used in this limit.  If the model domain is of width $L$ then these parameters are related by
+\begin{equation}
+\Delta x = O\left(\frac{L}{\sqrt{n}}\right) \quad \leftrightarrow \quad n = O\left(\frac{L^2}{\Delta x^2}\right).  \label{eq:paramrelation}
+\end{equation}
+That is, for a given value of $L$ there are $O(\sqrt{n})$ mesh cells in each horizontal dimension.\footnote{In flow-line models $\Delta x = O(L n^{-1})$.  However, our analysis addresses spatially-3D models with map-plane horizontal meshes.}
 
-A standard numerical ice sheet model uses $n$ ice thickness or surface elevation variables, the number of \emph{degrees of freedom}, and it requires $O(n)$ memory to store the instantaneous model state, including thermodynamical variables for example, if we assume that the vertical mesh/grid has an \emph{a priori} bounded resolution.\footnote{This bounded-vertical-nodes assumption reflects common usage \citep[for example]{Aschwandenetal2019,Brinkerhoffetal2017,Hoffmanetal2018}.  However, the \cite{IsaacStadlerGhattas2015} Stokes and \cite{BrownSmithAhmadia2013} higher-order multigrid solvers use 3D refinement, though with certain modifications regarding vertical refinement.}  The amount of fast memory needed by a running ice sheet simulation is also $O(n)$ if prior states are discarded or transferred to storage.  Ice sheet models also have $O(n)$ velocity variables, but these are not state variables because a very-viscous stress balance can recompute velocity as a function of (true) state variables.
+A numerical ice sheet model uses $n$ ice thickness or surface elevation variables, one \emph{degree of freedom} per mesh node.  It requires $O(n)$ memory to store the instantaneous model state, including thermodynamical variables for example, if we assume that the vertical mesh/grid has an \emph{a priori} bounded resolution.\footnote{This assumption reflects common usage \citep[for example]{Aschwandenetal2019,Brinkerhoffetal2017,Hoffmanetal2018}.  However, the \cite{IsaacStadlerGhattas2015} Stokes and \cite{BrownSmithAhmadia2013} higher-order multigrid solvers use 3D refinement, though with certain modifications regarding vertical refinement.}  The amount of fast memory needed by a running ice sheet simulation is also $O(n)$ if prior states are discarded or transferred to storage.  Ice sheet models also have $O(n)$ velocity variables, but these are not state variables because a very-viscous stress balance will compute velocity as a function of the true state variables.
  
 Ice sheet models involve climate interactions (coupling), especially via surface mass balance, on time scales which are dominated by an annual cycle and certain longer scales.  We define $q$ as the number of ice-dynamical time steps per year needed to capture this coupling.  Some typical values $q=0.1 \,\text{a}^{-1}, 1 \,\text{a}^{-1}, 12 \,\text{a}^{-1}$ correspond to decadal, yearly, and monthly coupling frequency, respectively.  Note that energy balance and degree-day schemes for computing surface mass balance generally have much shorter time scales, but here $q$ only describes the frequency on which ice geometry is updated from an ice velocity solution and the latest surface mass balance values.
 
