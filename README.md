@@ -1,3 +1,3 @@
 # perf-model-ism
 
-short commentary: a performance model for time-stepping ice sheet simulations
+a performance analysis of time-stepping ice sheet simulations
