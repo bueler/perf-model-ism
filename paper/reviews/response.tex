@@ -1,0 +1,146 @@
+\documentclass[letterpaper,final,12pt,reqno]{amsart}
+
+\usepackage[total={6.3in,9.2in},top=1.1in,left=1.1in]{geometry}
+
+\usepackage{times,bm,bbm,empheq,fancyvrb,graphicx,amsthm,amssymb}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{longtable}
+\usepackage{booktabs}
+
+\usepackage{tabto}
+\TabPositions{1.5cm}
+
+\usepackage{float}
+
+% hyperref should be the last package we load
+\usepackage[pdftex,
+colorlinks=true,
+plainpages=false, % only if colorlinks=true
+linkcolor=blue,   % ...
+citecolor=Red,    % ...
+urlcolor=black    % ...
+]{hyperref}
+
+\renewcommand{\baselinestretch}{1.05}
+
+\allowdisplaybreaks[1]  % allow display breaks in align environments, if they avoid major underfull
+
+\newcommand{\eps}{\epsilon}
+
+\newcommand{\RR}{\mathbb{R}}
+\newcommand{\ZZ}{\mathbb{Z}}
+
+\newcommand{\grad}{\nabla}
+\newcommand{\Div}{\nabla\cdot}
+\newcommand{\trace}{\operatorname{tr}}
+
+\newcommand{\hbn}{\hat{\mathbf{n}}}
+
+\newcommand{\bb}{\mathbf{b}}
+\newcommand{\be}{\mathbf{e}}
+\newcommand{\bbf}{\mathbf{f}}
+\newcommand{\bg}{\mathbf{g}}
+\newcommand{\bn}{\mathbf{n}}
+\newcommand{\br}{\mathbf{r}}
+\newcommand{\bu}{\mathbf{u}}
+\newcommand{\bv}{\mathbf{v}}
+\newcommand{\bw}{\mathbf{w}}
+\newcommand{\bx}{\mathbf{x}}
+\newcommand{\by}{\mathbf{y}}
+\newcommand{\bz}{\mathbf{z}}
+
+\newcommand{\bF}{\mathbf{F}}
+\newcommand{\bV}{\mathbf{V}}
+\newcommand{\bX}{\mathbf{X}}
+
+\newcommand{\bxi}{\bm{\xi}}
+\newcommand{\bzero}{\bm{0}}
+
+\newcommand{\cK}{\mathcal{K}}
+\newcommand{\cV}{\mathcal{V}}
+
+\newcommand{\rhoi}{\rho_{\text{i}}}
+
+\newcommand{\ip}[2]{\left<#1,#2\right>}
+
+\newcommand{\maxR}{R^{\bm{\oplus}}}
+\newcommand{\minR}{R^{\bm{\ominus}}}
+\newcommand{\iR}{R^{\bullet}}
+
+\newcommand{\nn}{{\text{n}}}
+\newcommand{\pp}{{\text{p}}}
+\newcommand{\qq}{{\text{q}}}
+\newcommand{\rr}{{\text{r}}}
+
+\newcommand{\supp}{\operatorname{supp}}
+\newcommand{\Span}{\operatorname{span}}
+
+
+\newenvironment{review}%
+{\bigskip \par \begin{quote} \selectfont \sl}%
+{\end{quote}}
+
+
+\begin{document}
+\title{Response to reviews of \emph{Performance analysis of high-resolution ice sheet simulations}}
+
+\author{Ed Bueler}
+
+\date{\today}
+
+\maketitle
+
+%\tableofcontents
+
+\thispagestyle{empty}
+%\bigskip
+
+The thoughtful comments of the two reviewers are much appreciated.
+
+\section{Responses to Reviewer 1}
+
+\begin{review}
+Let me congratulate you to this much needed performance analysis of ice sheet models, which is presented clearly and in detail in the manuscript at hand. I have only a few very minor comments to add.
+
+As you include glaciers in your introduction (L\# 21) you could reference Clarke et al (Clarke, G. K., Jarosch, A. H., Anslow, F. S., Radić, V., \& Menounos, B. (2015). Projected deglaciation of western Canada in the twenty-first century. Nature Geoscience, 8(5), 372-377) around L\#30 as an example of a large, region scale glacier study using an explicit time stepping scheme on sub km grid sizes.
+\end{review}
+
+\noindent Thank you!  This is a good example to add, and I have done so.
+
+\begin{review}
+More style comments:
+
+In lines \# 82 and on page 8 just befor equation (4), maybe use the word "equation" alongside the reference to an equation, as you do e.g. in L\#95 and other places, just for consistency.
+\end{review}
+
+\noindent Done.
+
+\begin{review}
+In lines \# 67, 150, 173, and maybe more places you use plural such as "our", "we", which strikes me as odd as you did the work on your own. But maybe that is only me as a non native English speaker.
+\end{review}
+
+\noindent I believe this is standard-enough usage, although I am happy to follow the Editor's guidance if it differs.  Speaking more precisely, I am trying to stick to ``inclusive we'' usage; see
+
+\medskip
+{\footnotesize \href{https://oxfordediting.com/to-we-or-not-to-we-the-first-person-in-academic-writing/}{\texttt{oxfordediting.com/to-we-or-not-to-we-the-first-person-in-academic-writing}}}
+
+\medskip
+\noindent Therefore I altered the text, away from ``we'' or ``our'', in lines 67, 113, 127, 173, and 207.  However, I kept ``us'', in the inclusive phrases ``let us assume'' and ``we see'', in lines 150, 186, and 217.
+
+\begin{review}
+In line \# 143, maybe add again the Robinson et al reference into the brackets to Figure 3(a) so that it is clear that you reference their figure.
+\end{review}
+
+\noindent Yes.  Done.
+
+\begin{review}
+Anyhow just a few comments from my side. Else the paper is, as said, crystal clear and well presented and very relevant for directing the model development efforts in a performance aware direction.
+\end{review}
+
+Thanks.
+
+
+\section{Responses to Reviewer 2}
+
+
+\end{document}
