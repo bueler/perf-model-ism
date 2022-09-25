@@ -1,0 +1,20 @@
+Reviewer: 1
+
+Comments to the Author
+
+Dear Ed,
+let me congratulate you to this much needed performance analysis of ice sheet models, which is presented clearly and in detail in the manuscript at hand. I have only a few very minor comments to add.
+
+As you include glaciers in your introduction (L# 21) you could reference Clarke et al (Clarke, G. K., Jarosch, A. H., Anslow, F. S., Radić, V., & Menounos, B. (2015). Projected deglaciation of western Canada in the twenty-first century. Nature Geoscience, 8(5), 372-377) around L#30 as an example of a large, region scale glacier study using an explicit time stepping scheme on sub km grid sizes.
+
+More style comments:
+In lines # 82 and on page 8 just befor equation (4), maybe use the word "equation" alongside the reference to an equation, as you do e.g. in L#95 and other places, just for consistency.
+
+In lines # 67, 150, 173, and maybe more places you use plural such as "our", "we", which strikes me as odd as you did the work on your own. But maybe that is only me as a non native English speaker.
+
+In line # 143, maybe add again the Robinson et al reference into the brackets to Figure 3(a) so that it is clear that you reference their figure.
+
+Anyhow just a few comments from my side. Else the paper is, as said, crystal clear and well presented and very relevant for directing the model development efforts in a performance aware direction.
+
+All the best,
+Alex
