@@ -142,5 +142,69 @@ Thanks.
 
 \section{Responses to Reviewer 2}
 
+\begin{review}
+\textbf{Summary}
 
+In this short manuscript, the author provides a prospectus on the benefits of adopting implicit methods for the time-discretization of the equations of ice sheet motion, and in particular how such methods may improve model efficiency relative to the use of explicit methods (which represent the current dominant, though not universal, paradigm). Beginning with some background on the relationship between ice sheet velocity (which is diagnostic) and geometry (which is prognostic) under different simplifications to the stress balance, the manuscript then goes through various scaling arguments that establish the essential amount of work needed to evolve an ice sheet model for a given length of time. The author re-establishes the classical result of fourth-power in spatial resolution effort for the shallow ice approximation, but presents the surprising result of (pessimistic) sixth-power growth for Stokes’ equations (which is quite oppressive), then shows that these resolution-dependent challenges can be significantly ameliorated with implicit schemes, which have the potential to realistically reduce computational cost to cubic in resolution (at least asymptotically).
+
+Overall, the manuscript is a worthwhile contribution that will help to guide future model development and to justify why such developments are worth the effort. It is, in a sense, an opinion piece, so there is little to criticize with respect to scientific merit. I do have a limited set of comments that might help clarify points and answer questions that some readers may have.
+\end{review}
+
+\noindent This summary of my intent is quite accurate, and I appreciate the reviewer's effort to improve my manuscript.
+
+\begin{review}
+\textbf{Title} I don't find this title to be a particularly helpful characterization of the work. Maybe something more specific e.g. 'Asymptotic analysis of implicit versus explicit methods in ice sheet models' would be better.
+\end{review}
+
+\noindent Some thought on a revised title is worthwhile, so this comment is welcomed.  Unfortunately ``Asymptotic analysis of implicit versus explicit methods in ice sheet models'' would not clarify which is the asymptotic limit.   (It is not aspect ratio $H/L \to 0$, nor convergence $\Delta x \to 0$, nor approach to steady state $t\to \infty$, but rather number of degrees of freedom.)  Furthermore, my intent is to address \emph{performance}, as a broader issue which relates to multiple modeling choices, specifically mesh resolution, time-stepping type (explicit vs.~implicit), solver design (multigrid versus not), and even operational ice-climate coupling frequency, all over long-duration runs.
+
+\medskip \noindent In other words, I don't see how to write a title of acceptable length without requiring the interested reader to (at least) dive into the abstract for clarification of some brief phrase such as ``performance analysis''.  (Of course, a shorter title will, itself, increase the number of such interested readers.)  A possible title is ``Performance analysis of numerical ice sheet simulations in the high-resolution limit'', and this captures the correct asymptotic, but I find the current title to be essentially as clear, and clearly briefer.  Does the Editor have a title suggestion?
+
+\begin{review}
+\textbf{L25} 'it is generally accepted...'  I am not sure that I agree that this is generally accepted.  There remain important works in Antarctica where models are run at 20km resolution or more and I’m not sure that they are ‘invalid’.  It is worth perhaps being more specific about the resolution requirements of specific tasks, e.g. capturing detailed perturbations to the grounding line or calving front, the influence of steep subglacial topography, etc.
+\end{review}
+
+\noindent I stand by the assertion, but this reasonable challenge has caused me to add some words to clarify.  The sentence in question now says:
+
+\begin{quote}  In order to resolve ice streams as fluid features it is now generally accepted that valid results need horizontal mesh (grid) cells smaller than about 10 km, but narrow outlet glacier flows need yet finer resolution.\end{quote}
+
+\noindent A few points about this sentence will, I think, be understood by any reader with minimal exposure to ice sheet modeling:
+\begin{itemize}
+\item This is a necessarily-imprecise description of practical resolution needs for ``resolving'' physical mechanisms understood to be important by a community of scientists.  This is not a mathematically or statistically based assertion.
+\item The added phrase ''ice streams as fluid features'' refers to model results which are necessarily more than one grid cell wide.  As fluids are locally infinite-dimensional, you need a few cells, more than one or two across for ice streams, to capture a ``fluid feature''.
+\item The added word ``it is \underline{now} generally accepted'' clearly refers to expectations in the 2020s.  There were indeed ``important'' 20km results before now, but I would disagree with any assertion in a present-day journal submission that, for example, flux across grounding lines in Antarctica is ``validly modeled'' at 20 km resolution; that would be a consequence of not trying very hard, or choosing a deficient model.
+\item 10 km resolution is itself not enough for narrower features than ice streams.
+\end{itemize}
+With that background, I am happy if readers conclude, for example, that the author thinks that 20km or 40km Antarctic model results are no longer ``valid'' in a scientific sense.  That is what I think, and I was under the impression that this was a generally-accepted judgement.
+
+\begin{review}
+\textbf{L34}  While explicit time stepping is indeed the paradigm, the ‘very few exceptions’ ought to be referenced. While I am sure there are more, here are three papers that use a coupled and implicit geometry-non-SIA-velocity solution scheme: Gudmundsson (2013); Brinkerhoff et al. (2017); Shapero et al. (2021)
+\end{review}
+
+\noindent FIXME This reviewer comment drives me to make the most significant alterations to the paper.  The reviewer, and I suspect many readers, have never imagined an unconditionally stable implicit ice sheet model, so they don't recognize the only semi-implicit nature of various assertions of implicitness in the literature.  The SIA solver in Bueler (2016) is actually implicit, and demonstrably unconditionally stable on flat beds, in the sense that one can take a single time step of arbitrary length to construct the geometry of an ice sheet from knowledge only of the surface mass balance (accumulation/ablation function) and the bed.  This means a free-boundary problem must be solved during the time step to determine the map-plane region occupied by the ice.  Otherwise, in the cited models wherein an ``implicit'' claim is made, in fact a major aspect of the geometry at the current time step, specifically the ice-covered domain of the map-plane, is \emph{fixed} during the time step.  Only the vertical extent of the ice is updated implicitly.
+
+\begin{review}
+\end{review}
+
+\noindent x
+\begin{review}
+\end{review}
+
+\noindent x
+\begin{review}
+\end{review}
+
+\noindent x
+\begin{review}
+\end{review}
+
+\noindent x
+\begin{review}
+\end{review}
+
+\noindent x
+\begin{review}
+\end{review}
+
+\noindent x
 \end{document}
