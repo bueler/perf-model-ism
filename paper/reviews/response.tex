@@ -95,22 +95,26 @@ urlcolor=black    % ...
 \thispagestyle{empty}
 %\bigskip
 
-The thoughtful comments of the two reviewers are much appreciated.
+The thoughtful comments of the two reviewers are much appreciated.  Below I both respond to their concerns---in block italics---and, in the important cases, quote the new or rewritten content of the paper which addresses these concerns.
 
 \section{Responses to Reviewer 1}
 
 \begin{review}
 Let me congratulate you to this much needed performance analysis of ice sheet models, which is presented clearly and in detail in the manuscript at hand. I have only a few very minor comments to add.
+\end{review}
 
+\noindent Thank you!
+
+\begin{review}
 As you include glaciers in your introduction (L\# 21) you could reference Clarke et al (Clarke, G. K., Jarosch, A. H., Anslow, F. S., Radić, V., \& Menounos, B. (2015). Projected deglaciation of western Canada in the twenty-first century. Nature Geoscience, 8(5), 372-377) around L\#30 as an example of a large, region scale glacier study using an explicit time stepping scheme on sub km grid sizes.
 \end{review}
 
-\noindent Thank you!  This is a good example to add, and I have done so.
+\noindent This is a good example to add, and I have done so.
 
 \begin{review}
 More style comments:
 
-In lines \# 82 and on page 8 just befor equation (4), maybe use the word "equation" alongside the reference to an equation, as you do e.g. in L\#95 and other places, just for consistency.
+In lines \# 82 and on page 8 just before equation (4), maybe use the word "equation" alongside the reference to an equation, as you do e.g. in L\#95 and other places, just for consistency.
 \end{review}
 
 \noindent Done.
@@ -137,7 +141,7 @@ In line \# 143, maybe add again the Robinson et al reference into the brackets t
 Anyhow just a few comments from my side. Else the paper is, as said, crystal clear and well presented and very relevant for directing the model development efforts in a performance aware direction.
 \end{review}
 
-Thanks.
+\noindent Thanks.
 
 
 \section{Responses to Reviewer 2}
@@ -156,9 +160,11 @@ Overall, the manuscript is a worthwhile contribution that will help to guide fut
 \textbf{Title} I don't find this title to be a particularly helpful characterization of the work. Maybe something more specific e.g. 'Asymptotic analysis of implicit versus explicit methods in ice sheet models' would be better.
 \end{review}
 
-\noindent Some thought on a revised title is worthwhile, so this comment is welcomed.  Unfortunately ``Asymptotic analysis of implicit versus explicit methods in ice sheet models'' would not clarify which is the asymptotic limit.   (It is not aspect ratio $H/L \to 0$, nor convergence $\Delta x \to 0$, nor approach to steady state $t\to \infty$, but rather number of degrees of freedom.)  Furthermore, my intent is to address \emph{performance}, as a broader issue which relates to multiple modeling choices, specifically mesh resolution, time-stepping type (explicit vs.~implicit), solver design (multigrid versus not), and even operational ice-climate coupling frequency, all over long-duration runs.
+\noindent Some thought on a revised title is worthwhile, so this comment is welcomed.
 
-\medskip \noindent In other words, I don't see how to write a title of acceptable length without requiring the interested reader to (at least) dive into the abstract for clarification of some brief phrase such as ``performance analysis''.  (Of course, a shorter title will, itself, increase the number of such interested readers.)  A possible title is ``Performance analysis of numerical ice sheet simulations in the high-resolution limit'', and this captures the correct asymptotic, but I find the current title to be essentially as clear, and clearly briefer.  Does the Editor have a title suggestion?
+Unfortunately ``Asymptotic analysis of implicit versus explicit methods in ice sheet models'' would not clarify which is the asymptotic limit.   (It is not aspect ratio $H/L \to 0$, nor approach to steady state $t\to \infty$, nor even convergence under the high-resolution $\Delta x \to 0$, but rather performance in the number of degrees of freedom limit.)  My intent is to address \emph{performance}, as a broader issue which relates to multiple modeling choices, specifically mesh resolution, time-stepping type (explicit vs.~implicit), solver design (multigrid versus not), and even operational ice-climate coupling frequency, all over long-duration runs.
+
+In other words, I don't see how to write a title of acceptable length without requiring the interested reader to (at least) dive into the abstract for clarification of some brief phrase such as ``performance analysis''.  (A shorter title may itself increase the number of such interested readers.)  A possible title is ``Performance analysis of numerical ice sheet simulations in the high-resolution limit'', and this identifies the asymptotic, but I find the current title to be essentially as clear, and clearly briefer.  Does the Editor have a title suggestion?
 
 \begin{review}
 \textbf{L25} 'it is generally accepted...'  I am not sure that I agree that this is generally accepted.  There remain important works in Antarctica where models are run at 20km resolution or more and I’m not sure that they are ‘invalid’.  It is worth perhaps being more specific about the resolution requirements of specific tasks, e.g. capturing detailed perturbations to the grounding line or calving front, the influence of steep subglacial topography, etc.
@@ -166,14 +172,14 @@ Overall, the manuscript is a worthwhile contribution that will help to guide fut
 
 \noindent I stand by the assertion, but this reasonable challenge has caused me to add some words to clarify.  The sentence in question now says:
 
-\begin{quote}  In order to resolve ice streams as fluid features it is now generally accepted that valid results need horizontal mesh (grid) cells smaller than about 10 km, but narrow outlet glacier flows need yet finer resolution.\end{quote}
+\begin{quote}``In order to resolve ice streams as fluid features it is now generally accepted that valid results need horizontal mesh (grid) cells smaller than about 10 km, but narrow outlet glacier flows need yet finer resolution.''\end{quote}
 
-\noindent A few points about this sentence will, I think, be understood by any reader with minimal exposure to ice sheet modeling:
+\noindent A few points about this new sentence will, I think, be understood by any reader with minimal exposure to ice sheet modeling:
 \begin{itemize}
-\item This is a necessarily-imprecise description of practical resolution needs for ``resolving'' physical mechanisms understood to be important by a community of scientists.  This is not a mathematically or statistically based assertion.
-\item The added phrase ''ice streams as fluid features'' refers to model results which are necessarily more than one grid cell wide.  As fluids are locally infinite-dimensional, you need a few cells, more than one or two across for ice streams, to capture a ``fluid feature''.
-\item The added word ``it is \underline{now} generally accepted'' clearly refers to expectations in the 2020s.  There were indeed ``important'' 20km results before now, but I would disagree with any assertion in a present-day journal submission that, for example, flux across grounding lines in Antarctica is ``validly modeled'' at 20 km resolution; that would be a consequence of not trying very hard, or choosing a deficient model.
-\item 10 km resolution is itself not enough for narrower features than ice streams.
+\item This is a necessarily-imprecise description of practical resolution needs for ``resolving'' physical mechanisms understood to be important by a community of scientists.  This is not a mathematically- or statistically-based assertion.
+\item The added phrase ''ice streams as fluid features'' refers to aspects of model results which are necessarily more than one grid cell wide.  That is, as fluids are locally infinite-dimensional, you need a few cells, more than one or two across for ice streams, to capture a ``fluid feature''.
+\item 10 km resolution is itself not enough for yet narrower features.
+\item The added word ``it is \underline{now} generally accepted'' clearly refers to expectations in the 2020s.  There were indeed ``important'' 20km results before now, but I would disagree with any assertion in a present-day journal submission that, for example, flux across grounding lines in Antarctica is ``validly modeled'' at 20 km resolution; that would now be a consequence of not trying very hard, or choosing a deficient model.
 \end{itemize}
 With that background, I am happy if readers conclude, for example, that the author thinks that 20km or 40km Antarctic model results are no longer ``valid'' in a scientific sense.  That is what I think, and I was under the impression that this was a generally-accepted judgement.
 
@@ -181,42 +187,100 @@ With that background, I am happy if readers conclude, for example, that the auth
 \textbf{L34}  While explicit time stepping is indeed the paradigm, the ‘very few exceptions’ ought to be referenced.  While I am sure there are more, here are three papers that use a coupled and implicit geometry-non-SIA-velocity solution scheme: Gudmundsson (2013); Brinkerhoff et al. (2017); Shapero et al. (2021)
 \end{review}
 
-\noindent This reviewer comment drives me to make the most significant addition to the paper.  The reviewer, and I suspect many readers, have never really imagined an unconditionally-stable and fully-implicit ice sheet model, so they don't recognize the only semi-implicit nature of various assertions of implicitness in the literature.  The only such solver is the SIA implementation in Bueler (2016), though in fact the idea has existed as a theoretical matter since Calvo et al (2003).
+\noindent This reviewer comment drives me to make the most significant addition to the paper.  The reviewer, and I suspect many readers, may never have fully imagined an unconditionally-stable and implicit ice sheet model, so they don't recognize the only semi-implicit nature of various assertions of implicitness in the literature.  The only such demonstrated solver is the SIA implementation in Bueler (2016), though in fact the idea has existed as a theoretical matter since Calvo et al (2002).
 
-My addition is the following definitions-of-terms inserted at the end of the second section, which has been re-titled from ``Mass continuity equation'' to ``Coupled geometry-velocity modeling'':
+That is, I recognize that I must work much harder to clearly define my terms.  My major addition, below, is in the second section, which has also been re-titled from ``Mass continuity equation'' to ``Coupled geometry-velocity modeling''.  The following three-paragraph addition ends the section with precise definitions of ``implicit'' and ``explicit'' as these terms would be applied to solving coupled mass-momentum time steps, that is, in a context in which we seek the property of unconditional stability by choosing the scheme construction called implicitness.
 
 \begin{quote}
-Precise definitions of the terms \emph{explicit} and \emph{implicit}, for coupled geometry-velocity updates, equivalently for coupled mass-momentum conservation time steps, will be needed for understanding the performance analysis which follows.  As defined earlier, an \emph{explicit} scheme for the coupled problem alternates between solving the stress balance for velocity, and then holding that velocity fixed while solving mass continuity or surface kinematical equation for geometry (thickness or surface elevation), and then accepting both fields as the scheme proceeds to the next time step.  At the other extreme a (\emph{fully}) \emph{implicit} scheme 
+``However, either statement (1) or (2) of the mass continuity equation is fundamentally incomplete without modeling the evolving (map-plane) boundary position of the glacier or ice sheet.  The problem of determining this updated margin position is only well-posed via an inequality constraint, namely that ice thickness is nonnegative ($H\ge 0$), equivalently that the ice surface elevation equals or exceeds the bed elevation ($s \ge b$).  The mathematical role of this constraint has been understood for some time in the SIA model (Calvo and others, 2002; Jouvet and Bueler, 2012; Schoof and Hewitt, 2013), but its role as the determinant of margin location is universal across fluid-layer problems with signed source terms (Bueler, 2021a).
+
+``In this context one can distinguish time-stepping types in coupled geometry-velocity, i.e.~mass and momentum conserving, glacier and ice sheet models.  A coupled model computes (\emph{fully}) \emph{implicit} time steps if no significant aspects of the geometry or velocity are held fixed during the (coupled) solution.  That is, in an implicit scheme a coupled and well-posed model for the ice surface elevation (or thickness) and velocity field updates is solved.  A scheme which does not allow the map-plane ice-covered region to change during the time step cannot respond physically (i.e.~conservatively with respect to mass and momentum conservation) to a change in climate inputs.  A scheme which is implicit in the sense here can be unconditionally stable; it can stably compute time steps of arbitrary duration causing nontrivial changes in margin position.  Next, a coupled scheme is \emph{semi-implicit} if, in particular, aspects of the ice geometry are held fixed during the geometry-velocity solution, or, for instance, if the velocity is held fixed during a time step as the geometry is updated (though perhaps ``implicitly'' on its own).  Thus a scheme which computes margin advance or retreat only after the velocity field update is accepted is only semi-implicit, for example.  Finally, a scheme is (\emph{fully}) \emph{explicit} for the coupled problem if the ice geometry is held fixed during the velocity solution, and then this (accepted and now fixed) velocity solution is used to update the geometry through an explicit step for Equation (1).
+
+``Thus a key point about time-stepping schemes for the coupled geometry and velocity problem for glaciers and ice sheets is that implicit schemes are not solving fixed-domain systems of coupled PDEs.  The mathematical problem for the coupled and implicit time-step includes the condition which controls the moving and free boundary, namely the inequality constraint of nonnegative thickness.  Implicit schemes which solve these free-boundary problems at each time step can, at high spatial resolution, transcend stability limitations on time step duration.  They, and only they, can do time-stepping at a rate controlled only by ice-climate interaction time scales.''
 \end{quote}
 
-FIXME returning to the reviewer's specific comment and citations, ...
+With these clarified definitions, let me return to the reviewer's specific comment and citations.  Two of the three cited works are now addressed in the following substantially-rewritten paragraph at the end of the third section.  The semi-implicit structure of the Brinkerhoff \& Johnson (2015) model is clear from their published text, and likewise the Jouvet \& Graeser (2013) model which the reviewer does not mention, but to understand the time-stepping structure of the open source \'Ua model (Gudmundsson, 2013; Gudmundsson, 2021) I looked in the source code and saw clear comments about its structural semi-implicitness.\footnote{See the relevant files \url{https://github.com/GHilmarG/UaSource/blob/master/SSS2dPrognostic.m} and \url{https://github.com/GHilmarG/UaSource/blob/master/NexthTG3in2D.m}.  I examined commit \texttt{9081fdbe3cf250d9cfd66504bf03134043ba2547}.}  I believe I have characterized the (innovative) semi-implicitness of these models correctly.
 
- is actually implicit, and demonstrably unconditionally stable on flat beds, in the sense that one can take a single time step of arbitrary length to construct the geometry of an ice sheet from knowledge only of the surface mass balance (accumulation/ablation function) and the bed.  This means a free-boundary problem must be solved during the time step to determine the map-plane region occupied by the ice.  Otherwise, in the cited models wherein an ``implicit'' claim is made, in fact a major aspect of the geometry at the current time step, specifically the ice-covered domain of the map-plane, is \emph{fixed} during the time step.  Only the vertical extent of the ice is updated implicitly.
+\begin{quote}
+``Certain recent numerical models are semi-implicit in innovative ways.  The SIA portions of hybrid time-stepping schemes by Jouvet \& Graeser (2013) and Brinkerhoff \& Johnson (2015) are solved implicitly, with nonnegativity of thickness in their SIA portions enforced as part of a free-boundary solution.  However, the time-stepping in these models is only semi-implicit because the membrane-stress-resolving portion of the velocity is held fixed as the ice thickness is advected.  The SIA time-step solvers in these schemes have apparently only been tested for time steps satisfying an advective condition $\Delta t < O(U^{-1}\Delta x)$, for $U$ derived from sliding speeds.  (Also, Jouvet \& Graeser (2013) use multigrid methods, but their published results do not constrain the power $\beta$.)  The semi-implicit scheme in the open-source \'Ua numerical marine ice sheet model (Gudmundsson, 2013; Gudmundsson, 2021) implicitly solves mass continuity free-boundary problem for Equation (1) using an active set method, but also while holding the (membrane-stress-resolved) velocity fixed.''
+\end{quote}
 
-FIXME owe the reader a definition of ``explicit'', ``semi-implicit'', and ``implicit'' as I use them; put this at the end of the (new) ``Coupled geometry-velocity time-stepping'' section; ``explicit if all aspects of ice geometry are fixed during the velocity solve, and then that velocity is used (without further alteration) to compute an updated velocity''; ``semi-implicit if any major aspect of the ice geometry is fixed during the (partly-coupled) geometry-velocity solve'' (and the ice-covered map-plane region certainly counts as a major aspect); ``implicit if all aspects of ice geometry and velocity are solved for simultaneously'' (and this is necessarily a free-boundary problem in horizontal and vertical directions; quote ``weakly recognized'' comment from Schoof \& Hewitt
+Regarding (Shapero et al., 2021)\footnote{Shapero, D. R., Badgeley, J. A., Hoffman, A. O., \& Joughin, I. R. (2021). \emph{icepack: A new glacier flow modeling package in Python, version 1.0}. Geoscientific Model Development, 14(7), 4593-4616.}, I am reasonably familiar with the model and the paper, and the authors make no claim that the time stepping has any implicitness, so I have not cited it in the paper.  I am not sure what the reviewer has in mind.
 
 \begin{review}
+\textbf{L57--60}  `Unconditional stability' is a useful shorthand here, and I'm alright with its use, but it also deserves a bit of an asterisk (stated here or elsewhere) that there is a finite radius of convergence that when combined with a practical initialization procedure can still yield some kind of time-step restriction.  This type of thing was seen, for example, with too-rough topography in Bueler (2016).
 \end{review}
 
-\noindent x
+\noindent This interesting comment is in cognitive dissonance with the previous comment!  Together, roughly, the reviewer's last two comments say: ``We accept other literature making an implicit claim about their schemes, even if this is not true, and when there is not even a hope of unconditional stability in such designs, but for a design where unconditional stability has been demonstrated in some cases, we must complain that it has not also been demonstrated in difficult high-resolution, realistic-data cases.''
+
+In any case the mildly-rewritten relevant text in the paper makes clear that the Bueler (2016) implicit-step solver is capable of unconditional stability because infinite time steps are computable for simplified geometry.  Furthermore, (Bueler, 2016) demonstrates long implicit time steps for realistic, high resolution data.
+
+\begin{quote}
+``The only currently implemented, unconditionally-stable, fully-implicit geometric-update solvers use the SIA stress balance.  For simplified (dome) geometry the scheme in Bueler (2016), based on Newton steps solved via direct linear algebra and single-grid ice margin determination, directly computes steady states with scaling $\beta=0.8$.  (An earlier steady, Picard iteration implementation by Jouvet \& Bueler (2012) scales worse.)  Convergence is also robust for implicit time steps of years to centuries on kilometer-scale grids for the Greenland ice sheet, using realistic and irregular bed topographies.''
+\end{quote}
+
+The reviewer's belief that the ``asterisk'' is because of ``a finite radius of convergence that when combined with a practical initialization procedure can still yield some kind of time-step restriction'' is not accurate, nor stated or implied by (Bueler, 2016).  Rather, even at resolutions well under 5km, down to 600m, for the entire Greenlandic ice sheet, the solver converges with regularization of the nonlinear diffusivity.  The problem is neither a ``finite radius of convergence'' nor ``a practical initialization procedure.''  Bueler (2016) actually says (page 238) that ``highly-resolved bed, which causes large and irregular values of [diffusivity and bed-slope pseudo-velocity] limits the success of our combined continuation scheme and Newton iteration.''  Direct computation of steady states, thereby demonstrating unconditional stability, is fine until you resolve the bed topography far beyond the reviewer's ``valid'' 20 km level, and the breakdown is in the Newton iteration.\footnote{Such breakdowns of Newton iterations typically relate to the conditioning of Jacobians, and the issue might even go away with use of 128 bit reals.  In any case it has nothing to do with the reviewer's description.}
+
 \begin{review}
+\dots In addition, there are other considerations that might yield only conditional stability: complicated boundary conditions like calving fluxes (and especially knowing where to impose them) come to mind.
 \end{review}
 
-\noindent x
+\noindent This comment is completely correct, but the paper is fully aware of it and addresses it.  Namely, calving is evidently a matter of ice-climate interaction.  Clearly such ``complicated boundary conditions'' will impose time-stepping constraints, and these are handled by the parameter $q$, which the paper describes as the ``number of ice-dynamical time steps per year needed to capture'' ice-climate interaction.\footnote{Other than blanket statements that ``ice sheet modeling is complicated,'' or similar, I don't know how to address the reality that looms over the paper, namely that the full, operational boundary value problems in ice sheet modeling are messy.}
+
 \begin{review}
+\textbf{L83} It might be useful to state here that velocity depends also on the gradient of the bed elevation.
 \end{review}
 
-\noindent x
+\noindent The velocity depends on everything in the stress balance boundary-value problem.  However, the text is describing instabilities of the mass continuity equation (1), and why an advection view of that equation is insufficient.  The relevant dependence on the surface slope, thus the slope of the (advected) thickness, is therefore emphasized.  Given that the mass continuity equation is usually stated in the glaciers literature with \emph{all} dependencies of the velocity unmentioned, cluttering the paragraph with this particular dependence is a peculiar ask.  The text is left as is.
+
 \begin{review}
+\textbf{L92--94} This sentence is a bit mysterious. Is this trying to describe the instability caused by violating the CFL or a different type of wiggle?
 \end{review}
 
-\noindent x
+\noindent The point about any instability, under the view contained in the standard and very-basic definition of \emph{absolute stability} of ODE systems, therefore of course including the method-of-lines semidiscretizations of all PDEs, and therefore all stability violations for discretized PDEs, is that large time steps cause overshoots.  The author is not invoking some weird concept here; the standard absolute stability view allows consideration of CFL violations, but also all other time-dependent PDE situations.
+
+Thus the text is only modified to add a citation to the standard Leveque (2007) reference on ODE and PDE numerical methods.  I don't know what ``a different type of wiggle'' would mean, and I would not want to pursue this for the reader, nor do I want to limit the consideration only to CFL violations, which would assume the (wrong) advection-only view of (1).
+
 \begin{review}
+\textbf{L101} I'm not sure what ‘primary’ means here. Perhaps something like ‘The parameters that we consider model efficiency with respect to are ...’.
 \end{review}
 
-\noindent x
+\noindent The text says:
+
+\begin{quote}
+``Table 1 lists the parameters used in the numerical model performance analysis which follows.  The primary parameters are $\Delta x$, which is a representative value for the horizontal mesh (grid) cell diameter, and $m$, the number of nodes (vertices) in the horizontal mesh.''
+\end{quote}
+
+Any reasonable reader should clearly see that all of the parameters in Table 1 are relevant to the performance analysis, but that attention should focus first on $\Delta x$ and $m$?
+
 \begin{review}
+\textbf{L111--112} Perhaps clarify that these are diagnostic (and thus not `state variables') because the time-derivative in the more general Navier-Stokes equation has been set to zero due to the very-viscous situation (or the low Reynolds number).
 \end{review}
 
-\noindent x
+\noindent I try to avoid use of ``prognostic''/``diagnostic'' language.  It does not have meaning in the mathematics of the systems under consideration.  It certainly ossifies traditional distinctions between variables, equations, and discretizations as they are used in the climate-modeling world, but (young?) readers who have not been previously programmed by the traditions of that narrow world cannot look up the meaning of these terms in the broader (e.g.~applied mathematics, computational fluid dynamics, or physics) literature.  By contrast, the meaning of ``state variables'' is fundamental to the consideration of all dynamical systems.
+
+However, the reviewer is right to suggest a reminder to the reader about the lack of a time-derivative in the Stokes model.\footnote{That is, as one way to explain why velocities are not state variables.  The reviewer and I would probably both want to avoid a treatise on differential-algebraic equations here.}  The relevant paragraph now says:
+
+\begin{quote}
+``Such models also have $O(m)$ velocity variables, but note that these are not state variables, essentially because the Stokes model lacks time derivatives.  That is, a very-viscous stress balance computes velocity as a function of the true state variables, such as ice thickness and temperature or enthalpy.''
+\end{quote}
+
+\begin{review}
+\textbf{L133--134} I like casting things as optimistic and pessimistic, but I think that a more technically descriptive phrasing might be ``advective stabililty condition'' and ``diffusive stability condition.''
+\end{review}
+
+\noindent Fair enough, but the two conditions are clearly ordered with respect to performance consequences, and it is that ordering that I want to emphasize.  As the ``optimistic'' and ``pessimistic'' usage is clearly attached to the advective/diffusive stability distinction, respectively, when the usage is introduced,\footnote{The introducing text says ``an advective restriction $\Delta t < O(U^{-1} \Delta x)$, for some representative horizontal velocity scale $U$, might be said to represent the \emph{optimistic} paradigm.  The corresponding \emph{pessimistic} paradigm for Stokes models says $\Delta t < O(D^{-1} \Delta x^2)$, using a representative diffusivity value $D$ computed in the SIA manner.''.} I think I will stick to my branding scheme.
+
+\begin{review}
+\textbf{L212} `Not enough better'.  Not enough better for what?
+\end{review}
+
+\noindent Good point.  The text now says ``The scaling of the Bueler (2016) implicit SIA solver is not enough better than such an explicit scheme, however.''
+
+\begin{review}
+\textbf{L225} `The Table' $\to$ `Table 2'.
+\end{review}
+
+\noindent Yup.
+
 \end{document}
