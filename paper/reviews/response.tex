@@ -95,7 +95,16 @@ urlcolor=black    % ...
 \thispagestyle{empty}
 %\bigskip
 
-The thoughtful comments of the two reviewers are much appreciated.  Below I both respond to their concerns---in block italics---and, in the important cases, quote the new or rewritten content of the paper which addresses these concerns.
+The thoughtful comments of the two reviewers are much appreciated.  Below I both respond to their concerns---in block italics---and, in the important cases, quote the new or rewritten content of the paper which addresses these concerns.  The aggregate responses to these comments have made the paper about one page longer, i.e.~when printed in the final two-column format.
+
+\section{Responses to Scientific Editor Ralf Greve}
+
+\begin{review}
+As for the first paragraph of the introduction and the comment by Reviewer 2 on L25, it may also be worth mentioning the findings by Gladstone et al. (2017, TC, doi: 10.5194/tc-11-319-2017). They showed that the resolution requirement can be alleviated substantially by choosing proper representations for basal sliding and melting that ensure continuity across the grounding line.
+\end{review}
+
+\noindent Yes, that makes sense.  This idea and citation is integrated into my response to Reviewer 2 on L25.
+
 
 \section{Responses to Reviewer 1}
 
@@ -170,18 +179,18 @@ In other words, I don't see how to write a title of acceptable length without re
 \textbf{L25} 'it is generally accepted...'  I am not sure that I agree that this is generally accepted.  There remain important works in Antarctica where models are run at 20km resolution or more and I’m not sure that they are ‘invalid’.  It is worth perhaps being more specific about the resolution requirements of specific tasks, e.g. capturing detailed perturbations to the grounding line or calving front, the influence of steep subglacial topography, etc.
 \end{review}
 
-\noindent I stand by the assertion, but this reasonable challenge has caused me to add some words to clarify.  The sentence in question now says:
+\noindent I stand by the assertion, but this reasonable challenge has caused me to add some words to clarify.  The sentence in question is now expanded into two sentences which explain some of the needs for resolution:
 
-\begin{quote}``In order to resolve ice streams as fluid features it is now generally accepted that valid results need horizontal mesh (grid) cells smaller than about 10 km, but narrow outlet glacier flows need yet finer resolution.''\end{quote}
+\begin{quote}``In order to resolve ice streams as fluid features it is now generally accepted that valid results need horizontal mesh (grid) cells smaller than about 10 km, but narrow outlet glacier flows and alpine topography need yet finer resolution.  Resolving the physics of marine ice sheets also benefits from fine resolution, although careful choice of basal parameterizations will reduce resolution dependence (Gladstone and others, 2017).''\end{quote}
 
-\noindent A few points about this new sentence will, I think, be understood by any reader with minimal exposure to ice sheet modeling:
+\noindent A few points about the first of these new sentences will, I think, be understood by any reader with minimal exposure to ice sheet modeling:
 \begin{itemize}
 \item This is a necessarily-imprecise description of practical resolution needs for ``resolving'' physical mechanisms understood to be important by a community of scientists.  This is not a mathematically- or statistically-based assertion.
 \item The added phrase ''ice streams as fluid features'' refers to aspects of model results which are necessarily more than one grid cell wide.  That is, as fluids are locally infinite-dimensional, you need a few cells, more than one or two across for ice streams, to capture a ``fluid feature''.
-\item 10 km resolution is itself not enough for yet narrower features.
-\item The added word ``it is \underline{now} generally accepted'' clearly refers to expectations in the 2020s.  There were indeed ``important'' 20km results before now, but I would disagree with any assertion in a present-day journal submission that, for example, flux across grounding lines in Antarctica is ``validly modeled'' at 20 km resolution; that would now be a consequence of not trying very hard, or choosing a deficient model.
+\item 10 km resolution is itself not enough for yet narrower or smaller features.
+\item The added word ``it is \underline{now} generally accepted'' clearly refers to expectations in the 2020s.  There were indeed ``important'' 20km results before now, but I would disagree with any assertion in a present-day journal submission that, for example, outlet glaciers in Antarctica or Greenland are ``validly modeled'' at 20 km resolution; that would now be a consequence of not trying very hard, or choosing a deficient model.
 \end{itemize}
-With that background, I am happy if readers conclude, for example, that the author thinks that 20km or 40km Antarctic model results are no longer ``valid'' in a scientific sense.  That is what I think, and I was under the impression that this was a generally-accepted judgement.
+With that background, I am happy if readers conclude, for example, that the author thinks that 20km or 40km ice sheet model results are no longer ``valid'' in a scientific sense.  That is what I think, and I was under the impression that this was an acceptable judgement call in the community.
 
 \begin{review}
 \textbf{L34}  While explicit time stepping is indeed the paradigm, the ‘very few exceptions’ ought to be referenced.  While I am sure there are more, here are three papers that use a coupled and implicit geometry-non-SIA-velocity solution scheme: Gudmundsson (2013); Brinkerhoff et al. (2017); Shapero et al. (2021)
