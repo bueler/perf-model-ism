@@ -1,14 +1,14 @@
 all: perfmod.pdf
 
-publish.zip: perfmod.pdf perfmod.bbl
-	rm -rf publish/
-	mkdir publish/
-	cp -f perfmod.bbl perfmod.tex igsnatbib.sty igs.bst lineno.sty igs.cls  publish/
-	zip -r publish publish
+# all submission in single file: perfmod.tex
 
-perfmod.pdf perfmod.bbl: perfmod.tex perfmod.bib
-	pdflatex perfmod
-	bibtex perfmod
+#perfmod.pdf perfmod.bbl: perfmod.tex perfmod.bib
+#	pdflatex perfmod
+#	bibtex perfmod
+#	pdflatex perfmod
+#	pdflatex perfmod
+
+perfmod.pdf: perfmod.tex
 	pdflatex perfmod
 	pdflatex perfmod
 

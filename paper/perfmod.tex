@@ -2,78 +2,26 @@
 \documentclass[review]{igs}
 %\documentclass[review,letterpaper]{igs}
 
-\usepackage{verbatim,xspace,amsmath,amssymb,bm,multirow,dashbox}
-\usepackage{tikz}
-\usetikzlibrary{arrows}
-\usepackage{igsnatbib,lineno}
+\usepackage{amsmath}
+\usepackage{igsnatbib}
+\usepackage{lineno}
 
 \usepackage{hyperref}
 \hypersetup{pdfauthor={Ed Bueler},
             pdfcreator={pdflatex},
             colorlinks=true,
-            citecolor=purple,
+            citecolor=blue,
             linkcolor=red,
             urlcolor=blue,
             }
 
 % math macros
-\newcommand\bb{\mathbf{b}}
-\newcommand\bc{\mathbf{c}}
-\newcommand\bbf{\mathbf{f}}
-\newcommand\bg{\mathbf{g}}
-\newcommand\bn{\mathbf{n}}
-\newcommand\bq{\mathbf{q}}
 \newcommand\bu{\mathbf{u}}
-\newcommand\bv{\mathbf{v}}
 \newcommand\bx{\mathbf{x}}
-\newcommand\by{\mathbf{y}}
-
-\newcommand\bA{\mathbf{A}}
-\newcommand\bF{\mathbf{F}}
-\newcommand\bH{\mathbf{H}}
-\newcommand\bN{\mathbf{N}}
-\newcommand\bQ{\mathbf{Q}}
-\newcommand\bU{\mathbf{U}}
-\newcommand\bV{\mathbf{V}}
-\newcommand\bW{\mathbf{W}}
-\newcommand\bX{\mathbf{X}}
-
-\newcommand\bzero{\bm{0}}
-
-\newcommand{\Div}{\nabla\cdot}
-\newcommand\eps{\epsilon}
-\newcommand{\grad}{\nabla}
-\newcommand{\ip}[2]{\ensuremath{\left<#1,#2\right>}}
-\newcommand\lam{\lambda}
-\newcommand\lap{\triangle}
-\newcommand\RR{\mathbb{R}}
-\newcommand{\half}{\tfrac{1}{2}}
-
 \newcommand{\Divx}{\nabla_\bx \cdot}
 \newcommand{\gradx}{\nabla_\bx}
+\newcommand{\nn}{\text{n}}
 
-\newcommand{\rhoi}{\rho_{\text{i}}}
-\newcommand{\pp}{{\text{p}}}
-\newcommand{\qq}{{\text{q}}}
-\newcommand{\rr}{{\text{r}}}
-
-\newcommand{\mR}{R^{\bm{\oplus}}}
-\newcommand{\iR}{R^{\bullet}}
-
-\newcommand{\sold}{s_{\text{o}}}
-\newcommand{\told}{t_{\text{o}}}
-
-\newcommand{\byold}{\by_{\text{o}}}
-
-\newcommand{\onecol}[1]{\includegraphics[width=86mm]{#1}}
-\newcommand{\onecolless}[1]{\includegraphics[width=80mm]{#1}}
-\newcommand{\onecolthin}[1]{\includegraphics[width=75mm]{#1}}
-
-%\newcommand{\twocol}[1]{\includegraphics[width=178mm]{#1}}
-\newcommand{\twocol}[1]{\includegraphics[width=165mm]{#1}}
-\newcommand{\twocolless}[1]{\includegraphics[width=140mm]{#1}}
-
-\newcommand{\ds}{\displaystyle}
 
 \begin{document}
 
@@ -85,9 +33,6 @@
 
 \affiliation{Dept.~Mathematics and Statistics, University of Alaska Fairbanks, USA \\
 E-mail: \emph{\texttt{elbueler\@@alaska.edu}}}
-
-%\keywords{glacier flow,glacier modelling,ice-sheet modelling}
-% suggested reviewers:  Dan Goldberg, William Lipscomb, Toby Isaac, Josefin Ahlkrona, Alex Jarosch, Doug Brinkerhoff
 
 \maketitle
 
@@ -122,7 +67,6 @@ For an incompressible ice sheet with thickness $H(t,\bx)$, vertically-averaged h
 
 Thus, as can be addressed by linearized analysis \citep{Robinsonetal2022}, when thickness perturbations grow unstably under explicit time-stepping, i.e.~with too large a step, they do so by a mix of  advective and diffusive mechanisms.  Let $s(t,\bx)=H(t,\bx)+b(\bx)$ denote the surface elevation, for bed elevation $b(\bx)$.  A numerical thickness perturbation will often cause the velocity $\bu$ to respond by increasing in a direction close to downhill ($-\gradx s$), a direction correlated to $-\gradx H$ over large areas of an ice sheet.  In membrane-stress-resolving models like Stokes this happens through the non-local solution of the stress balance, in which the gravitational source term effectively acts along the surface gradient $\gradx s$ because of the ice-domain geometry.  One might write that Equation \eqref{eq:masscontinuity} has velocity $\bu(H,\gradx s)$, a non-local function of geometry, but a stress balance solution is required to evaluate this function.  In any case, a numerical instability of Equation \eqref{eq:masscontinuity} occurs when the ice thickness under/over-shoots its correct value because the numerical velocity from evaluating this non-local function is too strong for the given time step \citep{LeVeque2007}.
 
-\newcommand{\nn}{\text{n}}
 A diffusive description of the mass continuity equation is also valid in the small-aspect-ratio limit which generates the SIA \citep{SchoofHewitt2013}:
 \begin{equation}
 \frac{\partial H}{\partial t} = \Divx \left(d\, \gradx s \right) + a. \label{eq:siamasscontinuity}
@@ -251,7 +195,200 @@ The promise of nearly-optimal solvers is truly revealed, however, when implicit,
 \subsection{Acknowledgements}  Comments by Jed Brown, editor Ralf Greve, referee Alex Jarosch, and especially an anonymous referee have helped to focus and improve this work.  However, opinions expressed here, and any remaining errors, are entirely those of the author.
 
 %         References
-\bibliography{perfmod}
-\bibliographystyle{igs}
+%\bibliography{perfmod}
+%\bibliographystyle{igs}
+
+\begin{thebibliography}{34}
+\providecommand{\natexlab}[1]{#1}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[\protect\citename{Aschwanden and others, }2019]{Aschwandenetal2019}
+Aschwanden A, Fahnestock MA, Truffer M, Brinkerhoff DJ, Hock R, Khroulev C,
+  Mottram R and Khan SA (2019) Contribution of the {Greenland Ice Sheet} to sea
+  level over the next millennium. \emph{Science Advances}, \textbf{5}(6) (\doi
+  {10.1126/sciadv.aav9396})
+
+\bibitem[\protect\citename{Briggs and others, }2000]{Briggsetal2000}
+Briggs W, Henson VE and McCormick S (2000) \emph{A {M}ultigrid {T}utorial}.
+  SIAM Press, Philadelphia, 2nd edition
+
+\bibitem[\protect\citename{Brinkerhoff and Johnson,
+  }2015]{BrinkerhoffJohnson2015}
+Brinkerhoff DJ and Johnson JV (2015) Dynamics of thermally induced ice streams
+  simulated with a higher-order flow model. \emph{Journal of Geophysical
+  Research: Earth Surface}, \textbf{120}(9), 1743--1770 (\doi
+  {10.1002/2015JF003499})
+
+\bibitem[\protect\citename{Brown and others, }2013]{BrownSmithAhmadia2013}
+Brown J, Smith B and Ahmadia A (2013) Achieving textbook multigrid efficiency
+  for hydrostatic ice sheet flow. \emph{SIAM Journal on Scientific Computing},
+  \textbf{35}(2), 359--375 (\doi {10.1137/110834512})
+
+\bibitem[\protect\citename{Bueler, }2016]{Bueler2016}
+Bueler E (2016) Stable finite volume element schemes for the shallow ice
+  approximation. \emph{Journal of Glaciology}, \textbf{62}(232), 230--242 (\doi
+  {10.1017/jog.2015.3})
+
+\bibitem[\protect\citename{Bueler, }2021{\natexlab{a}}]{Bueler2021conservation}
+Bueler E (2021{\natexlab{a}}) Conservation laws for free-boundary fluid layers.
+  \emph{SIAM Journal on Applied Mathematics}, \textbf{81}(5), 2007--2032 (\doi
+  {10.1137/20M135217X})
+
+\bibitem[\protect\citename{Bueler, }2021{\natexlab{b}}]{Bueler2021}
+Bueler E (2021{\natexlab{b}}) \emph{{PETSc} for {P}artial {D}ifferential
+  {E}quations: {N}umerical {S}olutions in {C} and {P}ython}. SIAM Press,
+  Philadelphia
+
+\bibitem[\protect\citename{Bueler and others, }2005]{Bueleretal2005}
+Bueler E, Lingle CS, Kallen-Brown JA, Covey DN and Bowman LN (2005) Exact
+  solutions and verification of numerical models for isothermal ice sheets.
+  \emph{Journal of Glaciology}, \textbf{51}(173), 291--306 (\doi
+  {10.3189/172756505781829449})
+
+\bibitem[\protect\citename{Calvo and others, }2003]{Calvoetal2003}
+Calvo N and others (2003) On a doubly nonlinear parabolic obstacle problem
+  modelling ice sheet dynamics. \emph{SIAM Journal on Applied Mathematics},
+  \textbf{63}(2), 683--707 (\doi {10.1137/S0036139901385345})
+
+\bibitem[\protect\citename{Cheng and others, }2017]{Chengetal2017}
+Cheng G, L{\"o}tstedt P and von Sydow L (2017) Accurate and stable time
+  stepping in ice sheet modeling. \emph{Journal of Computational Physics},
+  \textbf{329}, 29--47 (\doi {10.1016/j.jcp.2016.10.060})
+
+\bibitem[\protect\citename{Clarke and others, }2015]{Clarkeetal2015}
+Clarke GKC, Jarosch AH, Anslow FS, Radić V and Menounos B (2015) Projected
+  deglaciation of western {C}anada in the twenty-first century. \emph{Nature
+  Geoscience}, \textbf{8}, 372--377 (\doi {10.1038/ngeo2407})
+
+\bibitem[\protect\citename{Fischler and others, }2022]{Fischleretal2022}
+Fischler Y, R\"uckamp M, Bischof C, Aizinger V, Morlighem M and Humbert A
+  (2022) A scalability study of the {Ice-sheet and Sea-level System Model}
+  ({ISSM}, version 4.18). \emph{Geoscientific Model Development},
+  \textbf{15}(9), 3753--3771 (\doi {10.5194/gmd-15-3753-2022})
+
+\bibitem[\protect\citename{Gladstone and others, }2017]{Gladstoneetal2017}
+Gladstone RM, Warner RC, Galton-Fenzi BK, Gagliardini O, Zwinger T and Greve R
+  (2017) Marine ice sheet model performance depends on basal sliding physics
+  and sub-shelf melting. \emph{The Cryosphere}, \textbf{11}(1), 319--329 (\doi
+  {10.5194/tc-11-319-2017})
+
+\bibitem[\protect\citename{Goelzer and others, }2020]{Goelzeretal2020}
+Goelzer H, Nowicki S and others (2020) The future sea-level contribution of the
+  {G}reenland ice sheet: a multi-model ensemble study of {ISMIP6}. \emph{The
+  Cryosphere}, \textbf{14}(9), 3071--3096 (\doi {10.5194/tc-14-3071-2020})
+
+\bibitem[\protect\citename{Greve and Blatter, }2009]{GreveBlatter2009}
+Greve R and Blatter H (2009) \emph{Dynamics of {I}ce {S}heets and {G}laciers}.
+  Advances in Geophysical and Environmental Mechanics and Mathematics,
+  Springer, Berlin
+
+\bibitem[\protect\citename{Gudmundsson, }2013]{Gudmundsson2013}
+Gudmundsson GH (2013) Ice-shelf buttressing and the stability of marine ice
+  sheets. \emph{The Cryosphere}, \textbf{7}(2), 647--655 (\doi
+  {10.5194/tc-7-647-2013})
+
+\bibitem[\protect\citename{Hindmarsh and Payne, }1996]{HindmarshPayne1996}
+Hindmarsh RCA and Payne AJ (1996) Time-step limits for stable solutions of the
+  ice-sheet equation. \emph{Annals of Glaciology}, \textbf{23}, 74--85 (\doi
+  {10.3189/S0260305500013288})
+
+\bibitem[\protect\citename{Hock, }2005]{Hock2005}
+Hock R (2005) Glacier melt: a review of processes and their modelling.
+  \emph{Progress in Physical Geography}, \textbf{29}(3), 362--391 (\doi
+  {10.1191/0309133305pp453ra})
+
+\bibitem[\protect\citename{Hoffman and others, }2018]{Hoffmanetal2018}
+Hoffman MJ, Perego M, Price SF, Lipscomb WH, Zhang T, Jacobsen D, Tezaur I,
+  Salinger AG, Tuminaro R and Bertagna L (2018) {MPAS-Albany Land Ice (MALI)}:
+  a variable-resolution ice sheet model for {E}arth system modeling using
+  {V}oronoi grids. \emph{Geoscientific Model Development}, \textbf{11}(9),
+  3747--3780 (\doi {10.5194/gmd-11-3747-2018})
+
+\bibitem[\protect\citename{Isaac and others, }2015]{IsaacStadlerGhattas2015}
+Isaac T, Stadler G and Ghattas O (2015) Solution of nonlinear {S}tokes
+  equations discretized by high-order finite elements on nonconforming and
+  anisotropic meshes, with application to ice sheet dynamics. \emph{SIAM
+  Journal on Scientific Computing}, \textbf{37}(6), B804--B833 (\doi
+  {10.1137/140974407})
+
+\bibitem[\protect\citename{Jouvet and Bueler, }2012]{JouvetBueler2012}
+Jouvet G and Bueler E (2012) Steady, shallow ice sheets as obstacle problems:
+  well-posedness and finite element approximation. \emph{SIAM Journal on
+  Applied Mathematics}, \textbf{72}(4), 1292--1314 (\doi {10.1137/110856654})
+
+\bibitem[\protect\citename{Jouvet and Gr{\"a}ser, }2013]{JouvetGraeser2013}
+Jouvet G and Gr{\"a}ser C (2013) An adaptive {N}ewton multigrid method for a
+  model of marine ice sheets. \emph{Journal of Computational Physics},
+  \textbf{252}, 419--437 (\doi {10.1016/j.jcp.2013.06.032})
+
+\bibitem[\protect\citename{Leng and others, }2012]{Lengetal2012}
+Leng W, Ju L, Gunzburger M, Price S and Ringler T (2012) A parallel high-order
+  accurate finite element nonlinear {S}tokes ice sheet model and benchmark
+  experiments. \emph{Journal of Geophysical Research: Earth Surface},
+  \textbf{117}(F1) (\doi {10.1029/2011JF001962})
+
+\bibitem[\protect\citename{LeVeque, }2007]{LeVeque2007}
+LeVeque RJ (2007) \emph{{Finite Difference Methods for Ordinary and Partial
+  Differential Equations: Steady-State and Time-Dependent Problems}}. SIAM
+  Press, Philadelphia
+
+\bibitem[\protect\citename{L{\"o}fgren and others,
+  }2022]{LofgrenAhlkronaHelanow2022}
+L{\"o}fgren A, Ahlkrona J and Helanow C (2022) Increasing stable time-step
+  sizes of the free-surface problem arising in ice-sheet simulations.
+  \emph{Journal of Computational Physics: X}, \textbf{16}(100114) (\doi
+  {10.1016/j.jcpx.2022.100114})
+
+\bibitem[\protect\citename{Robinson and others, }2022]{Robinsonetal2022}
+Robinson A, Goldberg D and Lipscomb WH (2022) A comparison of the stability and
+  performance of depth-integrated ice-dynamics solvers. \emph{The Cryosphere},
+  \textbf{16}(2), 689--709 (\doi {10.5194/tc-16-689-2022})
+
+\bibitem[\protect\citename{Schoof and Hewitt, }2013]{SchoofHewitt2013}
+Schoof C and Hewitt IJ (2013) Ice-sheet dynamics. \emph{Annual Review of Fluid
+  Mechanics}, \textbf{45}, 217--239 (\doi {10.1002/jgrf.20146})
+
+\bibitem[\protect\citename{Seguinot and Delaney, }2021]{SeguinotDelaney2021}
+Seguinot J and Delaney I (2021) Last-glacial-cycle glacier erosion potential in
+  the {A}lps. \emph{Earth Surface Dynamics}, \textbf{9}(4), 923--935 (\doi
+  {10.5194/esurf-9-923-2021})
+
+\bibitem[\protect\citename{Seroussi and others, }2020]{Seroussietal2020}
+Seroussi H, Nowicki S and others (2020) {ISMIP6 Antarctica}: a multi-model
+  ensemble of the {A}ntarctic ice sheet evolution over the 21st century.
+  \emph{The Cryosphere}, \textbf{14}(9), 3033--3070 (\doi
+  {10.5194/tc-14-3033-2020})
+
+\bibitem[\protect\citename{Trottenberg and others, }2001]{Trottenbergetal2001}
+Trottenberg U, Oosterlee CW and Schuller A (2001) \emph{Multigrid}. Elsevier,
+  Oxford
+
+\bibitem[\protect\citename{Tuminaro and others, }2016]{Tuminaroetal2016}
+Tuminaro R, Perego M, Tezaur I, Salinger A and Price S (2016) A matrix
+  dependent/algebraic multigrid approach for extruded meshes with applications
+  to ice sheet modeling. \emph{SIAM Journal on Scientific Computing},
+  \textbf{38}(5), C504--C532 (\doi {10.1137/15M1040839})
+
+\bibitem[\protect\citename{Weber and others, }2021]{Weberetal2021}
+Weber ME, Golledge NR, Fogwill CJ, Turney CSM and Thomas ZA (2021)
+  Decadal-scale onset and termination of {A}ntarctic ice-mass loss during the
+  last deglaciation. \emph{Nature Communications}, \textbf{12}(6683) (\doi
+  {10.1038/s41467-021-27053-6})
+
+\bibitem[\protect\citename{Winkelmann and others, }2011]{Winkelmannetal2011}
+Winkelmann R, Martin MA, Haseloff M, Albrecht T, Bueler E, Khroulev C and
+  Levermann A (2011) {The Potsdam Parallel Ice Sheet Model (PISM-PIK)--Part 1:
+  Model description}. \emph{The Cryosphere}, \textbf{5}(3), 715--726 (\doi
+  {10.5194/tc-5-715-2011})
+
+\bibitem[\protect\citename{Wirbel and Jarosch, }2020]{WirbelJarosch2020}
+Wirbel A and Jarosch AH (2020) Inequality-constrained free-surface evolution in
+  a full {S}tokes ice flow model (\textit{evolve\_glacier v1.1}).
+  \emph{Geoscientific Model Development}, \textbf{13}(12), 6425--6445 (\doi
+  {10.5194/gmd-13-6425-2020})
+
+\end{thebibliography}
 
 \end{document}
