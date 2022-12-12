@@ -132,13 +132,53 @@
 \end{frame}
 
 
-\section{a section}
+\section{introduction}
+
+\begin{frame}{what is an ice sheet model?}
+
+\begin{itemize}
+\item x
+\item y
+\end{itemize}
+\end{frame}
 
 \begin{frame}{\alert{summary}}
 
 \begin{itemize}
 \item x
 \item y
+\end{itemize}
+\end{frame}
+
+
+
+\section{a simplified performance analysis}
+
+\begin{frame}{\alert{summary}}
+
+\begin{itemize}
+\item x
+\item y
+\end{itemize}
+\end{frame}
+
+\newcommand{\oo}[1]{\displaystyle O\left(#1\right)}
+
+\begin{frame}{complexity table}
+
+%\setlength{\tabcolsep}{5pt}
+%\renewcommand{\arraystretch}{1.5}
+
+\begin{tabular}{llll}
+\emph{time-stepping} & \emph{dynamics} & \emph{flops per model year} & \emph{[pessimistic stability]} \\ \hline
+explicit & SIA    & $\oo{\frac{D\, L^2}{\Delta x^4}} = \oo{\frac{D\, m^2}{L^2}}$ \\
+explicit & Stokes & $\oo{\frac{U L^{2+2\alpha}}{\Delta x^{3+2\alpha}}} = \oo{\frac{U m^{1.5+\alpha}}{L}}$ & $\oo{\frac{D\, L^{2+2\alpha}}{\Delta x^{4+2\alpha}}} = \oo{\frac{D\,m^{2+\alpha}}{L^2}}$ \\
+implicit & SIA    & $\oo{\frac{q\, L^{2+2\beta}}{\Delta x^{2+2\beta}}} = \oo{q\, m^{1+\beta}}$ \\
+implicit & Stokes & $\oo{\frac{q\, L^{2+2\gamma}}{\Delta x^{2+2\gamma}}} = \oo{q\, m^{1+\gamma}}$
+\end{tabular}
+
+\begin{itemize}
+\item Asymptotic estimates of algorithmic scaling, measured by floating point operations per model year, for map-plane (2D) time-stepping numerical ice sheet simulations, in the high resolution limit where $\Delta x\to 0$ and $m\to\infty$
 \end{itemize}
 \end{frame}
 
