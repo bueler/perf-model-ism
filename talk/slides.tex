@@ -16,7 +16,7 @@
 %\usepackage[svgnames]{xcolor}
 \usepackage{hyperref}
 \hypersetup{
-    pdftitle = {Online optimization},
+    pdftitle = {Making ice sheet models scale properly},
     pdfauthor = {Ed Bueler},
     pdfsubject = {},
     pdfkeywords = {}
@@ -132,7 +132,33 @@
 \end{frame}
 
 
-\section{introduction}
+\section{what is an ice sheet model}
+
+\begin{frame}{what is an ice sheet?}
+
+\begin{itemize}
+\item before numerical models \dots \emph{what} are we modeling?
+\item \emph{def.} an \alert{ice sheet} is a large glacier with small thickness$/$width ratio
+\item<5> it is \emph{not} sea ice
+\end{itemize}
+
+\bigskip
+\begin{minipage}[t][40cm][t]{\textwidth}
+\begin{center}
+\includegraphics<1>[height=0.64\textheight]{images/ant-pittard2021.png}
+\only<1>{\par {\scriptsize Antarctic ice sheet (Pittard et al 2021)}}
+\only<2>{\vspace{15mm}}
+\includegraphics<2>[width=\textwidth]{images/ant-schoofhewitt2013.png}
+\only<2>{\vspace{10mm}}
+\only<2>{\par {\scriptsize note vertical exageration and rough bed (Schoof \& Hewitt 2013)}}
+\includegraphics<3>[height=0.64\textheight]{images/alps-seguinot2018.png}
+\only<3>{\par {\scriptsize modeled Alpine ice sheet near last glacial maximum (Seguinot et al 2018)}}
+\includegraphics<4>[height=0.64\textheight]{images/british-clark2022.png}
+\only<4>{\par {\scriptsize modeled British-Irish ice sheet near last glacial maximum (Clark et al 2022)}}
+\includegraphics<5>[height=0.70\textheight]{images/not-sea-ice.png}
+\end{center}
+\end{minipage}
+\end{frame}
 
 \begin{frame}{what is an ice sheet model?}
 
