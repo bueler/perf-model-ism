@@ -44,60 +44,51 @@
 % the following command:
 %\beamerdefaultoverlayspecification{<+->}
 
-\newcommand{\ba}{\mathbf{a}}
-\newcommand{\bb}{\mathbf{b}}
-\newcommand{\bc}{\mathbf{c}}
-\newcommand{\bbf}{\mathbf{f}}
-\newcommand{\bg}{\mathbf{g}}
-\newcommand{\bn}{\mathbf{n}}
-\newcommand{\bq}{\mathbf{q}}
-\newcommand{\br}{\mathbf{r}}
-\newcommand{\bx}{\mathbf{x}}
-\newcommand{\by}{\mathbf{y}}
-\newcommand{\bv}{\mathbf{v}}
-\newcommand{\bu}{\mathbf{u}}
-\newcommand{\bw}{\mathbf{w}}
-
-\newcommand{\bF}{\mathbf{F}}
-\newcommand{\bG}{\mathbf{G}}
-\newcommand{\bQ}{\mathbf{Q}}
+\newcommand{\eps}{\epsilon}
+\newcommand{\RR}{\mathbb{R}}
 
 \newcommand{\grad}{\nabla}
 \newcommand{\Div}{\nabla\cdot}
+\newcommand{\trace}{\operatorname{tr}}
 
-\newcommand{\argmin}{\operatorname{argmin}}
+\newcommand{\hbn}{\hat{\mathbf{n}}}
 
-\newcommand{\CC}{\mathbb{C}}
-\newcommand{\EE}{\mathbb{E}}
-\newcommand{\RR}{\mathbb{R}}
+\newcommand{\bb}{\mathbf{b}}
+\newcommand{\be}{\mathbf{e}}
+\newcommand{\bbf}{\mathbf{f}}
+\newcommand{\bg}{\mathbf{g}}
+\newcommand{\bn}{\mathbf{n}}
+\newcommand{\br}{\mathbf{r}}
+\newcommand{\bu}{\mathbf{u}}
+\newcommand{\bv}{\mathbf{v}}
+\newcommand{\bw}{\mathbf{w}}
+\newcommand{\bx}{\mathbf{x}}
 
-\newcommand{\ddt}[1]{\ensuremath{\frac{\partial #1}{\partial t}}}
-\newcommand{\ddx}[1]{\ensuremath{\frac{\partial #1}{\partial x}}}
-\newcommand{\Matlab}{\textsc{Matlab}\xspace}
-\newcommand{\Octave}{\textsc{Octave}\xspace}
-\newcommand{\eps}{\epsilon}
+\newcommand{\bF}{\mathbf{F}}
+\newcommand{\bV}{\mathbf{V}}
+\newcommand{\bX}{\mathbf{X}}
 
-\newcommand{\ip}[2]{\left<#1,#2\right>}
+\newcommand{\bxi}{\bm{\xi}}
 
-\newcommand{\xiphalf}{{x_{i+\frac{1}{2}}}}
-\newcommand{\ximhalf}{{x_{i-\frac{1}{2}}}}
-\newcommand{\Fiphalf}{{F_{i+\frac{1}{2}}}}
-\newcommand{\Fimhalf}{{F_{i-\frac{1}{2}}}}
-\newcommand{\Fiphalfn}{{F^n_{i+\frac{1}{2}}}}
-\newcommand{\Fimhalfn}{{F^n_{i-\frac{1}{2}}}}
+\newcommand{\bzero}{\bm{0}}
 
-\newcommand{\trefcolumn}[1]{\begin{bmatrix} \phantom{x} \\ #1 \\ \phantom{x} \end{bmatrix}}
-\newcommand{\trefmatrixtwo}[2]{\left[\begin{array}{c|c|c} & & \\ #1 & \dots & #2 \\ & & \end{array}\right]}
-\newcommand{\trefmatrixthree}[3]{\left[\begin{array}{c|c|c|c} & & & \\ #1 & #2 & \dots & #3 \\ & & & \end{array}\right]}
-\newcommand{\trefmatrixgroups}[4]{\left[\begin{array}{c|c|c|c|c|c} & & & & & \\ #1 & \dots & #2 & #3 & \dots & #4 \\ & & & & & \end{array}\right]}
+\newcommand{\rhoi}{\rho_{\text{i}}}
 
-\newcommand{\blocktwo}[4]{\left[\begin{array}{c|c} #1 & #2 \\ \hline #3 & #4 \end{array}\right]}
+\newcommand{\ip}[2]{\left(#1,#2\right)}
 
-\newcommand{\bqed}{{\color{blue}\qed}}
-\newcommand{\ds}{\displaystyle}
+\newcommand{\mR}{R^{\bm{\oplus}}}
+\newcommand{\iR}{R^{\bullet}}
 
-\newcommand\mynum[1]{{\renewcommand{\insertenumlabel}{#1}%
-      \usebeamertemplate{enumerate item} \,}}
+\newcommand{\nn}{{\text{n}}}
+\newcommand{\pp}{{\text{p}}}
+\newcommand{\qq}{{\text{q}}}
+\newcommand{\rr}{{\text{r}}}
+
+\newcommand{\bus}{\bu|_s}
+\newcommand{\oo}[1]{\displaystyle O\left(#1\right)}
+\newcommand{\sold}{s_{\text{o}}}
+
+
 
 
 \title[Making ice sheet models scale properly]{Making ice sheet models \\ scale properly}
@@ -124,10 +115,16 @@
 \begin{document}
 \beamertemplatenavigationsymbolsempty
 
-\begin{frame}
-  \maketitle
-\end{frame}
+%\begin{frame}
+%  \maketitle
+%\end{frame}
 
+{
+  \usebackgroundtemplate{\includegraphics[width=\paperwidth]{images/gray-british-clark2022.png}}
+  \begin{frame}
+    \titlepage
+  \end{frame}
+}
 
 \begin{frame}{Outline}
   \tableofcontents[hideallsubsections]
@@ -139,50 +136,50 @@
 \begin{frame}{what is an ice sheet?}
 
 \begin{itemize}
-\item before numerical models \dots \emph{what} are we modeling?
+\item before numerical modeling \dots \emph{what} are we modeling?
 \item \emph{def.} an \alert{ice sheet} is a large glacier with small thickness$/$width ratio
-\item<5> it is \emph{not} sea ice
 \end{itemize}
 
 \bigskip
-\begin{minipage}[t][40cm][t]{\textwidth}
+\begin{minipage}[t][60cm][t]{\textwidth}
 \begin{center}
-\includegraphics<1>[height=0.64\textheight]{images/ant-pittard2021.png}
-\only<1>{\par {\scriptsize Antarctic ice sheet (Pittard et al 2021)}}
-\only<2>{\vspace{15mm}}
+\includegraphics<1>[height=0.69\textheight]{images/ant-pittard2021.png}
+\only<1>{\par {\scriptsize Antarctic ice sheet}} % (Pittard et al 2021)
+\only<2>{\vspace{17mm}}
 \includegraphics<2>[width=\textwidth]{images/ant-schoofhewitt2013.png}
-\only<2>{\vspace{10mm}}
-\only<2>{\par {\scriptsize note vertical exageration and rough bed (Schoof \& Hewitt 2013)}}
-\includegraphics<3>[height=0.64\textheight]{images/alps-seguinot2018.png}
+\only<2>{\vspace{13mm}}
+\only<2>{\par {\scriptsize note vertical exaggeration and rough bed (Schoof \& Hewitt 2013)}}
+\includegraphics<3>[height=0.69\textheight]{images/alps-seguinot2018.png}
 \only<3>{\par {\scriptsize modeled Alpine ice sheet near last glacial maximum (Seguinot et al 2018)}}
-\includegraphics<4>[height=0.64\textheight]{images/british-clark2022.png}
+\includegraphics<4>[height=0.69\textheight]{images/british-clark2022.png}
 \only<4>{\par {\scriptsize modeled British-Irish ice sheet near last glacial maximum (Clark et al 2022)}}
-\includegraphics<5>[height=0.70\textheight]{images/not-sea-ice.png}
+\includegraphics<5>[height=0.69\textheight]{images/not-sea-ice.png}
+\only<5>{\par {\scriptsize but an ice sheet is \emph{not} sea ice!}}
 \end{center}
 \end{minipage}
 \end{frame}
 
 
-\begin{frame}{what is an ice sheet model?}
+\begin{frame}{basic facts}
 
 \begin{columns}
-\begin{column}{0.63\textwidth}
+\begin{column}{0.6\textwidth}
 \begin{itemize}
-\item ice is modeled as a non-Newtonian viscous fluid at large scale
+\item glacier ice is modeled as a \emph{slow, incompressible, viscous, non-Newtonian fluid}
     \begin{itemize}
-    \item[$\circ$] more on that later \dots
+    \item[$\circ$] more on that soon!
     \end{itemize}
-\item ice sheets evolve their geometry and velocity \emph{in contact with climate}
+\item ice sheet geometry and velocity evolve \emph{in contact with the climate}
     \begin{itemize}
     \item[$\circ$] snowfall
     \item[$\circ$] surface melt
     \item[$\circ$] subglacial melt
-    \item[$\circ$] melt and calving of parts which float in ocean (\emph{ice shelves})
+    \item[$\circ$] melt and calving when floating in the ocean (\emph{ice shelves})
     \end{itemize}
 \end{itemize}
 \end{column}
-\begin{column}{0.4\textwidth}
-\includegraphics[width=\textwidth]{images/coverfig.png}
+\begin{column}{0.42\textwidth}
+\hfill \includegraphics[width=0.9\textwidth]{images/coverfig.png}
 \end{column}
 \end{columns}
 \end{frame}
@@ -191,45 +188,101 @@
 \begin{frame}{what is an ice sheet model?}
 
 \begin{columns}
-\begin{column}{0.63\textwidth}
+\begin{column}{0.6\textwidth}
 \begin{itemize}
-\item for purposes of clarity and analysis, let us simplify
-\item inputs into an ice sheet model:
-\item outputs from an ice sheet model:
+\item for simplicity/clarity of the upcoming performance analysis, I will be ignoring quite a bit of detail!
+\item \alert{ignoring}:
+    \begin{itemize}
+    \item[$\circ$] floating ice
+    \item[$\circ$] subglacial hydrology
+    \item[$\circ$] ice temperature
+    \item[$\circ$] fracture processes (calving, crevasses)
+    \end{itemize}
+\item now, a simple definition of \emph{ice sheet model}
 \end{itemize}
 \end{column}
-\begin{column}{0.4\textwidth}
-\includegraphics[width=\textwidth]{images/coverfig.png}
+\begin{column}{0.42\textwidth}
+\hfill \includegraphics[width=0.9\textwidth]{images/coverfig.png}
 \end{column}
 \end{columns}
 \end{frame}
 
 
-\begin{frame}{z}
+\begin{frame}{what is an ice sheet model?}
+
+\begin{columns}
+\begin{column}{0.6\textwidth}
+\begin{itemize}
+\begin{definition}
+an \alert{ice sheet model} is a map
+\end{definition} 
+\item two inputs:
+    \begin{itemize}
+    \item[$\circ$] \emph{surface mass balance}
+$$a(t,x) = \begin{pmatrix}
+\text{balance of solid precipitation} \\
+\text{\, vs melt \& runoff at surfaces}
+\end{pmatrix}$$
+
+\vspace{-3mm}
+        \begin{itemize}
+        \item[{\scriptsize $\bullet$}] units of mass flux:\, $\text{kg}\, \text{m}^{-2} \text{s}^{-1}$
+        \end{itemize}
+
+    \item[$\circ$] \emph{bed elevation} $b(x)$ [m]
+    \end{itemize}
+\item one output:
+    \begin{itemize}
+    \item[$\circ$] \emph{upper surface elevation} $s(t,x)$ [m]
+    \end{itemize}
+\end{itemize}
+\end{column}
+\begin{column}{0.42\textwidth}
+\hfill \includegraphics[width=0.9\textwidth]{images/coverfig.png}
+
+\vspace{2mm}
+\end{column}
+\end{columns}
+\end{frame}
+
+
+\begin{frame}{conservation}
 
 \begin{itemize}
-\item x
-\item y
+\item but this is a mathematics talk in fact
+\item FIXME conservation laws; conserve momentum standard; conserve mass means both conserve mass in interior (incompressible) and at surface (SKE)
 \end{itemize}
 \end{frame}
+
+
+\begin{frame}{strong form of ice sheet model}
+
+\begin{itemize}
+\item FIXME RETURN TIME DERIV
+\item nonlinear complementarity problem coupled to Stokes:
+\begin{align*}
+s - b &\ge 0 && \text{on $\Omega$} \\
+s - \Delta t\, \bu|_s \cdot \bn_s - (\sold + \Delta t\, a )&\ge 0 && \text{''} \\
+(s - b) (s - \Delta t\, \bu|_s \cdot \bn_s - (\sold + \Delta t\, a)) &= 0 && \text{''} \\
+- \nabla \cdot \left(2 \nu_\eps(D\bu)\, D\bu\right) + \nabla p - \rhoi \mathbf{g} &= \bzero && \text{on $\Lambda_s$} \\
+\nabla \cdot \bu &= 0 && \text{''} \\
+\bu &= \bzero && \text{on $\Gamma_0$} \\
+\left(2 \nu_\eps(D\bu) D\bu - pI\right) \bn &= \bzero && \text{on $\partial \Lambda_s \setminus \Gamma_0$}
+\end{align*}
+
+    \begin{itemize}
+    \item with regularized Glen-law effective viscosity ($\text{p}=\frac{1}{\nn}+1$):
+      $$\nu_\eps(D\bu) = \frac{\Gamma}{2} \left(|D\bu|^2 + \eps\, D_0^2\right)^{(\pp-2)/2}$$
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+
+\section{time-stepping and stability}
 
 
 
 \section{a simplified performance analysis}
-
-\section{more on numerical stability}
-
-\section{}
-
-\begin{frame}{\alert{summary}}
-
-\begin{itemize}
-\item x
-\item y
-\end{itemize}
-\end{frame}
-
-\newcommand{\oo}[1]{\displaystyle O\left(#1\right)}
 
 \begin{frame}{complexity table}
 
@@ -250,26 +303,27 @@ implicit & Stokes & $\oo{\frac{q\, L^{2+2\gamma}}{\Delta x^{2+2\gamma}}} = \oo{q
 \end{frame}
 
 
+\section{Stokes solver scaling}
+
+\section{scalable implicit steps?}
+
+\begin{frame}{\alert{summary}}
+
+\begin{itemize}
+\item x
+\item y
+\end{itemize}
+\end{frame}
+
+
 \begin{frame}{references}
 
 \begin{itemize}
 \footnotesize
-\item E.~Hazan, A.~Agarwal, \& S.~Kale (2007).  \href{https://link.springer.com/content/pdf/10.1007/s10994-007-5016-8.pdf}{\emph{Logarithmic regret algorithms for online convex optimization.}} Machine Learning, 69(2), 169-192
-    \begin{itemize}
-    \scriptsize
-    \item[$-$] $O(\log j)$ regret bounds for positive definite Hessians, and for Newton algorithms
-    \end{itemize}
-\item D.~P.~Kingma \& J.~Ba (2014). \href{https://arxiv.org/abs/1412.6980}{\emph{Adam: A method for stochastic optimization}}, preprint arXiv:1412.6980.
-    \begin{itemize}
-    \scriptsize
-    \item[$-$] claims $O(\sqrt{j})$ regret bound
-    \end{itemize}
-\item M.~Zinkevich (2003). \href{https://www.aaai.org/Papers/ICML/2003/ICML03-120.pdf}{\emph{Online convex programming and generalized infinitesimal gradient ascent}}, Proceedings of the 20th International Conference on Machine Learning, 928-936
-    \begin{itemize}
-    \scriptsize
-    \item[$-$] introduced regret
-    \item[$-$] $O(\sqrt{j})$ regret bound of OGD
-    \end{itemize}
+\item E.~Bueler (2016). \emph{Stable finite volume element schemes for the shallow-ice approximation}, J.~Glaciol.~62 (232), 230--242, \href{https://doi.org/10.1017/jog.2015.3}{10.1017/jog.2015.3}
+\item E.~Bueler (2021). \emph{Conservation laws for free-boundary fluid layers}, SIAM J.~Appl.~Math.~81 (5), 2007--2032, \href{https://doi.org/10.1137/20M135217X}{10.1137/20M135217X}
+\item E.~Bueler (2022). \emph{Performance analysis of high-resolution ice-sheet simulations}, J.~Glaciol., \href{https://doi.org/10.1017/jog.2022.113}{10.1017/jog.2022.113}
+\item x
 \end{itemize}
 \end{frame}
 
