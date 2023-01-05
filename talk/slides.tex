@@ -29,9 +29,7 @@
 % Or whatever. Note that the encoding and the font should match. If T1
 % does not look nice, try deleting the line with the fontenc.
 
-\usepackage{empheq,bm}
-\usepackage{xspace}
-\usepackage{fancyvrb}
+\usepackage{empheq,bm,xspace,fancyvrb,soul}
 
 \usepackage{tikz}
 \usetikzlibrary{shapes,arrows.meta,decorations.markings,decorations.pathreplacing,fadings,positioning}
@@ -198,6 +196,7 @@
     \item[$\circ$] subglacial hydrology
     \item[$\circ$] ice temperature
     \item[$\circ$] fracture processes (calving, crevasses)
+    \item[$\circ$] solid earth deformation
     \end{itemize}
 \item now, a simple definition of ``ice sheet model'' \dots
 \end{itemize}
@@ -220,9 +219,9 @@ an \alert{ice sheet model} is a \underline{map} which simulates an ice sheet in 
 \item two inputs:
     \begin{itemize}
     \item[$\circ$] \emph{surface mass balance}
-$$a(t,x) = \begin{pmatrix}
-\text{balance of solid precipitation} \\
-\text{\, vs melt \& runoff at surfaces}
+$$\hspace{-7mm} a(t,x,y) = \begin{pmatrix}
+\text{balance of precipitation vs} \\
+\text{melt \& runoff from surfaces}
 \end{pmatrix}$$
 
 \vspace{-3mm}
@@ -230,12 +229,12 @@ $$a(t,x) = \begin{pmatrix}
         \item[{\scriptsize $\bullet$}] units of mass flux:\, $\text{kg}\, \text{m}^{-2} \text{s}^{-1}$
         \end{itemize}
 
-    \item[$\circ$] \emph{bed elevation} $b(x)$
+    \item[$\circ$] \emph{bed elevation} $b(x,y)$
     \end{itemize}
 \item two outputs:
     \begin{itemize}
-    \item[$\circ$] \emph{upper surface elevation} $s(t,x)$
-    \item[$\circ$] \emph{ice velocity} $\bu(t,x)$
+    \item[$\circ$] \emph{upper surface elevation} $s(t,x,y)$
+    \item[$\circ$] \emph{ice velocity} $\bu(t,x,y,z)$
     \end{itemize}
 \item {\small $\begin{pmatrix} \text{climate} \\ \text{topography} \end{pmatrix} \to \begin{pmatrix} \text{geometry} \\ \text{velocity} \end{pmatrix}$}
 \end{itemize}
@@ -249,11 +248,45 @@ $$a(t,x) = \begin{pmatrix}
 \end{frame}
 
 
+\begin{frame}{notation}
+
+\begin{itemize}
+%\item but this is a mathematics talk \dots notation! equations!
+\item the data $a(t,x,y)$, $b(x,y)$ is defined on fixed time and space domains:
+	$$t \in [0,T] \quad \text{and} \quad (x,y) \in \Omega \subset \RR^2$$
+
+\begin{center}
+\includegraphics<1>[width=0.55\textheight]{images/domain-data.png}
+\includegraphics<2>[width=0.6\textheight]{images/domain-velocity.png}
+\end{center}
+
+\medskip
+\item<2> the solution surface elevation $s(t,x,y)$ is defined on $[0,T]\times \Omega$
+    \begin{itemize}
+    \item[$\circ$] $s=b$ where there is no ice
+    \end{itemize}
+
+\item<2> one must \emph{solve} for the time-dependent \alert{icy domain} $\Lambda(t) \subset \Omega$ on which the velocity $\bu(t,x,y,z)$ is defined:
+    $$\Lambda(t) = \left\{(x,y,z)\,:\,b(x,y) < z < s(t,x,y)\right\}$$
+
+\vspace{-2mm}
+    \begin{itemize}
+    \item[$\circ$] $\Gamma_s(t),\Gamma_b(t) \subset \partial \Lambda(t)$ denote the surface and base of the ice
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+
 \begin{frame}{conservation}
 
 \begin{itemize}
-\item as this is a mathematics talk, more or less, some notation \dots
-\item FIXME conservation laws; conserve momentum standard; conserve mass means both conserve mass in interior (incompressible) and at surface (SKE)
+\item ice sheet evolution is a \alert{free-boundary conservation} problem
+    \begin{itemize}
+    \item[$\circ$] mass conservation
+    \item[$\circ$] momentum conservation
+    \item[$\circ$] energy conservation (\emph{ignored here})
+    \end{itemize}
+\item key idea: conservation of mass means both conserve mass in interior (incompressible) and at surface (SKE)
 \end{itemize}
 \end{frame}
 
