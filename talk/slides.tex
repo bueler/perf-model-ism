@@ -136,7 +136,7 @@
 
 \begin{itemize}
 \item before numerical modeling \dots \emph{what} are we modeling?
-\item \emph{def.} an \alert{ice sheet} is a large glacier with small thickness$/$width ratio
+\item \emph{def.} an \alert{ice sheet} is a large glacier with small thickness$/$width
 \end{itemize}
 
 \bigskip
@@ -153,27 +153,29 @@
 \includegraphics<4>[height=0.69\textheight]{images/british-clark2022.png}
 \only<4>{\par {\scriptsize modeled British-Irish ice sheet near last glacial maximum (Clark et al 2022)}}
 \includegraphics<5>[height=0.69\textheight]{images/not-sea-ice.png}
-\only<5>{\par {\scriptsize but an ice sheet is \emph{not} sea ice!}}
+\only<5>{\par {\scriptsize \emph{not} sea ice!}}
 \end{center}
 \end{minipage}
 \end{frame}
 
 
-\begin{frame}{basic facts}
+\begin{frame}{basic facts about glaciers}
 
 \begin{columns}
 \begin{column}{0.6\textwidth}
 \begin{itemize}
-\item glacier ice is modeled as a \emph{slow, incompressible, viscous, non-Newtonian fluid}
-    \begin{itemize}
-    \item[$\circ$] more on that soon!
-    \end{itemize}
-\item ice sheet geometry and velocity evolve \emph{in contact with the climate}
+\item the geometry and velocity evolve \emph{in contact with its climate},
     \begin{itemize}
     \item[$\circ$] snowfall
     \item[$\circ$] surface melt
     \item[$\circ$] subglacial melt
-    \item[$\circ$] melt and calving when floating in the ocean (\emph{ice shelves})
+    \item[$\circ$] melt when floating (\emph{ice shelf})
+    \item[$\circ$] calving into the ocean
+    \end{itemize}
+\item and the \emph{topography} on which it sits
+\item glacier ice is modeled as a \emph{slow, incompressible, viscous, non-Newtonian fluid}
+    \begin{itemize}
+    \item[$\circ$] more on that soon
     \end{itemize}
 \end{itemize}
 \end{column}
@@ -184,12 +186,12 @@
 \end{frame}
 
 
-\begin{frame}{what is an ice sheet model?}
+\begin{frame}{simplifications}
 
 \begin{columns}
 \begin{column}{0.6\textwidth}
 \begin{itemize}
-\item for simplicity/clarity of the upcoming performance analysis, I will be ignoring quite a bit of physics!
+\item for simplicity/clarity of the upcoming model performance analysis, I will ignore quite a bit of physics
 \item \alert{ignoring}:
     \begin{itemize}
     \item[$\circ$] floating ice
@@ -198,7 +200,10 @@
     \item[$\circ$] fracture processes (calving, crevasses)
     \item[$\circ$] solid earth deformation
     \end{itemize}
-\item now, a simple definition of ``ice sheet model'' \dots
+
+\medskip
+\item<2> {\footnotesize see UAF's \href{https://pism.io/}{Parallel Ice Sheet Model (\texttt{pism.io})} for a model which does \emph{not} make these simplifications}
+\item<2> {\footnotesize next, a simple definition of ``ice sheet model''}
 \end{itemize}
 \end{column}
 \begin{column}{0.42\textwidth}
@@ -236,7 +241,9 @@ $$\hspace{-7mm} a(t,x,y) = \begin{pmatrix}
     \item[$\circ$] \emph{upper surface elevation} $s(t,x,y)$
     \item[$\circ$] \emph{ice velocity} $\bu(t,x,y,z)$
     \end{itemize}
-\item {\small $\begin{pmatrix} \text{climate} \\ \text{topography} \end{pmatrix} \to \begin{pmatrix} \text{geometry} \\ \text{velocity} \end{pmatrix}$}
+
+\bigskip
+\item<2-> {\small map: \quad $\begin{pmatrix} \text{climate \&} \\ \text{topography} \end{pmatrix} \to \begin{pmatrix} \text{geometry} \\ \text{\& velocity} \end{pmatrix}$}
 \end{itemize}
 \end{column}
 \begin{column}{0.42\textwidth}
@@ -248,11 +255,10 @@ $$\hspace{-7mm} a(t,x,y) = \begin{pmatrix}
 \end{frame}
 
 
-\begin{frame}{notation}
+\begin{frame}{notation for the simplified model}
 
 \begin{itemize}
-%\item but this is a mathematics talk \dots notation! equations!
-\item the data $a(t,x,y)$, $b(x,y)$ is defined on fixed time and space domains:
+\item the \alert{data} $a(t,x,y)$, $b(x,y)$ \alert{is defined on a fixed domain}:
 	$$t \in [0,T] \quad \text{and} \quad (x,y) \in \Omega \subset \RR^2$$
 
 \begin{center}
@@ -270,43 +276,68 @@ $$\hspace{-7mm} a(t,x,y) = \begin{pmatrix}
     $$\Lambda(t) = \left\{(x,y,z)\,:\,b(x,y) < z < s(t,x,y)\right\}$$
 
 \vspace{-2mm}
-    \begin{itemize}
-    \item[$\circ$] $\Gamma_s(t),\Gamma_b(t) \subset \partial \Lambda(t)$ denote the surface and base of the ice
-    \end{itemize}
 \end{itemize}
 \end{frame}
 
 
-\begin{frame}{conservation}
+\begin{frame}{mass and momentum conservation}
 
 \begin{itemize}
-\item ice sheet evolution is a \alert{free-boundary conservation} problem
+\item ice sheet evolution should conserve physical quantities:
     \begin{itemize}
-    \item[$\circ$] mass conservation
-    \item[$\circ$] momentum conservation
-    \item[$\circ$] energy conservation (\emph{ignored here})
+    \item[$\circ$] mass
+    \item[$\circ$] momentum
+    \item[$\circ$] \st{energy} \hfill $\leftarrow$ \emph{ignored in this talk}
     \end{itemize}
-\item key idea: conservation of mass means both conserve mass in interior (incompressible) and at surface (SKE)
+\item a \emph{key idea} is that conservation of mass is important both
+    \begin{itemize}
+    \item[$\circ$] \emph{in} the icy domain $\Lambda(t) \subset \RR^3$:
+\begin{align*}
+\text{\alert{incompressibility}}&& \Div \bu &= 0 \qquad \text{in } \Lambda(t), \\
+    \intertext{\item[$\circ$] and \emph{on} the ice surfaces:}
+\text{\alert{surface kinematic equation}}&& \frac{\partial s}{\partial t} - \bu|_s \cdot \bn_s &= a \qquad \text{on } \Gamma_s(t), \\
+\text{\alert{non-penetration}}&&     \bu|_b \cdot \bn_b &= 0 \qquad \text{on } \Gamma_b(t).
+\end{align*}
+    \end{itemize}
+\item where $\Gamma_s(t)$ and $\Gamma_b(t)$, subsets of $\partial \Lambda(t)$, denote the surface and base of the ice
 \end{itemize}
 \end{frame}
 
 
-\begin{frame}{strong form of ice sheet model}
+\begin{frame}{free boundary problem}
 
 \begin{itemize}
-\item nonlinear complementarity problem coupled to Stokes:
+\item but ice sheet evolution is a \alert{free-boundary} problem for conserved quantities in a (thin) fluid layer
+\item specifically, the surface kinematic equation
+  $$\frac{\partial s}{\partial t} - \bu|_s \cdot \bn_s = a$$
+applies \emph{only} on the ice upper surface $\Gamma_s(t)$
+\item in the remainder of the fixed map-plane domain $\Omega\subset \RR^2$, glacier \alert{complementarity} holds:
+  $$s=b \quad \text{and} \quad a \le 0$$
+
+\bigskip
+\item<2> {\footnotesize for more on this free-boundary perspective, see Jouvet \& Bueler (2012) and Bueler (2021)}
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{simplified ice sheet model (strong form)}
+
+\begin{itemize}
+\item nonlinear complementarity problem \onslide<2->{coupled to Stokes}:
 \begin{align*}
 s - b &\ge 0 && \text{on $\Omega \subset \RR^2$} \\
 \frac{\partial s}{\partial t} - \bu|_s \cdot \bn_s - a &\ge 0 && \text{''} \\
 (s - b) \left(\frac{\partial s}{\partial t} - \bu|_s \cdot \bn_s - a\right) &= 0 && \text{''} \\
-- \nabla \cdot \left(2 \nu_\eps(D\bu)\, D\bu\right) + \nabla p - \rhoi \mathbf{g} &= \bzero && \text{on $\Lambda(t) \subset \RR^3$} \\
+\onslide<2->{- \nabla \cdot \left(2 \nu_\eps(D\bu)\, D\bu\right) + \nabla p - \rhoi \mathbf{g} &= \bzero && \text{in $\Lambda(t) \subset \RR^3$} \\
 \nabla \cdot \bu &= 0 && \text{''} \\
-\bu\cdot \bn = 0 \quad \& \quad \btau_b - \bbf(\bu) &= \bzero && \text{on $\Gamma_b(t) \subset \partial \Lambda(t)$} \\
-\left(2 \nu_\eps(D\bu) D\bu - pI\right) \bn &= \bzero && \text{on $\Gamma_s(t) \subset \partial \Lambda(t)$}
+\btau_b - \bbf(\bu|_b) &= \bzero && \text{on $\Gamma_b(t) \subset \partial \Lambda(t)$} \\
+\bu|_b \cdot \bn_b &= 0 && \text{''} \\
+\left(2 \nu_\eps(D\bu) D\bu - pI\right) \bn &= \bzero && \text{on $\Gamma_s(t) \subset \partial \Lambda(t)$}}
 \end{align*}
 
     \begin{itemize}
-    \item viscosity by Glen law: \, $2\nu_\eps(D\bu) = \Gamma \left(|D\bu|^2 + \eps\, D_0^2\right)^{(\pp-2)/2}$
+    \item $\bu|_s=0$ where no ice
+    \item<2-> viscosity by Glen law: \, $2\nu_\eps(D\bu) = \Gamma \left(|D\bu|^2 + \eps\, D_0^2\right)^{(\pp-2)/2}$
     \end{itemize}
 \end{itemize}
 \end{frame}
@@ -314,6 +345,10 @@ s - b &\ge 0 && \text{on $\Omega \subset \RR^2$} \\
 
 \section{time-stepping and stability}
 
+\begin{frame}{ice thickness and ``mass continuity equation'' view}
+
+FIXME
+\end{frame}
 
 
 \section{a simplified performance analysis}
@@ -337,7 +372,7 @@ implicit & Stokes & $\oo{\frac{q\, L^{2+2\gamma}}{\Delta x^{2+2\gamma}}} = \oo{q
 \end{frame}
 
 
-\section{Stokes solver scaling}
+\section{on Stokes solver scaling}
 
 \section{scalable implicit steps by multigrid?}
 
@@ -348,32 +383,31 @@ implicit & Stokes & $\oo{\frac{q\, L^{2+2\gamma}}{\Delta x^{2+2\gamma}}} = \oo{q
    \begin{itemize}
    \item[$\circ$] there are \alert{no easy or magic techniques} for performance
    \end{itemize}
-\item current-technology ice sheet models mostly use \alert{explicit time stepping}, \alert{non-optimal stress-balance solvers}, and shallow assumptions
-\item \alert{coming soon} from current research:
+\item<2-> current-technology ice sheet models mostly use \alert{explicit} time stepping, \alert{non-optimal} stress-balance solvers, and \alert{shallow} assumptions
+\item<3-> \alert{coming soon} from current research:
    \begin{itemize}
    \item[$\circ$] scalable Stokes solvers (Isaac et al.~2015)
    \item[$\circ$] semi-implicit, semi-coupled time stepping (L{\"o}fgren et al.~2022)
    \item[$\circ$] ML emulators (Jouvet et al.~2021)
    \end{itemize}
-\item scalable solvers for the implicit-step, coupled problem for ice sheet geometry requires advances in \alert{multilevel solutions of non-local variational inequalities}
+\item<4-> scalable solvers for the implicit-step, coupled problem for ice sheet geometry requires advances in \alert{multilevel solutions of non-local variational inequalities}
 \end{itemize}
 \end{frame}
 
 
 \begin{frame}{references}
 
+{\scriptsize
 \begin{itemize}
-\footnotesize
 \item E.~Bueler (2016). \emph{Stable finite volume element schemes for the shallow-ice approximation}, J.~Glaciol.~62 (232), 230--242, \href{https://doi.org/10.1017/jog.2015.3}{10.1017/jog.2015.3}
 \item E.~Bueler (2021). \emph{Conservation laws for free-boundary fluid layers}, SIAM J.~Appl.~Math.~81 (5), 2007--2032, \href{https://doi.org/10.1137/20M135217X}{10.1137/20M135217X}
 \item E.~Bueler (2022). \emph{Performance analysis of high-resolution ice-sheet simulations}, J.~Glaciol., \href{https://doi.org/10.1017/jog.2022.113}{10.1017/jog.2022.113}
 \item T.~Isaac, G.~Stadler, \& O.~Ghattas (2015). \emph{Solution of nonlinear Stokes equations discretized by high-order finite elements on nonconforming and anisotropic meshes, with application to ice sheet dynamics}, SIAM J.~Sci.~Comput.~37 (6), B804--B833, \href{https://doi.org/10.1137/140974407}{10.1137/140974407}
+\item G.~Jouvet \& E. Bueler (2012). \emph{Steady, shallow ice sheets as obstacle problems: well-posedness and finite element approximation}, SIAM J.~Appl.~Math. 72 (4), 1292--1314, \href{https://doi.org/10.1137/110856654}{10.1137/110856654}
 \item G.~Jouvet, G.~Cordonnier, B.~Kim, M.~L\"uthi, A.~Vieli, A.~Aschwanden (2021). \emph{Deep learning speeds up ice flow modelling by several orders of magnitude}, J.~Glaciol.~\href{https://doi.org/10.1017/jog.2021.120}{10.1017/jog.2021.120}
 \item A.~L{\"o}fgren, J. Ahlkrona, \& C. Helanow (2022). \emph{Increasing stable time-step sizes of the free-surface problem arising in ice-sheet simulations}, J.~Comput.~Phys.~X 16, \href{https://doi.org/10.1016/j.jcpx.2022.100114}{10.1016/j.jcpx.2022.100114}
 \end{itemize}
+}
 \end{frame}
-
-
-
 
 \end{document}
