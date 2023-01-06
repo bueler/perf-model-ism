@@ -204,7 +204,7 @@
 
 \medskip
 \item<2> {\footnotesize see UAF's \href{https://pism.io/}{Parallel Ice Sheet Model (\texttt{pism.io})} for a model which does \emph{not} make these simplifications}
-\item<2> {\footnotesize next, a simple definition of ``ice sheet model''}
+\item<2> {\footnotesize next, a basic definition of ``ice sheet model''}
 \end{itemize}
 \end{column}
 \begin{column}{0.42\textwidth}
@@ -256,7 +256,7 @@ $$\hspace{-7mm} a(t,x,y) = \begin{pmatrix}
 \end{frame}
 
 
-\begin{frame}{notation for the simplified model}
+\begin{frame}{notation for the basic model}
 
 \begin{itemize}
 \item the \alert{data} $a(t,x,y)$, $b(x,y)$ \alert{is defined on a fixed domain}:
@@ -341,6 +341,41 @@ s - b &\ge 0 && \text{on $\Omega \subset \RR^2$} \\
     \item<2-> viscosity by Glen law: \, $2\nu_\eps(D\bu) = \Gamma \left(|D\bu|^2 + \eps\, D_0^2\right)^{(\pp-2)/2}$
     \end{itemize}
 \end{itemize}
+\end{frame}
+
+
+\begin{frame}{shallow ice sheet models}
+
+\begin{itemize}
+\item the model on the last slide is \emph{not yet} in common use for ice sheet simulations, because for now it is expensive to compute
+    \begin{itemize}
+    \item goal: make it fast enough to use!
+    \end{itemize}
+\item current-technology models use various shallow simplifications
+\item simplest is a lubrication approximation, the \alert{shallow ice approximation}, in which $- \bu|_s \cdot \bn_s$ resolves to a nonlinear differential operator  
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{shallow ice approximation: details}
+
+{\small
+\begin{align*}
+s - b &\ge 0 \\
+\frac{\partial s}{\partial t} + \Phi(s) - a &\ge 0 \\
+(s - b) \left(\frac{\partial s}{\partial t} + \Phi(s) - a\right) &= 0
+\end{align*}
+where
+\begin{align*}
+\Phi(s) &= - \frac{\gamma}{\pp} (s-b)^{\pp} |\grad s|^{\pp} \\
+        &\qquad\qquad - \grad \cdot\left(\frac{\gamma}{\pp+1} (s-b)^{\pp+1} |\grad s|^{\pp-2} \grad s\right)
+\end{align*}
+here $\nabla$ only acts in horizontal variables, and constants $\pp = \nn+1$ and $\gamma > 0$ are related to ice deformation
+
+\begin{itemize}
+\item $\Phi$ is a \alert{doubly-nonlinear differential operator}, simultaneously of porous medium and $\pp$-Laplacian type
+\end{itemize}
+}
 \end{frame}
 
 
