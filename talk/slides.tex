@@ -63,6 +63,7 @@
 \newcommand{\bx}{\mathbf{x}}
 
 \newcommand{\bF}{\mathbf{F}}
+\newcommand{\bU}{\mathbf{U}}
 \newcommand{\bV}{\mathbf{V}}
 \newcommand{\bX}{\mathbf{X}}
 
@@ -315,7 +316,7 @@ applies \emph{only} on the ice upper surface $\Gamma_s(t)$
   $$s=b \quad \text{and} \quad a \le 0$$
 
 \bigskip
-\item<2> {\footnotesize for more on this free-boundary perspective, see Jouvet \& Bueler (2012) and Bueler (2021)}
+\item<2> {\footnotesize for more on this free-boundary perspective see Bueler (2021)}
 \end{itemize}
 \end{frame}
 
@@ -347,34 +348,69 @@ s - b &\ge 0 && \text{on $\Omega \subset \RR^2$} \\
 
 \begin{frame}{ice thickness and ``mass continuity equation'' view}
 
-FIXME
-\end{frame}
-
-
-\section{a simplified performance analysis}
-
-\begin{frame}{complexity table}
-
-%\setlength{\tabcolsep}{5pt}
-%\renewcommand{\arraystretch}{1.5}
-
-\begin{tabular}{llll}
-\emph{time-stepping} & \emph{dynamics} & \emph{flops per model year} & \emph{[pessimistic stability]} \\ \hline
-explicit & SIA    & $\oo{\frac{D\, L^2}{\Delta x^4}} = \oo{\frac{D\, m^2}{L^2}}$ \\
-explicit & Stokes & $\oo{\frac{U L^{2+2\alpha}}{\Delta x^{3+2\alpha}}} = \oo{\frac{U m^{1.5+\alpha}}{L}}$ & $\oo{\frac{D\, L^{2+2\alpha}}{\Delta x^{4+2\alpha}}} = \oo{\frac{D\,m^{2+\alpha}}{L^2}}$ \\
-implicit & SIA    & $\oo{\frac{q\, L^{2+2\beta}}{\Delta x^{2+2\beta}}} = \oo{q\, m^{1+\beta}}$ \\
-implicit & Stokes & $\oo{\frac{q\, L^{2+2\gamma}}{\Delta x^{2+2\gamma}}} = \oo{q\, m^{1+\gamma}}$
-\end{tabular}
-
 \begin{itemize}
-\item Asymptotic estimates of algorithmic scaling, measured by floating point operations per model year, for map-plane (2D) time-stepping numerical ice sheet simulations, in the high resolution limit where $\Delta x\to 0$ and $m\to\infty$
+\item a helpful viewpoint on this complicated system is the equation
+
+FIXME
+
+where $\bU$ is vertically-averaged horizontal velocity within icy domain $\Lambda(t)$
+\item \emph{question:} is it really an advection?
+
+FIXME
+
+\item[] \emph{answer:} no, because ice flows (mostly) downhill
+
+\item alternative equation, the \emph{shallow diffusion} model of ice sheets:
+
+FIXME
+\bigskip
+\item<2> {\footnotesize for more on the shallow diffusion perspective see Jouvet \& Bueler (2012)}
 \end{itemize}
 \end{frame}
 
 
 \section{on Stokes solver scaling}
 
+\begin{frame}{regarding PDE solver complexity}
+
+FIXME
+\end{frame}
+
+
+\section{a simplified performance analysis}
+
+\begin{frame}{complexity of ice sheet models}
+
+\begin{tabular}{llll}
+\emph{time-stepping} & \emph{dynamics} & \emph{flops per model year} \\ \hline
+\onslide<1->{
+\,explicit & SIA    & $\oo{\frac{D\, L^2}{\Delta x^4}} = \oo{\frac{D\, m^2}{L^2}}$ \\
+}
+\onslide<1->{
+explicit & Stokes (\emph{optimistic}) & $\oo{\frac{U L^{2+2\alpha}}{\Delta x^{3+2\alpha}}} = \oo{\frac{U m^{1.5+\alpha}}{L}}$ \\
+}
+\onslide<2->{
+explicit & Stokes (\emph{pessimistic})  & $\oo{\frac{D\, L^{2+2\alpha}}{\Delta x^{4+2\alpha}}} = \oo{\frac{D\,m^{2+\alpha}}{L^2}}$ \\
+}
+\onslide<3->{
+implicit & SIA    & $\oo{\frac{q\, L^{2+2\beta}}{\Delta x^{2+2\beta}}} = \oo{q\, m^{1+\beta}}$ \\
+}
+\onslide<3->{
+implicit & Stokes & $\oo{\frac{q\, L^{2+2\gamma}}{\Delta x^{2+2\gamma}}} = \oo{q\, m^{1+\gamma}}$
+}
+\end{tabular}
+
+FIXME asymptotic estimates of algorithmic scaling, measured by floating point operations per model year, for map-plane (2D) time-stepping numerical ice sheet simulations, in the high resolution limit where $\Delta x\to 0$ and $m\to\infty$
+\end{frame}
+
+
 \section{scalable implicit steps by multigrid?}
+
+\begin{frame}{obstacle problem solver scaling}
+
+FIXME
+\end{frame}
+
 
 \begin{frame}{\alert{summary}}
 
