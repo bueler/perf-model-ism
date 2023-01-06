@@ -321,7 +321,7 @@ applies \emph{only} on the ice upper surface $\Gamma_s(t)$
 \end{frame}
 
 
-\begin{frame}{simplified ice sheet model (strong form)}
+\begin{frame}{basic ice sheet model (strong form)}
 
 \begin{itemize}
 \item nonlinear complementarity problem \onslide<2->{coupled to Stokes}:
@@ -344,15 +344,35 @@ s - b &\ge 0 && \text{on $\Omega \subset \RR^2$} \\
 \end{frame}
 
 
+\begin{frame}{the mass-continuity equation view}
+
+\begin{itemize}
+\item a thickness-transport form exposes the basic ice sheet model
+\item define:
+\begin{align*}
+H(t,x,y) &=s-b && \text{ice thickness} \\
+\bU(t,x,y) &= \frac{1}{H} \int_b^s \bu \,dz && \begin{matrix} \text{vertically-averaged} \\ \hspace{-1.8mm} \text{horizontal velocity} \end{matrix}
+\end{align*}
+\item the \alert{mass continuity equation} follows from the surface kinematical equation and incompressibility:
+   $$\frac{\partial H}{\partial t} + \nabla \cdot \left(\bU H\right) = a$$
+\item \emph{question:} is it really an advection?
+\item[] \emph{answer:} not really, because ice flows (mostly) downhill
+\item an alternative form is the \emph{shallow diffusion} equation for ice sheets:
+   $$\frac{\partial H}{\partial t} = \nabla \cdot \left(D \grad s\right) + a$$
+\item<2> {\footnotesize for more on the shallow diffusion perspective see Jouvet \& Bueler (2012)}
+\end{itemize}
+\end{frame}
+
 \begin{frame}{shallow ice sheet models}
 
 \begin{itemize}
-\item the model on the last slide is \emph{not yet} in common use for ice sheet simulations, because for now it is expensive to compute
+\item the model on the last slide is \emph{not yet} in common use for ice sheet simulations
     \begin{itemize}
-    \item goal: make it fast enough to use!
+    \item[$\circ$] for now, it is too expensive at scale
+    \item[$\circ$] one goal: \alert{make it fast enough to use!}
     \end{itemize}
-\item current-technology models use various shallow simplifications
-\item simplest is a lubrication approximation, the \alert{shallow ice approximation}, in which $- \bu|_s \cdot \bn_s$ resolves to a nonlinear differential operator  
+\item<2-> current-technology models use various shallow simplifications
+\item<2-> simplest is a lubrication approximation, the \alert{shallow ice approximation}, in which $- \bu|_s \cdot \bn_s$ resolves to a nonlinear differential operator  
 \end{itemize}
 \end{frame}
 
@@ -367,12 +387,13 @@ s - b &\ge 0 \\
 \end{align*}
 where
 \begin{align*}
-\Phi(s) &= - \frac{\gamma}{\pp} (s-b)^{\pp} |\grad s|^{\pp} \\
-        &\qquad\qquad - \grad \cdot\left(\frac{\gamma}{\pp+1} (s-b)^{\pp+1} |\grad s|^{\pp-2} \grad s\right)
+\Phi(s) &= - \bu|_s \cdot \bn_s \\
+        &= - \frac{\gamma}{\pp} (s-b)^{\pp} |\grad s|^{\pp} - \grad \cdot\left(\frac{\gamma}{\pp+1} (s-b)^{\pp+1} |\grad s|^{\pp-2} \grad s\right)
 \end{align*}
-here $\nabla$ only acts in horizontal variables, and constants $\pp = \nn+1$ and $\gamma > 0$ are related to ice deformation
 
 \begin{itemize}
+\item $\nabla$ only acts in horizontal variables
+\item constants $\pp = \nn+1$ and $\gamma > 0$ relate to ice deformation
 \item $\Phi$ is a \alert{doubly-nonlinear differential operator}, simultaneously of porous medium and $\pp$-Laplacian type
 \end{itemize}
 }
@@ -381,27 +402,7 @@ here $\nabla$ only acts in horizontal variables, and constants $\pp = \nn+1$ and
 
 \section{time-stepping and stability}
 
-\begin{frame}{ice thickness and ``mass continuity equation'' view}
 
-\begin{itemize}
-\item a helpful viewpoint on this complicated system is the equation
-
-FIXME
-
-where $\bU$ is vertically-averaged horizontal velocity within icy domain $\Lambda(t)$
-\item \emph{question:} is it really an advection?
-
-FIXME
-
-\item[] \emph{answer:} no, because ice flows (mostly) downhill
-
-\item alternative equation, the \emph{shallow diffusion} model of ice sheets:
-
-FIXME
-\bigskip
-\item<2> {\footnotesize for more on the shallow diffusion perspective see Jouvet \& Bueler (2012)}
-\end{itemize}
-\end{frame}
 
 
 \section{on Stokes solver scaling}
