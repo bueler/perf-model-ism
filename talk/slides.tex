@@ -63,6 +63,7 @@
 \newcommand{\bx}{\mathbf{x}}
 
 \newcommand{\bF}{\mathbf{F}}
+\newcommand{\bQ}{\mathbf{Q}}
 \newcommand{\bU}{\mathbf{U}}
 \newcommand{\bV}{\mathbf{V}}
 \newcommand{\bX}{\mathbf{X}}
@@ -165,7 +166,11 @@
 \begin{columns}
 \begin{column}{0.6\textwidth}
 \begin{itemize}
-\item the geometry and velocity evolve \emph{in contact with its climate},
+\item glacier ice is modeled as a \emph{slow, incompressible, viscous, non-Newtonian fluid}
+    \begin{itemize}
+    \item[$\circ$] more on that soon
+    \end{itemize}
+\item glacier geometry and velocity evolve \emph{in contact with its climate}:
     \begin{itemize}
     \item[$\circ$] snowfall
     \item[$\circ$] surface melt
@@ -174,10 +179,6 @@
     \item[$\circ$] calving into the ocean
     \end{itemize}
 \item and the \emph{topography} on which it sits
-\item glacier ice is modeled as a \emph{slow, incompressible, viscous, non-Newtonian fluid}
-    \begin{itemize}
-    \item[$\circ$] more on that soon
-    \end{itemize}
 \end{itemize}
 \end{column}
 \begin{column}{0.42\textwidth}
@@ -203,7 +204,7 @@
     \end{itemize}
 
 \medskip
-\item<2> {\footnotesize see UAF's \href{https://pism.io/}{Parallel Ice Sheet Model (\texttt{pism.io})} for a model which does \emph{not} make these simplifications}
+\item<2> {\footnotesize see UAF's \href{https://pism.io/}{Parallel Ice Sheet Model (\texttt{pism.io})}, for example, as a model which includes these processes}
 \item<2> {\footnotesize next, a basic definition of ``ice sheet model''}
 \end{itemize}
 \end{column}
@@ -226,8 +227,8 @@ an \alert{ice sheet model} is a \underline{map} which simulates an ice sheet in 
     \begin{itemize}
     \item[$\circ$] \emph{surface mass balance}
 $$\hspace{-7mm} a(t,x,y) = \begin{pmatrix}
-\text{balance of precipitation vs} \\
-\text{melt \& runoff from surfaces}
+\text{precipitation minus} \\
+\text{melt \& runoff}
 \end{pmatrix}$$
 
 \vspace{-3mm}
@@ -243,7 +244,7 @@ $$\hspace{-7mm} a(t,x,y) = \begin{pmatrix}
     \item[$\circ$] \emph{ice velocity} $\bu(t,x,y,z)$
     \end{itemize}
 
-\bigskip
+\smallskip
 \item<2-> {\small map: \quad $\begin{pmatrix} \text{climate \&} \\ \text{topography} \end{pmatrix} \to \begin{pmatrix} \text{geometry} \\ \text{\& velocity} \end{pmatrix}$}
 \end{itemize}
 \end{column}
@@ -324,7 +325,7 @@ applies \emph{only} on the ice upper surface $\Gamma_s(t)$
 \begin{frame}{basic ice sheet model (strong form)}
 
 \begin{itemize}
-\item nonlinear complementarity problem \onslide<2->{coupled to Stokes}:
+\item nonlinear complementarity problem (NCP) \onslide<2->{coupled to Stokes}:
 \begin{align*}
 s - b &\ge 0 && \text{on $\Omega \subset \RR^2$} \\
 \frac{\partial s}{\partial t} - \bu|_s \cdot \bn_s - a &\ge 0 && \text{''} \\
@@ -347,37 +348,59 @@ s - b &\ge 0 && \text{on $\Omega \subset \RR^2$} \\
 \begin{frame}{the mass-continuity equation view}
 
 \begin{itemize}
-\item a thickness-transport form exposes the basic ice sheet model
+\item a thickness-transport form exposes evolution type
 \item define:
 \begin{align*}
 H(t,x,y) &=s-b && \text{ice thickness} \\
 \bU(t,x,y) &= \frac{1}{H} \int_b^s \bu \,dz && \begin{matrix} \text{vertically-averaged} \\ \hspace{-1.8mm} \text{horizontal velocity} \end{matrix}
 \end{align*}
+
+    \begin{itemize}
+    \item[$\circ$] note: $s$ and $H$ are equivalent variables for modeling ice geometry
+    \end{itemize}
 \item the \alert{mass continuity equation} follows from the surface kinematical equation and incompressibility:
    $$\frac{\partial H}{\partial t} + \nabla \cdot \left(\bU H\right) = a$$
-\item \emph{question:} is it really an advection?
-\item[] \emph{answer:} not really, because ice flows (mostly) downhill
-\item an alternative form is the \emph{shallow diffusion} equation for ice sheets:
-   $$\frac{\partial H}{\partial t} = \nabla \cdot \left(D \grad s\right) + a$$
-\item<2> {\footnotesize for more on the shallow diffusion perspective see Jouvet \& Bueler (2012)}
+
+\smallskip
+\item<2-> \emph{question:} is it really an advection?
+\item<2->[] \emph{answer:} not really \dots ice flows (mostly) downhill so
+  $$\bU \sim - \grad s \sim - \grad H$$
 \end{itemize}
 \end{frame}
+
+
+\begin{frame}{mass continuity equation: advection or diffusion?}
+
+\begin{align*}
+\text{advective form:} && \frac{\partial H}{\partial t} + \nabla \cdot \left(\bU H\right) &= a \\
+\text{diffusion form:} && \frac{\partial H}{\partial t} - \nabla \cdot \left(D \grad s\right) &= a
+\end{align*}
+\begin{itemize}
+\item both forms are highly-nonlinear: \, $\bU=\bU(H,\grad s), \, D = D(H,\grad s)$
+\end{itemize}
+\end{frame}
+
 
 \begin{frame}{shallow ice sheet models}
 
 \begin{itemize}
-\item the model on the last slide is \emph{not yet} in common use for ice sheet simulations
+\item the ``basic model'', i.e.~NCP coupled to Stokes, is \emph{not yet} in common use for ice sheet simulations
     \begin{itemize}
     \item[$\circ$] for now, it is too expensive at scale
-    \item[$\circ$] one goal: \alert{make it fast enough to use!}
+    \item[$\circ$] goal: \alert{make it fast enough to use!}
     \end{itemize}
+
+\smallskip
 \item<2-> current-technology models use various shallow simplifications
 \item<2-> simplest is a lubrication approximation, the \alert{shallow ice approximation}, in which $- \bu|_s \cdot \bn_s$ resolves to a nonlinear differential operator  
+
+\smallskip
+\item<3-> the diffusion form of mass continuity ($\frac{\partial H}{\partial t} - \nabla \cdot \left(D \grad s\right) = a$) is only literally valid in the lubrication approximation, but \emph{the fact that ice flows downhill has time-stepping stability consequences}
 \end{itemize}
 \end{frame}
 
 
-\begin{frame}{shallow ice approximation: details}
+\begin{frame}{shallow ice approximation NCP: details}
 
 {\small
 \begin{align*}
@@ -402,7 +425,53 @@ where
 
 \section{time-stepping and stability}
 
+\begin{frame}{time-stepping the mass continuity equation}
 
+{\footnotesize
+\begin{align*}
+\text{advective form:} && \frac{\partial H}{\partial t} + \nabla \cdot \left(\bU H\right) &= a \\
+\text{diffusion form:} && \frac{\partial H}{\partial t} - \nabla \cdot \left(D \grad s\right) &= a
+\end{align*}
+}
+
+\begin{itemize}
+\item recall some traditional numerical analysis \dots
+\end{itemize}
+\begin{minipage}[t][60cm][t]{\textwidth}
+\begin{itemize}
+\only<1>{
+\item we expect \alert{explicit} time stepping for advections
+\item for example, forward Euler in 1D gives
+	$$\frac{H_j^{\ell+1} - H_j^\ell}{\Delta t} + \frac{\bQ_{j+1/2}^\ell - \bQ_{j-1/2}^\ell}{\Delta x} = a_j^\ell$$
+
+    \begin{itemize}
+    \item[$\circ$] where $\bQ = \bU H$
+    \item[$\circ$] need flux approximations: upwinding, Lax-Wendroff, streamline diffusion, flux-limiters, \dots
+    \end{itemize}
+}
+\only<2>{
+\item we expect \alert{implicit} time stepping for diffusions
+\item for example, backward Euler in 1D gives
+	$$\frac{H_j^{\ell+1} - H_j^\ell}{\Delta t} - \frac{D_{j+\frac{1}{2}} (H_{j+1}^{\ell+1} + H_{j}^{\ell+1}) - D_{j-\frac{1}{2}} (H_{j}^{\ell+1} + H_{j-1}^{\ell+1})}{2 \Delta x} = a_j^\ell$$
+
+    \begin{itemize}
+    \item[$\circ$] or use: Crank-Nicolson, BDF, \dots
+    \end{itemize}
+}
+\end{itemize}
+\end{minipage}
+\end{frame}
+
+
+\begin{frame}{time-stepping in ice sheet models}
+
+\begin{itemize}
+\item current-technology models mostly ``believe'' that the problem is an advection and use explicit time stepping
+\item FIXME but this has performance consequences
+\item FIXME the problem is a DAE!
+\item FIXME implicit alternative requires solving step equations: simultaneous NCP for SKE and Stokes
+\end{itemize}
+\end{frame}
 
 
 \section{on Stokes solver scaling}
