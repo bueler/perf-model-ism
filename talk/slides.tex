@@ -90,8 +90,6 @@
 \newcommand{\sold}{s_{\text{o}}}
 
 
-
-
 \title[Making ice sheet models scale properly]{Making ice sheet models \\ scale properly}
 
 %\subtitle{\emph{x}}
@@ -170,15 +168,15 @@
     \begin{itemize}
     \item[$\circ$] more on that soon
     \end{itemize}
-\item glacier geometry and velocity evolve \emph{in contact with its climate}:
+\item glaciers lie on \emph{topography}, and sometimes they float  (\emph{ice shelf})
+\item glacier geometry and velocity evolve \emph{in contact with climate}:
     \begin{itemize}
     \item[$\circ$] snowfall
     \item[$\circ$] surface melt
     \item[$\circ$] subglacial melt
-    \item[$\circ$] melt when floating (\emph{ice shelf})
+    \item[$\circ$] melt when floating
     \item[$\circ$] calving into the ocean
     \end{itemize}
-\item and the \emph{topography} on which it sits
 \end{itemize}
 \end{column}
 \begin{column}{0.42\textwidth}
@@ -205,7 +203,6 @@
 
 \medskip
 \item<2> {\footnotesize see UAF's \href{https://pism.io/}{Parallel Ice Sheet Model (\texttt{pism.io})}, for example, as a model which includes these processes}
-\item<2> {\footnotesize next, a basic definition of ``ice sheet model''}
 \end{itemize}
 \end{column}
 \begin{column}{0.42\textwidth}
@@ -223,7 +220,7 @@
 \begin{definition}
 an \alert{ice sheet model} is a \underline{map} which simulates an ice sheet in a climate
 \end{definition} 
-\item two inputs:
+\item at least two inputs:
     \begin{itemize}
     \item[$\circ$] \emph{surface mass balance}
 $$\hspace{-7mm} a(t,x,y) = \begin{pmatrix}
@@ -238,7 +235,7 @@ $$\hspace{-7mm} a(t,x,y) = \begin{pmatrix}
 
     \item[$\circ$] \emph{bed elevation} $b(x,y)$
     \end{itemize}
-\item two outputs:
+\item at least two outputs:
     \begin{itemize}
     \item[$\circ$] \emph{upper surface elevation} $s(t,x,y)$
     \item[$\circ$] \emph{ice velocity} $\bu(t,x,y,z)$
@@ -257,28 +254,31 @@ $$\hspace{-7mm} a(t,x,y) = \begin{pmatrix}
 \end{frame}
 
 
-\begin{frame}{notation for the basic model}
+\begin{frame}{basic ice sheet model: notation}
 
+\begin{columns}
+\begin{column}{0.6\textwidth}
 \begin{itemize}
-\item the \alert{data} $a(t,x,y)$, $b(x,y)$ \alert{is defined on a fixed domain}:
+\item the \alert{data} $a(t,x,y)$, $b(x,y)$  is defined on a fixed domain:
 	$$t \in [0,T] \quad \text{and} \quad (x,y) \in \Omega \subset \RR^2$$
-
-\begin{center}
-\includegraphics<1>[width=0.55\textheight]{images/domain-data.png}
-\includegraphics<2>[width=0.6\textheight]{images/domain-velocity.png}
-\end{center}
-
-\medskip
-\item<2> the solution surface elevation $s(t,x,y)$ is defined on $[0,T]\times \Omega$
+\item<2> the solution \alert{surface elevation} $s(t,x,y)$ is defined on $[0,T]\times \Omega$
     \begin{itemize}
     \item[$\circ$] $s=b$ where there is no ice
     \end{itemize}
 
-\item<2> one must \emph{solve} for the time-dependent \alert{icy domain} $\Lambda(t) \subset \Omega$ on which the velocity $\bu(t,x,y,z)$ is defined:
+\medskip
+\item<2> one must \emph{solve} for the time-dependent \alert{icy domain} $\Lambda(t) \subset \RR^3$ on which the solution \alert{velocity} $\bu(t,x,y,z)$ is defined:
     $$\Lambda(t) = \left\{(x,y,z)\,:\,b(x,y) < z < s(t,x,y)\right\}$$
 
 \vspace{-2mm}
 \end{itemize}
+\end{column}
+\begin{column}{0.4\textwidth}
+\includegraphics<1>[width=\textwidth]{images/domain-data.png}
+
+\includegraphics<2>[width=\textwidth]{images/domain-velocity.png}
+\end{column}
+\end{columns}
 \end{frame}
 
 
@@ -289,9 +289,9 @@ $$\hspace{-7mm} a(t,x,y) = \begin{pmatrix}
     \begin{itemize}
     \item[$\circ$] mass
     \item[$\circ$] momentum
-    \item[$\circ$] \st{energy} \hfill $\leftarrow$ \emph{ignored in this talk}
+    \item[$\circ$] \st{energy} \hfill $\leftarrow$ \emph{ignored for simplicity in this talk}
     \end{itemize}
-\item a \emph{key idea} is that conservation of mass is important both
+\item a key idea is that conservation of mass is important both
     \begin{itemize}
     \item[$\circ$] \emph{in} the icy domain $\Lambda(t) \subset \RR^3$:
 \begin{align*}
@@ -300,8 +300,10 @@ $$\hspace{-7mm} a(t,x,y) = \begin{pmatrix}
 \text{\alert{surface kinematic equation}}&& \frac{\partial s}{\partial t} - \bu|_s \cdot \bn_s &= a \qquad \text{on } \Gamma_s(t), \\
 \text{\alert{non-penetration}}&&     \bu|_b \cdot \bn_b &= 0 \qquad \text{on } \Gamma_b(t).
 \end{align*}
+
+    \item[$\circ$] $\Gamma_s(t), \Gamma_b(t) \subset \partial \Lambda(t)$ denote the surface and base of the ice
     \end{itemize}
-\item where $\Gamma_s(t)$ and $\Gamma_b(t)$, subsets of $\partial \Lambda(t)$, denote the surface and base of the ice
+
 \end{itemize}
 \end{frame}
 
@@ -309,20 +311,20 @@ $$\hspace{-7mm} a(t,x,y) = \begin{pmatrix}
 \begin{frame}{free boundary problem}
 
 \begin{itemize}
-\item but ice sheet evolution is a \alert{free-boundary} problem for conserved quantities in a (thin) fluid layer
+\item ice sheet evolution is a \alert{free-boundary} problem for conserved mass and momentum quantities
 \item specifically, the surface kinematic equation
   $$\frac{\partial s}{\partial t} - \bu|_s \cdot \bn_s = a$$
 applies \emph{only} on the ice upper surface $\Gamma_s(t)$
-\item in the remainder of the fixed map-plane domain $\Omega\subset \RR^2$, glacier \alert{complementarity} holds:
+\item in the remainder of the (fixed, map-plane) domain $\Omega\subset \RR^2$, \alert{complementarity} holds:
   $$s=b \quad \text{and} \quad a \le 0$$
 
 \bigskip
-\item<2> {\footnotesize for more on this free-boundary perspective see Bueler (2021)}
+\item<2> {\footnotesize for more on this perspective see Bueler (2021)}
 \end{itemize}
 \end{frame}
 
 
-\begin{frame}{basic ice sheet model (strong form)}
+\begin{frame}{basic ice sheet model: strong form}
 
 \begin{itemize}
 \item nonlinear complementarity problem (NCP) \onslide<2->{coupled to Stokes}:
@@ -345,10 +347,51 @@ s - b &\ge 0 && \text{on $\Omega \subset \RR^2$} \\
 \end{frame}
 
 
+\begin{frame}{basic ice sheet model: its a DAE system anyway}
+
+\begin{itemize}
+\item for clarity and simplicity, declutter by forgetting complementarity and all the other boundary conditions, too \dots
+\item get surface kinematic equation coupled to Stokes:
+\begin{align*}
+\frac{\partial s}{\partial t} - \bu|_s \cdot \bn_s - a &= 0 && \text{on } \Omega \subset \RR^2 \\
+- \nabla \cdot \left(2 \nu_\eps(D\bu)\, D\bu\right) + \nabla p - \rhoi \mathbf{g} &= \bzero && \text{in $\Lambda(t) \subset \RR^3$} \\
+\nabla \cdot \bu &= 0 && \text{''}
+\end{align*}
+\item observe that $s(t,x,y)$ and $\bu(t,x,y,z)$ both evolve in time
+\item \emph{however}, only the first of the 5 equations has a time derivative
+\item the problem is a \alert{differential algebraic equation} system, e.g.
+\begin{align*}
+\dot x &= f(x,y) \\
+     0 &= g(x,y)
+\end{align*}
+
+    \begin{itemize}
+    \item[$\circ$] \dots actually in infinite dimensions (\emph{PDAE}?), and subject to complementarity (\emph{free boundary problem for PDAE})
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{important context (current research)}
+
+\begin{itemize}
+\item to the best of my knowledge, \emph{no} current research groups are studying the well-posedness or regularity of this ``NCP coupled to Stokes'' glacier evolution model
+    \begin{itemize}
+    \item[$\circ$] however, I think most researchers would agree this is the intended model!
+    \item[$\circ$] well-posedness of shallow approximations has been considered\footnote{e.g.~Jouvet \& Bueler (2012)}
+    \end{itemize}
+
+\medskip
+\item<2> numerical modelers tend think of the Stokes problem separately from surface evolution (\emph{time-split} or \emph{explicit time-stepping}),
+\item<2> and glacier evolution is addressed with minimal awareness of complementarity
+\end{itemize}
+\end{frame}
+
+
 \begin{frame}{the mass-continuity equation view}
 
 \begin{itemize}
-\item a thickness-transport form exposes evolution type
+\item thickness-transport form helps expose evolution character
 \item define:
 \begin{align*}
 H(t,x,y) &=s-b && \text{ice thickness} \\
@@ -358,12 +401,12 @@ H(t,x,y) &=s-b && \text{ice thickness} \\
     \begin{itemize}
     \item[$\circ$] note: $s$ and $H$ are equivalent variables for modeling ice geometry
     \end{itemize}
-\item the \alert{mass continuity equation} follows from the surface kinematical equation and incompressibility:
+\item<2-> the \alert{mass continuity equation} follows from the surface kinematical equation and incompressibility:
    $$\frac{\partial H}{\partial t} + \nabla \cdot \left(\bU H\right) = a$$
 
 \smallskip
-\item<2-> \emph{question:} is it really an advection?
-\item<2->[] \emph{answer:} not really \dots ice flows (mostly) downhill so
+\item<3-> \emph{question:} is it really an advection?
+\item<3->[] \emph{answer:} not really \dots ice flows (mostly) downhill so
   $$\bU \sim - \grad s \sim - \grad H$$
 \end{itemize}
 \end{frame}
@@ -377,25 +420,30 @@ H(t,x,y) &=s-b && \text{ice thickness} \\
 \end{align*}
 \begin{itemize}
 \item both forms are highly-nonlinear: \, $\bU=\bU(H,\grad s), \, D = D(H,\grad s)$
+\item the diffusion form is only \emph{literally} valid in the lubrication approximation (more below)
+\item the fact that \emph{ice flows downhill} has \emph{time-stepping stability consequences} regardless
 \end{itemize}
 \end{frame}
 
 
-\begin{frame}{shallow ice sheet models}
+\begin{frame}{numerical shallow ice sheet models}
 
 \begin{itemize}
-\item the ``basic model'', i.e.~NCP coupled to Stokes, is \emph{not yet} in common use for ice sheet simulations
+\item the ``basic ice sheet model'' (NCP coupled to Stokes) is \emph{not yet} in common use for ice sheet simulations
     \begin{itemize}
-    \item[$\circ$] for now, it is too expensive at scale
+    \item[$\circ$] usual justification for falling back to shallow approximations: ``Stokes is too expensive at scale''
     \item[$\circ$] goal: \alert{make it fast enough to use!}
     \end{itemize}
 
 \smallskip
 \item<2-> current-technology models use various shallow simplifications
-\item<2-> simplest is a lubrication approximation, the \alert{shallow ice approximation}, in which $- \bu|_s \cdot \bn_s$ resolves to a nonlinear differential operator  
+    \begin{itemize}
+    \item<2->[$\circ$] usual justification for falling back to shallow approximations: ``Stokes is too expensive at scale''
+    \end{itemize}
+\item<2-> the simplest shallow approximation is a lubrication approximation, the \alert{shallow ice approximation} (SIA)
+\item<2-> in the SIA, $- \bu|_s \cdot \bn_s$ resolves to a nonlinear differential operator  
 
 \smallskip
-\item<3-> the diffusion form of mass continuity ($\frac{\partial H}{\partial t} - \nabla \cdot \left(D \grad s\right) = a$) is only literally valid in the lubrication approximation, but \emph{the fact that ice flows downhill has time-stepping stability consequences}
 \end{itemize}
 \end{frame}
 
@@ -408,20 +456,27 @@ s - b &\ge 0 \\
 \frac{\partial s}{\partial t} + \Phi(s) - a &\ge 0 \\
 (s - b) \left(\frac{\partial s}{\partial t} + \Phi(s) - a\right) &= 0
 \end{align*}
-where
-\begin{align*}
-\Phi(s) &= - \bu|_s \cdot \bn_s \\
-        &= - \frac{\gamma}{\pp} (s-b)^{\pp} |\grad s|^{\pp} - \grad \cdot\left(\frac{\gamma}{\pp+1} (s-b)^{\pp+1} |\grad s|^{\pp-2} \grad s\right)
-\end{align*}
+\begin{equation*}
+\Phi(s) = - \frac{\gamma}{\pp} (s-b)^{\pp} |\grad s|^{\pp} - \grad \cdot\left(\frac{\gamma}{\pp+1} (s-b)^{\pp+1} |\grad s|^{\pp-2} \grad s\right)
+\end{equation*}
+}
 
 \begin{itemize}
-\item $\nabla$ only acts in horizontal variables
 \item constants $\pp = \nn+1$ and $\gamma > 0$ relate to ice deformation
-\item $\Phi$ is a \alert{doubly-nonlinear differential operator}, simultaneously of porous medium and $\pp$-Laplacian type
+
+\medskip
+\item<2> thus: $\Phi(s) = - \bu|_s \cdot \bn_s$ resolves to a \alert{doubly-nonlinear} differential operator, of porous medium and $\pp$-Laplacian type simultaneously
+\item<2> Jouvet \& Bueler (2012): existence for this problem
 \end{itemize}
-}
 \end{frame}
 
+
+\AtBeginSection[]
+{
+  \begin{frame}{Outline}
+    \tableofcontents[currentsection]
+  \end{frame}
+}
 
 \section{time-stepping and stability}
 
@@ -429,29 +484,32 @@ where
 
 {\footnotesize
 \begin{align*}
-\text{advective form:} && \frac{\partial H}{\partial t} + \nabla \cdot \left(\bU H\right) &= a \\
-\text{diffusion form:} && \frac{\partial H}{\partial t} - \nabla \cdot \left(D \grad s\right) &= a
+\text{advective ice sheet model schema:} && \frac{\partial H}{\partial t} + \nabla \cdot \left(\bU H\right) &= a \\
+\text{diffusion ice sheet model schema:} && \frac{\partial H}{\partial t} - \nabla \cdot \left(D \grad s\right) &= a
 \end{align*}
 }
 
+\bigskip
 \begin{itemize}
-\item recall some traditional numerical analysis \dots
+\item recall: traditional numerical analysis applied to these equations
 \end{itemize}
+
 \begin{minipage}[t][60cm][t]{\textwidth}
 \begin{itemize}
-\only<1>{
+\only<1>{\item[]}
+\only<2>{
 \item we expect \alert{explicit} time stepping for advections
-\item for example, forward Euler in 1D gives
-	$$\frac{H_j^{\ell+1} - H_j^\ell}{\Delta t} + \frac{\bQ_{j+1/2}^\ell - \bQ_{j-1/2}^\ell}{\Delta x} = a_j^\ell$$
+\item for example, forward Euler:
+	$$\frac{H_j^{\ell+1} - H_j^\ell}{\Delta t} + \frac{(\bU H)_{j+1/2}^\ell - (\bU H)_{j-1/2}^\ell}{\Delta x} = a_j^\ell$$
 
     \begin{itemize}
-    \item[$\circ$] where $\bQ = \bU H$
     \item[$\circ$] need flux approximations: upwinding, Lax-Wendroff, streamline diffusion, flux-limiters, \dots
+    \item[$\circ$] maximum time step from CFL using $\max |\bU|$
     \end{itemize}
 }
-\only<2>{
+\only<3>{
 \item we expect \alert{implicit} time stepping for diffusions
-\item for example, backward Euler in 1D gives
+\item for example, backward Euler:
 	$$\frac{H_j^{\ell+1} - H_j^\ell}{\Delta t} - \frac{D_{j+\frac{1}{2}} (H_{j+1}^{\ell+1} + H_{j}^{\ell+1}) - D_{j-\frac{1}{2}} (H_{j}^{\ell+1} + H_{j-1}^{\ell+1})}{2 \Delta x} = a_j^\ell$$
 
     \begin{itemize}
@@ -463,59 +521,108 @@ where
 \end{frame}
 
 
-\begin{frame}{time-stepping in ice sheet models}
+\begin{frame}{time-stepping in current ice sheet models}
 
 \begin{itemize}
-\item current-technology models mostly ``believe'' that the problem is an advection and use explicit time stepping
-\item FIXME but this has performance consequences
-\item FIXME the problem is a DAE!
-\item FIXME implicit alternative requires solving step equations: simultaneous NCP for SKE and Stokes
+\item current-technology models mostly ``believe'' the advection schema
+\item current-technology models mostly use explicit time stepping
+    \begin{itemize}
+    \item[$\circ$] an embarrassing situation \dots the problem is a DAE!
+    \item[$\circ$] performance consequences: stability is determined by the coupled solution velocity $\bU$ not a pre-determined velocity
+    \end{itemize}
+
+\medskip
+\item<2> an alternative should be obvious to any numerical analyst \dots
+\item<2> \alert{implicit time-stepping} is expected for DAE problems
+\item<2> implicit steps imply a sequence of problems (``equations'') to solve at each time step
+\item<2> here: implicit $\implies$ NCP coupled to Stokes at each time step
 \end{itemize}
 \end{frame}
 
 
-\section{on Stokes solver scaling}
+\section{Stokes solver scaling}
 
-\begin{frame}{regarding PDE solver complexity}
+\begin{frame}{PDE solver complexity}
 
-FIXME
+FIXME explain in terms of 2D Poisson
+\end{frame}
+
+\begin{frame}{a scalable Stokes solver for ice sheets}
+
+FIXME Isaac et al.~2015
+\end{frame}
+
+\begin{frame}{a scalable Stokes solver for ice sheets 2}
+
+FIXME table from Isaac, and estimate power $\alpha$
 \end{frame}
 
 
-\section{a simplified performance analysis}
+\section{simplified performance analysis}
 
-\begin{frame}{complexity of ice sheet models}
-
-\begin{tabular}{llll}
-\emph{time-stepping} & \emph{dynamics} & \emph{flops per model year} \\ \hline
-\onslide<1->{
-\,explicit & SIA    & $\oo{\frac{D\, L^2}{\Delta x^4}} = \oo{\frac{D\, m^2}{L^2}}$ \\
-}
-\onslide<1->{
-explicit & Stokes (\emph{optimistic}) & $\oo{\frac{U L^{2+2\alpha}}{\Delta x^{3+2\alpha}}} = \oo{\frac{U m^{1.5+\alpha}}{L}}$ \\
-}
-\onslide<2->{
-explicit & Stokes (\emph{pessimistic})  & $\oo{\frac{D\, L^{2+2\alpha}}{\Delta x^{4+2\alpha}}} = \oo{\frac{D\,m^{2+\alpha}}{L^2}}$ \\
-}
-\onslide<3->{
-implicit & SIA    & $\oo{\frac{q\, L^{2+2\beta}}{\Delta x^{2+2\beta}}} = \oo{q\, m^{1+\beta}}$ \\
-}
-\onslide<3->{
-implicit & Stokes & $\oo{\frac{q\, L^{2+2\gamma}}{\Delta x^{2+2\gamma}}} = \oo{q\, m^{1+\gamma}}$
-}
-\end{tabular}
+\begin{frame}{analyzing ice sheet model performance}
 
 FIXME asymptotic estimates of algorithmic scaling, measured by floating point operations per model year, for map-plane (2D) time-stepping numerical ice sheet simulations, in the high resolution limit where $\Delta x\to 0$ and $m\to\infty$
 \end{frame}
 
+\begin{frame}{ice sheet model performance: table}
 
-\section{scalable implicit steps by multigrid?}
+\begin{tabular}{llll}
+\emph{time-stepping} & \emph{dynamics} & \emph{flops per model year} \\ \hline
+\,explicit & SIA    & $\oo{\frac{D\, L^2}{\Delta x^4}} = \oo{\frac{D\, m^2}{L^2}}$ \\
+explicit & Stokes (\emph{optimistic}) & $\oo{\frac{U L^{2+2\alpha}}{\Delta x^{3+2\alpha}}} = \oo{\frac{U m^{1.5+\alpha}}{L}}$ \\
+explicit & Stokes (\emph{pessimistic})  & $\oo{\frac{D\, L^{2+2\alpha}}{\Delta x^{4+2\alpha}}} = \oo{\frac{D\,m^{2+\alpha}}{L^2}}$
+\end{tabular}
 
-\begin{frame}{obstacle problem solver scaling}
-
-FIXME
+FIXME table from Bueler (2022)
 \end{frame}
 
+
+\begin{frame}{complexity for implicit solves}
+
+FIXME $\beta$, $\gamma$
+\end{frame}
+
+
+\begin{frame}{ice sheet model performance: table cont.}
+
+\begin{tabular}{llll}
+\emph{time-stepping} & \emph{dynamics} & \emph{flops per model year} \\ \hline
+\,explicit & SIA    & $\oo{\frac{D\, L^2}{\Delta x^4}} = \oo{\frac{D\, m^2}{L^2}}$ \\
+explicit & Stokes (\emph{optimistic}) & $\oo{\frac{U L^{2+2\alpha}}{\Delta x^{3+2\alpha}}} = \oo{\frac{U m^{1.5+\alpha}}{L}}$ \\
+explicit & Stokes (\emph{pessimistic})  & $\oo{\frac{D\, L^{2+2\alpha}}{\Delta x^{4+2\alpha}}} = \oo{\frac{D\,m^{2+\alpha}}{L^2}}$ \\
+implicit & SIA    & $\oo{\frac{q\, L^{2+2\beta}}{\Delta x^{2+2\beta}}} = \oo{q\, m^{1+\beta}}$ \\
+implicit & Stokes & $\oo{\frac{q\, L^{2+2\gamma}}{\Delta x^{2+2\gamma}}} = \oo{q\, m^{1+\gamma}}$
+\end{tabular}
+
+FIXME table from Bueler (2022)
+\end{frame}
+
+
+\section{scalable approaches: candidates}
+
+\begin{frame}{semi-coupled time-stepping}
+
+FIXME L{\"o}fgren et al.~2022
+\end{frame}
+
+\begin{frame}{machine learning}
+
+FIXME Jouvet et al.~2021
+\end{frame}
+
+\begin{frame}{scalable obstacle problem solvers}
+
+FIXME chapter 9 from my book
+\end{frame}
+
+\begin{frame}{scalable obstacle problem solvers}
+
+FIXME multilevel multigrid approach
+\end{frame}
+
+
+\section{conclusion}
 
 \begin{frame}{\alert{summary}}
 
