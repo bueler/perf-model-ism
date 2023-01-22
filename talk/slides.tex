@@ -573,14 +573,13 @@ s - b \ge 0, \quad \frac{\partial s}{\partial t} + {\color{FireBrick} \Phi(s)} -
 \end{frame}
 
 
-\section{Stokes solver scaling}
+\section{stress balance solver scaling}
 
 \begin{frame}{the Stokes problem for ice}
 
 \begin{itemize}
-\item from now on assume our ice sheet model is \emph{not} shallow
-\item whether time steps are explicit or implicit, a Stokes problem is solved at each step
-\item for a given icy domain $\Lambda \subset \RR^3$:
+\item assume an ice sheet model which is \emph{not} shallow
+\item whether explicit or implicit, solves a Stokes problem at each step:
 \begin{align*}
 - \nabla \cdot \left(2 \nu_\eps(D\bu)\, D\bu\right) + \nabla p - \rhoi \mathbf{g} &= \bzero && \text{in $\Lambda$} \\
 \nabla \cdot \bu &= 0 && \text{''} \\
@@ -588,64 +587,142 @@ s - b \ge 0, \quad \frac{\partial s}{\partial t} + {\color{FireBrick} \Phi(s)} -
 \bu|_b \cdot \bn_b &= 0 && \text{''} \\
 \left(2 \nu_\eps(D\bu) D\bu - pI\right) \bn &= \bzero && \text{on $\Gamma_s$}
 \end{align*}
+\item this problem is the \alert{stress balance} (conservation of momentum) which determines velocity $\bu$ and pressure $p$
 \item how fast is the numerical solution process?
 \end{itemize}
 \end{frame}
 
-\begin{frame}{PDE solver complexity}
 
-FIXME explain for Poisson
+\begin{frame}{PDE solver algorithmic scaling}
+
+\begin{itemize}
+\item as intro to scaling, consider the 3D Poisson equation:
+    $$-\grad^2 u = f \text{ in $\Omega$}, \quad u=0 \text{ on $\partial\Omega$}$$
+\item discretization generates a linear system $A\bu = \bb$
+\item (data size $m$) = \alert{number of unknowns}
+    \begin{itemize}
+    \item[$\circ$] for low-order discretizations, $m$ = (number of nodes in the grid)
+    \item[$\circ$] for cell size $h$, $m \sim h^{-3}$ in 3D
+    \end{itemize}
+\item solver choice determines asymptotic growth of computational expense (complexity)
+\item \alert{algorithmic scaling} of flops as $m\to\infty$:
+    \begin{itemize}
+    \item[$\circ$] $O(m^3)$ for direct linear algebra, ignoring matrix structure
+    \item[$\circ$] $\approx O(m^2)$ for sparsity-exploiting direct linear algebra
+    \item[$\circ$] $O(m^1)$, \alert{optimal}, for \alert{multigrid} solvers (below)
+    \end{itemize}
+\end{itemize}
+
+\medskip
+\begin{center}
+\includegraphics[width=0.5\textwidth]{images/multigrid-grids.png}
+\end{center}
 \end{frame}
 
-\begin{frame}{a scalable Stokes solver for ice sheets}
 
-FIXME Isaac et al.~2015
+\begin{frame}{scalable stress balance solvers for ice sheets}
+
+\begin{itemize}
+\item ice sheet stress balance solvers can be analyzed similarly
+\item $m$ = (number of velocity and pressure unknowns)
+    \begin{itemize}
+    \item[$\circ$] indicate scaling by ``$O(m^{1+\alpha})$'', with $\alpha=0$ optimal
+    \end{itemize}
+\item \alert{near-optimal solvers} already exist: \hfill \emph{good news!}
+    \begin{itemize}
+    \item[$\circ$] $\alpha=0.08$ for Isaac et al.~(2015) Stokes solver
+        \begin{itemize}
+        \item[$\vartriangleright$] unstructured quadrilateral/tetrahedral mesh, $Q_k\times Q_{k-2}$ stable elements, Schur-preconditioned Newton-Krylov, column-oriented algebraic multigrid (AMG) preconditioner for $(\bu,\bu)$ block
+        \end{itemize}
+
+\begin{center}
+\includegraphics[width=0.6\textwidth]{images/isaac-antarctica.png}
+\end{center}
+    \item[$\circ$] $\alpha=0.05$ for Tuminaro et al~(2016) 1st-order (shallow) AMG solver
+    \item[$\circ$] similar for Brown et al~(2013) GMG solver
+    \end{itemize}
+\end{itemize}
 \end{frame}
 
-\begin{frame}{a scalable Stokes solver for ice sheets 2}
-
-FIXME table from Isaac, and estimate power $\alpha$
-\end{frame}
 
 
-\section{simplified performance analysis}
+\section{ice sheet model performance analysis}
 
 \begin{frame}{analyzing ice sheet model performance}
 
-FIXME asymptotic estimates of algorithmic scaling, measured by floating point operations per model year, for map-plane (2D) time-stepping numerical ice sheet simulations, in the high resolution limit where $\Delta x\to 0$ and $m\to\infty$
+\begin{itemize}
+\item for a time-stepping model our metric is \alert{flops per model year}
+\item $m$ = (\# of surface elevation, velocity, and pressure unknowns)
+\item domain $\Omega \subset \RR^2$ (map-plane) has characteristic width $L$
+\item map-plane (2D) mesh cells have characteristic diameter $h$:
+  $$m \sim \frac{L^2}{h^2}  \quad \iff \quad h \sim \frac{L}{m^{1/2}}$$
+\item recall mass-continuity equation schemata:
+{\footnotesize
+\begin{align*}
+\text{advective schema:} && \frac{\partial H}{\partial t} + \nabla \cdot \left(\bU H\right) &= a \\
+\text{diffusion schema:} && \frac{\partial H}{\partial t} - \nabla \cdot \left(D \grad s\right) &= a
+\end{align*}
+}
+\end{itemize}
 \end{frame}
 
-\begin{frame}{ice sheet model performance: table}
+
+\begin{frame}{ice sheet model performance}
 
 \begin{tabular}{llll}
-\emph{time-stepping} & \emph{dynamics} & \emph{flops per model year} \\ \hline
-\,explicit & SIA    & $\oo{\frac{D\, L^2}{\Delta x^4}} = \oo{\frac{D\, m^2}{L^2}}$ \\
-explicit & Stokes (\emph{optimistic}) & $\oo{\frac{U L^{2+2\alpha}}{\Delta x^{3+2\alpha}}} = \oo{\frac{U m^{1.5+\alpha}}{L}}$ \\
-explicit & Stokes (\emph{pessimistic})  & $\oo{\frac{D\, L^{2+2\alpha}}{\Delta x^{4+2\alpha}}} = \oo{\frac{D\,m^{2+\alpha}}{L^2}}$
+\emph{time-stepping} &  & \emph{flops per model year} \\ \hline
+\\
+explicit & SIA    & $\oo{\frac{D\, L^2}{h^4}} = \oo{\frac{D}{L^2} m^2}$ \\
+\\
+explicit ({\footnotesize \emph{advective}}) & Stokes & $\oo{\frac{U L^{2+2\alpha}}{h^{3+2\alpha}}} = \oo{\frac{U}{L} m^{1.5+\alpha}}$ \\
+\\
+\phantom{explicit} ({\footnotesize \emph{diffusive}})  & Stokes & $\oo{\frac{D\, L^{2+2\alpha}}{h^{4+2\alpha}}} = \oo{\frac{D}{L^2} m^{2+\alpha}}$
 \end{tabular}
-
-FIXME table from Bueler (2022)
 \end{frame}
 
 
-\begin{frame}{complexity for implicit solves}
+\begin{frame}{implicit time-stepping for ice sheet models}
 
-FIXME $\beta$, $\gamma$
+\begin{itemize}
+\item main point: \alert{explicit time-stepping stability restrictions imply many stress-balance solves}
+    \begin{itemize}
+    \item[$\circ$] $\alpha$ for stress balance solver important
+    \item[$\circ$] however, even optimality ($\alpha=0$) cannot fix low model performance
+    \end{itemize}
+\item switch to \alert{implicit time-stepping} for unconditional stability?
+    \begin{itemize}
+    \item[$\circ$] each step is a NCP-coupled-to-Stokes problem
+        \begin{itemize}
+        \item[$\vartriangleright$] or SIA NCP
+        \item[$\vartriangleright$] in any case, a \alert{free-boundary problem}
+        \item[$\vartriangleright$] next slide parameterizes expense of these coupled, implicit-step solves as $O(m^{1+\beta})$; optimal is $\beta=0$
+        \end{itemize}
+    \item[$\circ$] need $q$ model updates per year to integrate climate influences
+    \end{itemize}
+
+\bigskip
+\item<2> \alert{existing} implicit time-stepping ice sheet models:
+    \begin{itemize}
+    \item[$\circ$] Bueler (2016) SIA NCP solver scales badly ($\beta=0.8$)
+    \item[$\circ$] no other fully-implicit NCP solvers known?
+    \end{itemize}
+\end{itemize}
 \end{frame}
 
 
-\begin{frame}{ice sheet model performance: table cont.}
+\begin{frame}{ice sheet model performance 2}
 
 \begin{tabular}{llll}
-\emph{time-stepping} & \emph{dynamics} & \emph{flops per model year} \\ \hline
-\,explicit & SIA    & $\oo{\frac{D\, L^2}{\Delta x^4}} = \oo{\frac{D\, m^2}{L^2}}$ \\
-explicit & Stokes (\emph{optimistic}) & $\oo{\frac{U L^{2+2\alpha}}{\Delta x^{3+2\alpha}}} = \oo{\frac{U m^{1.5+\alpha}}{L}}$ \\
-explicit & Stokes (\emph{pessimistic})  & $\oo{\frac{D\, L^{2+2\alpha}}{\Delta x^{4+2\alpha}}} = \oo{\frac{D\,m^{2+\alpha}}{L^2}}$ \\
-implicit & SIA    & $\oo{\frac{q\, L^{2+2\beta}}{\Delta x^{2+2\beta}}} = \oo{q\, m^{1+\beta}}$ \\
-implicit & Stokes & $\oo{\frac{q\, L^{2+2\gamma}}{\Delta x^{2+2\gamma}}} = \oo{q\, m^{1+\gamma}}$
+\emph{time-stepping} &  & \emph{flops per model year} \\ \hline
+\\
+explicit & SIA    & $\oo{\frac{D\, L^2}{h^4}} = \oo{\frac{D}{L^2} m^{\,2}}$ \\
+\\
+explicit \, {\footnotesize \emph{advective}} & Stokes & $\oo{\frac{U L^{2+2\alpha}}{h^{3+2\alpha}}} = \oo{\frac{U}{L} m^{1.5+\alpha}}$ \\
+\\
+\phantom{explicit} \, {\footnotesize \emph{diffusive}}  & Stokes & $\oo{\frac{D\, L^{2+2\alpha}}{h^{4+2\alpha}}} = \oo{\frac{D}{L^2} m^{2+\alpha}}$ \\
+\\
+implicit & \emph{either} & $\oo{\frac{q\, L^{2+2\beta}}{h^{2+2\beta}}} = \oo{q\, m^{1+\beta}}$
 \end{tabular}
-
-FIXME table from Bueler (2022)
 \end{frame}
 
 
@@ -697,7 +774,7 @@ FIXME multilevel multigrid approach
    \item[2.] semi-implicit, semi-coupled time stepping (L{\"o}fgren et al.~2022)
    \item[3.] scalable Stokes solvers (Isaac et al.~2015)   
    \end{enumerate}
-\item<4-> scalable solvers for the implicit-step problem require advances in \alert{multilevel solutions of non-local variational inequalities}
+\item<4-> scalable solvers for implicit-step models require advances in \alert{multilevel solutions of non-local variational inequalities}
 \end{itemize}
 \end{frame}
 
