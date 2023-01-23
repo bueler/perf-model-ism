@@ -778,9 +778,11 @@ implicit & \emph{either} & $\oo{\frac{q\, L^{2+2\beta}}{h^{\,2+2\beta}}} = \oo{q
 
 \begin{itemize}
 \item apply \alert{machine learning}
-\item \emph{concept (Jouvet et al.~2021)}: run existing non-scalable ice sheet models on a range of hypothetical/real ice sheets, and train an ML on the results
+\item \emph{concept}: apply non-scalable ice sheet models on many hypothetical/real ice sheets, and train ML \alert{emulator} on results
     \begin{itemize}
-    \item[$\circ$] supervised learning of physically-based model yields \alert{emulator}
+    \item[$\circ$] supervised learning of physically-based model results
+    \item[$\circ$] compute map on CPUs, then learn \& evaluate map on GPUs
+    \item[$\circ$] convincing demo in Jouvet et al.~(2021)
     \end{itemize}
 \end{itemize}
 
@@ -788,7 +790,7 @@ implicit & \emph{either} & $\oo{\frac{q\, L^{2+2\beta}}{h^{\,2+2\beta}}} = \oo{q
 \begin{minipage}[t][60cm][t]{\textwidth}
 \begin{center}
 \only<1>{\includegraphics[height=0.52\textheight]{images/tiles-jouvet.png}}
-\only<2>{\includegraphics[height=0.6\textheight]{images/cnn-jouvet.png}}
+\only<2>{\includegraphics[height=0.57\textheight]{images/cnn-jouvet.png}}
 \end{center}
 \end{minipage}
 \end{frame}
