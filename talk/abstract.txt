@@ -1,0 +1,5 @@
+TITLE: Making ice sheet models scale properly
+
+SPEAKER: Ed Bueler
+
+ABSTRACT: In this talk I'll attempt to capture the imperfect state of the art in high-resolution ice sheet modelling, aiming to expose the core performance-limiting issues.  The essential equations for modeling ice flow in a changing climate will be laid out, assuming no prior knowledge of the problem.  The unusual mathematics of these geophysical/climate problems, of both free-boundary and algebraic-equation-constrained character, explains why current-technology models solve non-linear Stokes equations, or approximations thereof, at every explicit time-step.  Scale analysis shows why this is an expensive design.  Building faster high-resolution ice sheet models requires new techniques.  I'll survey some recently-arrived possibilities, and the need for new ideas.
