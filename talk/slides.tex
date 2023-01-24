@@ -675,12 +675,21 @@ s - b \ge 0, \quad \frac{\partial s}{\partial t} + {\color{FireBrick} \Phi(s)} -
 
 \medskip
 \item let $m$ = (\# surface elev, velocity, \& pressure unknowns)
-\item relationships for map-plane domain $\Omega \subset \RR^2$ of width $L$ and cells of diameter $h$:
-  $$m \sim \frac{L^2}{h^2}  \quad \iff \quad h \sim \frac{L}{m^{1/2}} \hspace{20mm}$$
+\item for map-plane domain $\Omega \subset \RR^2$ of width $L$ and cells of diameter $h$:
+  $$m \sim \frac{L^2}{h^2} \hspace{20mm}$$
 
-\vspace{-18mm}
-\hfill \includegraphics[width=0.15\textwidth]{images/one-grid.png} \hspace{5mm}
+\vspace{-14mm}
+\hfill
+\begin{tikzpicture}[scale=1.5]
+  \pgfmathsetmacro\fourth{1.0/4.0}
+  \draw[xstep=\fourth,ystep=\fourth,black,thin] (0.0,0.0) grid (1.0,1.0);
+  \draw[<->] (-0.2,0.0) -- (-0.2,1.0);
+  \draw[<->] (1.2,0.76) -- (1.2,0.99);
+  \node at (-0.35,0.5) {$L$};
+  \node at (1.4,0.86) {$h$};
+\end{tikzpicture}
 
+\vspace{-2mm}
 \item explicit time-stepping schemata:
 {\footnotesize
 \begin{align*}
@@ -726,22 +735,27 @@ explicit ({\footnotesize \emph{advective}}) & Stokes & $\oo{\frac{U \,L^{2+2\alp
 \\
 \phantom{explicit} ({\footnotesize \emph{diffusive}})  & Stokes & $\oo{\frac{D\, L^{2+2\alpha}}{h^{\,4+2\alpha}}} = \oo{\frac{D}{L^2} m^{\,2+\alpha}}$
 \end{tabular}
+
+
+\bigskip
+\begin{itemize}
+\item \alert{explicit} time-stepping \alert{implies many stress-balance solves}
+    \begin{itemize}
+    \item[$\circ$] stress-balance solver scaling $\alpha$ is important, but even optimality ($\alpha=0$) cannot fix performance
+    \end{itemize}
+\end{itemize}
 \end{frame}
 
 
 \begin{frame}{implicit time-stepping for ice sheet models}
 
 \begin{itemize}
-\item thus \alert{explicit} time-stepping \alert{implies many stress-balance solves}
-    \begin{itemize}
-    \item[$\circ$] stress-balance solver scaling $\alpha$ is important, but even optimality ($\alpha=0$) cannot fix performance
-    \end{itemize}
 \item switch to \alert{implicit time-stepping} for unconditional stability?
     \begin{itemize}
-    \item[$\circ$] need $q$ model updates per year to integrate climate influences
     \item[$\circ$] each step is a \alert{free-boundary} NCP-coupled-to-Stokes problem
     \item[$\circ$] parameterize cost of these solves as $O(m^{1+\beta})$
     \end{itemize}
+\item nonetheless need $q$ model updates per year to integrate climate influences
 \end{itemize}
 \end{frame}
 
@@ -857,7 +871,7 @@ implicit & \emph{either} & $\oo{\frac{q\, L^{2+2\beta}}{h^{\,2+2\beta}}} = \oo{q
     \begin{itemize}
     \item[$\circ$] Poisson equation obstacle problem (Brandt \& Cryer 1983; Gr\"aeser \& Kornhuber 2009)
     \end{itemize}
-\item<2> \alert{help me}
+\item<2> join me on this quest?
 \end{itemize}
 \end{frame}
 
