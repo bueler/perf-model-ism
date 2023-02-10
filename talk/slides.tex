@@ -136,14 +136,15 @@
 \only<1>{\par {\scriptsize Antarctic ice sheet}} % (Pittard et al 2021)
 \only<2>{\vspace{17mm}}
 \includegraphics<2>[width=\textwidth]{images/ant-schoofhewitt2013.png}
-\only<2>{\vspace{13mm}}
-\only<2>{\par {\scriptsize note vertical exaggeration and rough bed (Schoof \& Hewitt 2013)}}
+\only<2>{\bigskip \hfill {\tiny (Schoof \& Hewitt 2013)}}
+\only<2>{\vspace{4mm}}
+\only<2>{\begin{center} {\footnotesize note vertical exaggeration, smooth surface, and rough bed} \end{center} }
 \includegraphics<3>[height=0.69\textheight]{images/alps-seguinot2018.png}
-\only<3>{\par {\scriptsize modeled Alpine ice sheet near last glacial maximum (Seguinot et al 2018)}}
+\only<3>{\par {\scriptsize modeled Alpine ice sheet near last glacial maximum} \hfill {\tiny (Seguinot et al 2018)}}
 \includegraphics<4>[height=0.69\textheight]{images/british-clark2022.png}
-\only<4>{\par {\scriptsize modeled British-Irish ice sheet near last glacial maximum (Clark et al 2022)}}
+\only<4>{\par {\scriptsize modeled British-Irish ice sheet near last glacial maximum} \hfill {\tiny  (Clark et al 2022)}}
 \includegraphics<5>[height=0.69\textheight]{images/not-sea-ice.png}
-\only<5>{\par {\scriptsize \emph{not} sea ice!}}
+\only<5>{\par {\footnotesize an ice sheet is \emph{not} sea ice!}}
 \end{center}
 \end{minipage}
 \end{frame}
@@ -154,11 +155,14 @@
 \begin{columns}
 \begin{column}{0.6\textwidth}
 \begin{itemize}
-\item glacier ice is modeled as a \emph{slow, incompressible, viscous, non-Newtonian fluid}
+\item glacier ice is modeled as a \emph{very viscous, incompressible, non-Newtonian fluid}
     \begin{itemize}
     \item[$\circ$] more on that soon
     \end{itemize}
-\item glaciers lie on \emph{topography}, and sometimes they float  (\emph{ice shelf})
+\item glaciers lie on \emph{topography}
+    \begin{itemize}
+    \item[$\circ$] sometimes they float  (\emph{ice shelf})
+    \end{itemize}
 \item glacier geometry and velocity evolve \emph{in contact with climate}:
     \begin{itemize}
     \item[$\circ$] snowfall
@@ -181,7 +185,7 @@
 \begin{columns}
 \begin{column}{0.6\textwidth}
 \begin{itemize}
-\item for simplicity/clarity of the upcoming model performance analysis, I will ignore much of glacier physics
+\item for simplicity/clarity of the upcoming modeling, I will ignore much of glacier physics
 \item \alert{ignoring}:
     \begin{itemize}
     \item[$\circ$] floating ice
@@ -192,7 +196,7 @@
     \end{itemize}
 
 \medskip
-\item<2> {\footnotesize see UAF's \href{https://pism.io/}{Parallel Ice Sheet Model (\texttt{pism.io})}, for example, as a model which includes these processes}
+\item {\footnotesize see UAF's \href{https://pism.io/}{Parallel Ice Sheet Model (\texttt{pism.io})}, for example, as a model which includes these processes}
 \end{itemize}
 \end{column}
 \begin{column}{0.42\textwidth}
@@ -249,14 +253,14 @@ $$\hspace{-7mm} a(t,x,y) = \begin{pmatrix}
 \begin{columns}
 \begin{column}{0.55\textwidth}
 \begin{itemize}
-\item data $a(t,x,y)$, $b(x,y)$  is defined on a \alert{fixed domain}:
+\item data $a(t,x,y)$, $b(x,y)$ are defined on a \alert{fixed domain}:
 	$$t \in [0,T] \quad \text{and} \quad (x,y) \in \Omega \subset \RR^2$$
 \item<2-> solution surface elevation $s(t,x,y)$ is defined on $[0,T]\times \Omega$
     \begin{itemize}
     \item[$\circ$] also a fixed domain,
     \item[$\circ$] but $s=b$ where there is no ice
     \end{itemize}
-\item<3> one must \emph{solve} for the time-dependent \alert{icy domain} $\Lambda(t) \subset \RR^3$, on which (solution) velocity $\bu(t,x,y,z)$ is defined:
+\item<3> $s(t,x,y)$ determines the time-dependent \alert{icy domain} $\Lambda(t) \subset \RR^3$, on which the solution velocity $\bu(t,x,y,z)$ is defined:
     $$\Lambda(t) = \left\{(x,y,z)\,:\,b(x,y) < z < s(t,x,y)\right\}$$
 
 \vspace{-2mm}
@@ -296,6 +300,7 @@ $$\hspace{-7mm} a(t,x,y) = \begin{pmatrix}
 
         \begin{itemize}
         \item[$\vartriangleright$] $\Gamma_s(t), \Gamma_b(t) \subset \partial \Lambda(t)$ denote the surface and base of the ice
+        \item[$\vartriangleright$] $\bn_s = \left<-\grad s,1\right>$ is upward surface normal
         \end{itemize}
     \end{itemize}
 
@@ -327,16 +332,16 @@ applies \emph{only} on the ice upper surface $\Gamma_s(t)$
 s - b &\ge 0 && \text{on $\Omega \subset \RR^2$} \\
 \frac{\partial s}{\partial t} - \bu|_s \cdot \bn_s - a &\ge 0 && \text{''} \\
 (s - b) \left(\frac{\partial s}{\partial t} - \bu|_s \cdot \bn_s - a\right) &= 0 && \text{''} \\
-\onslide<2->{- \nabla \cdot \left(2 \nu_\eps(D\bu)\, D\bu\right) + \nabla p - \rhoi \mathbf{g} &= \bzero && \text{in $\Lambda(t) \subset \RR^3$} \\
+\onslide<2->{- \nabla \cdot \left(2 \nu(D\bu)\, D\bu\right) + \nabla p - \rhoi \mathbf{g} &= \bzero && \text{in $\Lambda(t) \subset \RR^3$} \\
 \nabla \cdot \bu &= 0 && \text{''} \\
 \btau_b - \bbf(\bu|_b) &= \bzero && \text{on $\Gamma_b(t)$} \\
 \bu|_b \cdot \bn_b &= 0 && \text{''} \\
-\left(2 \nu_\eps(D\bu) D\bu - pI\right) \bn &= \bzero && \text{on $\Gamma_s(t)$}}
+\left(2 \nu(D\bu) D\bu - pI\right) \bn_s &= \bzero && \text{on $\Gamma_s(t)$}}
 \end{align*}
 
     \begin{itemize}
     \item[$\circ$] $\bu|_s=0$ where no ice
-    \item<2->[$\circ$] viscosity by Glen law: \, $2\nu_\eps(D\bu) = \Gamma \left(|D\bu|^2 + \eps\, D_0^2\right)^{(\pp-2)/2}$
+    \item<2->[$\circ$] viscosity by Glen law: \, $2\nu(D\bu) = \Gamma |D\bu|^{\pp-2}$
     \end{itemize}
 \end{itemize}
 \end{frame}
@@ -349,7 +354,7 @@ s - b &\ge 0 && \text{on $\Omega \subset \RR^2$} \\
 \item result: SKE coupled to Stokes
 \begin{align*}
 \frac{\partial s}{\partial t} - \bu|_s \cdot \bn_s - a &= 0 \\
-- \nabla \cdot \left(2 \nu_\eps(D\bu)\, D\bu\right) + \nabla p - \rhoi \mathbf{g} &= \bzero \\
+- \nabla \cdot \left(2 \nu(D\bu)\, D\bu\right) + \nabla p - \rhoi \mathbf{g} &= \bzero \\
 \nabla \cdot \bu &= 0
 \end{align*}
 
@@ -375,7 +380,7 @@ s - b &\ge 0 && \text{on $\Omega \subset \RR^2$} \\
 \begin{itemize}
 \item to the best of my knowledge, \emph{no} current research groups are studying well-posedness or regularity for this basic model
     \begin{itemize}
-    \item[$\circ$] when pressed, most researchers would agree NCP-coupled-to-Stokes is the \emph{intended} model?
+    \item[$\circ$] when pressed, most researchers would agree NCP-coupled-to-Stokes is the \emph{intended} model
     \item[$\circ$] well-posedness of the lubrication approximation of the model has been considered; existence proved in (Jouvet \& Bueler 2012)
     \end{itemize}
 
@@ -391,6 +396,7 @@ s - b &\ge 0 && \text{on $\Omega \subset \RR^2$} \\
 \medskip
 \item NCP-coupled-to-Stokes is \emph{not yet} in common use for high-resolution, long-duration ice sheet simulations
     \begin{itemize}
+    \item[$\circ$] because it is too slow
     \item[$\circ$] \alert{can we make it fast enough to use?}
     \end{itemize}
 \end{itemize}
@@ -575,11 +581,11 @@ s - b \ge 0, \quad \frac{\partial s}{\partial t} + {\color{FireBrick} \Phi(s)} -
 \begin{itemize}
 \item a non-shallow model solves a Stokes problem at each step:
 \begin{align*}
-- \nabla \cdot \left(2 \nu_\eps(D\bu)\, D\bu\right) + \nabla p - \rhoi \mathbf{g} &= \bzero && \text{in $\Lambda \subset \RR^3$} \\
+- \nabla \cdot \left(2 \nu(D\bu)\, D\bu\right) + \nabla p - \rhoi \mathbf{g} &= \bzero && \text{in $\Lambda \subset \RR^3$} \\
 \nabla \cdot \bu &= 0 && \text{''} \\
 \btau_b - \bbf(\bu|_b) &= \bzero && \text{on $\Gamma_b$} \\
 \bu|_b \cdot \bn_b &= 0 && \text{''} \\
-\left(2 \nu_\eps(D\bu) D\bu - pI\right) \bn &= \bzero && \text{on $\Gamma_s$}
+\left(2 \nu(D\bu) D\bu - pI\right) \bn_s &= \bzero && \text{on $\Gamma_s$}
 \end{align*}
 \item this is the \alert{stress balance} (conservation of momentum) problem which determines velocity $\bu$ and pressure $p$
 \item how fast is the numerical solution process?
