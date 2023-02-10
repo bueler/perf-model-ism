@@ -697,29 +697,31 @@ s - b \ge 0, \quad \frac{\partial s}{\partial t} + {\color{FireBrick} \Phi(s)} -
 how does this metric \alert{scale} in the \alert{high spatial resolution limit} $h\to 0$, equivalently $m\to \infty$?
 \end{minipage}
 \end{center}
+
+\bigskip
+\item the goal: \hspace{20mm} $O(h^{-2}) = O(m^1)$
 \end{itemize}
 \end{frame}
 
 
-\begin{frame}{\emph{explicit} ice sheet model performance}
+\begin{frame}{explicit ice sheet model performance}
 
 \begin{tabular}{llll}
 \emph{time-stepping} &  & \emph{flops per model year} \\ \hline
 \\
 explicit & SIA    & $\oo{\frac{D\, L^2}{h^{\,4}}} = \oo{\frac{D}{L^2} m^{\,2}}$ \\
 \\
-explicit ({\footnotesize \emph{advective}}) & Stokes & $\oo{\frac{U \,L^{2+2\alpha}}{h^{\,3+2\alpha}}} = \oo{\frac{U}{L} m^{1.5+\alpha}}$ \\
+explicit ({\footnotesize \emph{advective}}) & Stokes \phantom{xxxx} & $\oo{\frac{U \,L^{2+2\alpha}}{h^{\,3+2\alpha}}} = \oo{\frac{U}{L} m^{1.5+\alpha}}$ \\
 \\
 \phantom{explicit} ({\footnotesize \emph{diffusive}})  & Stokes & $\oo{\frac{D\, L^{2+2\alpha}}{h^{\,4+2\alpha}}} = \oo{\frac{D}{L^2} m^{\,2+\alpha}}$
 \end{tabular}
 
 
-\bigskip
+\vspace{10mm}
 \begin{itemize}
-\item \alert{explicit} time-stepping \alert{implies many stress-balance solves}
+\item explicit time-stepping implies \alert{many stress-balance solves}
     \begin{itemize}
-    \item[$\circ$] stress-balance solver scaling $\alpha$ is important,
-    \item[$\circ$] but even optimality ($\alpha=0$) cannot rescue performance
+    \item[$\circ$] while stress-balance scaling exponent $\alpha$ is important, even optimality ($\alpha=0$) cannot rescue performance
     \end{itemize}
 \end{itemize}
 \end{frame}
@@ -733,7 +735,7 @@ explicit ({\footnotesize \emph{advective}}) & Stokes & $\oo{\frac{U \,L^{2+2\alp
     \item[$\circ$] each step is a \alert{free-boundary} NCP-coupled-to-Stokes problem
     \item[$\circ$] parameterize cost of these solves as $O(m^{1+\beta})$
     \end{itemize}
-\item nonetheless need $q$ model updates per year to integrate climate influences
+\item need $q$ model updates per year to integrate climate influences
 \end{itemize}
 \end{frame}
 
@@ -745,16 +747,16 @@ explicit ({\footnotesize \emph{advective}}) & Stokes & $\oo{\frac{U \,L^{2+2\alp
 \\
 explicit & SIA    & $\oo{\frac{D\, L^2}{h^{\,4}}} = \oo{\frac{D}{L^2} m^{\,2}}$ \\
 \\
-explicit ({\footnotesize \emph{advective}}) & Stokes & $\oo{\frac{U \,L^{2+2\alpha}}{h^{\,3+2\alpha}}} = \oo{\frac{U}{L} m^{1.5+\alpha}}$ \\
+explicit ({\footnotesize \emph{advective}}) & Stokes \phantom{xxxx} & $\oo{\frac{U \,L^{2+2\alpha}}{h^{\,3+2\alpha}}} = \oo{\frac{U}{L} m^{1.5+\alpha}}$ \\
 \\
 \phantom{explicit} ({\footnotesize \emph{diffusive}})  & Stokes & $\oo{\frac{D\, L^{2+2\alpha}}{h^{\,4+2\alpha}}} = \oo{\frac{D}{L^2} m^{\,2+\alpha}}$ \\
 \\
-implicit & \emph{either} & $\oo{\frac{q\, L^{2+2\beta}}{h^{\,2+2\beta}}} = \oo{q\, m^{1+\beta}}$
+implicit & & $\oo{\frac{q\, L^{2+2\beta}}{h^{\,2+2\beta}}} = \oo{q\, m^{1+\beta}}$
 \end{tabular}
 
 \bigskip
 \begin{itemize}
-\item to really reduce power on $m$, use \alert{implicit} time-stepping and build a \alert{near-optimal ($\beta \approx 0$) NCP-coupled-to-Stokes solver}
+\item goal for optimists: implicit time-stepping \emph{and} build a $\beta \approx 0$ NCP-coupled-to-Stokes solver for the time step problems
 \end{itemize}
 \end{frame}
 
@@ -766,10 +768,7 @@ implicit & \emph{either} & $\oo{\frac{q\, L^{2+2\beta}}{h^{\,2+2\beta}}} = \oo{q
     \begin{itemize}
     \item[$\circ$] Wirbel \& Jarosch~(2020) is an important attempt \dots
     \end{itemize}
-\item the Bueler (2016) free-boundary solver uses the SIA
-    \begin{itemize}
-    \item[$\circ$] and it scales badly: $\beta=0.8$
-    \end{itemize}
+\item the Bueler (2016) implicit (free-boundary) SIA solver scales badly: $\beta=0.8$
 \end{itemize}
 \end{frame}
 
@@ -805,8 +804,8 @@ implicit & \emph{either} & $\oo{\frac{q\, L^{2+2\beta}}{h^{\,2+2\beta}}} = \oo{q
     \begin{itemize}
     \item[$\circ$] earlier use in mantle/crust simulations (Kaus et al.~2010)
     \end{itemize}
-\item \emph{idea.} keep time-splitting (de-coupled Stokes, SKE solves) but \alert{modify the Stokes problem to see the updated surface}
-\item that is, modify the Stokes weak form \onslide<2>{by adding body force terms corresponding to the updated-surface icy domain}
+\item \emph{idea.} remain explicit, but \alert{modify the Stokes problem to ``see'' the updated (extrapolated) surface}
+\item that is, modify the Stokes problem at time $t^\ell$ \onslide<2>{by adding body force terms corresponding to the updated-surface icy domain}
 
 \vspace{-3mm}
 \begin{minipage}[t][30mm][t]{0.8\textwidth}
@@ -814,6 +813,8 @@ implicit & \emph{either} & $\oo{\frac{q\, L^{2+2\beta}}{h^{\,2+2\beta}}} = \oo{q
 {\small
 \begin{align*}
 \int_{\Lambda^\ell} 2 \nu D\bu : D\bv - \int_{\Lambda^\ell} p \Div \bv &= \int_{\Lambda^\ell} \bbf\cdot \bv \\
+\phantom{x} \\
+\phantom{x} \\
 \int_{\Lambda^\ell} q \Div \bu &= 0
 \end{align*}
 }
@@ -822,7 +823,7 @@ implicit & \emph{either} & $\oo{\frac{q\, L^{2+2\beta}}{h^{\,2+2\beta}}} = \oo{q
 {\small
 \begin{align*}
 \int_{\Lambda^\ell} 2 \nu D\bu : D\bv - \int_{\Lambda^\ell} p \Div \bv \qquad\qquad &= \int_{\Lambda^\ell} \bbf\cdot \bv + \Delta t \int_{\Gamma_s^\ell} a\, (\bbf\cdot \bv)\,dx\\
-\hspace{20mm} - \Delta t \int_{\Gamma_s^\ell} (\bu \cdot \bn_s^\ell) (\bbf\cdot \bv)\,dx \qquad
+\hspace{20mm} - \Delta t \int_{\Gamma_s^\ell} (\bu \cdot \bn_{s^\ell}) (\bbf\cdot \bv)\,dx \qquad
 &\phantom{=} \\
 \int_{\Lambda^\ell} q \Div \bu &= 0
 \end{align*}
@@ -840,16 +841,13 @@ implicit & \emph{either} & $\oo{\frac{q\, L^{2+2\beta}}{h^{\,2+2\beta}}} = \oo{q
 \begin{frame}{approach 3: multilevel NCP-coupled-to-Stokes solvers}
 
 \begin{itemize}
-\item direct attack on the problem seems to require a \alert{multilevel} solver for \alert{variational inequalities} (VIs), but in the \alert{non-local residual case}
+\item direct attack on the problem seems to require a \alert{multilevel} solver for \alert{variational inequalities} (VIs)
+\item but in the \alert{non-local residual case} \hfill $\gets$ \emph{yesterday's seminar}
     \begin{itemize}
     \item[$\circ$] this seems not to exist
-    \item[$\circ$] the \alert{smoother} must compute an implicit-step SKE residual including surface-motion term $\Phi(s) = - \bu|_s\cdot \bn_s$ from a scalable Stokes solver
+    \item[$\circ$] the \alert{smoother} must reduce a residual formed from surface-motion term $\Phi(s) = - \bu|_s\cdot \bn_s$ (from a scalable Stokes solver)
     \end{itemize}
-\item near-optimal multilevel VI solvers exist for toy problems
-    \begin{itemize}
-    \item[$\circ$] Poisson equation obstacle problem (Brandt \& Cryer 1983; Gr\"aeser \& Kornhuber 2009)
-    \end{itemize}
-\item<2> join me on this quest?
+\item near-optimal multilevel solvers exist for simpler VI problems
 \end{itemize}
 \end{frame}
 
@@ -865,7 +863,7 @@ implicit & \emph{either} & $\oo{\frac{q\, L^{2+2\beta}}{h^{\,2+2\beta}}} = \oo{q
    \end{itemize}
 \item<2-> current-technology ice sheet models mostly use \alert{explicit} time stepping, \alert{non-optimal} stress-balance solvers, and \alert{shallow} assumptions
    \begin{itemize}
-   \item[$\circ$] progress will be made in all of these areas
+   \item[$\circ$] progress is being made in all of these areas
    \end{itemize}
 \item<3-> \alert{coming soon} from current research:
    \begin{enumerate}
@@ -873,7 +871,7 @@ implicit & \emph{either} & $\oo{\frac{q\, L^{2+2\beta}}{h^{\,2+2\beta}}} = \oo{q
    \item[2.] semi-coupled time stepping (L{\"o}fgren et al.~2022)
    \item[3.] scalable Stokes solvers (Isaac et al.~2015)   
    \end{enumerate}
-\item<4-> scalable solvers for implicit-step NCP-coupled-to-Stokes models require advances in \alert{multilevel solutions of non-local variational inequalities}
+\item<4-> scalable solvers for implicit-step NCP-coupled-to-Stokes models, which would seem to be the recommended numerical design, require \alert{multilevel solvers for non-local variational inequalities}
 \end{itemize}
 \end{frame}
 
