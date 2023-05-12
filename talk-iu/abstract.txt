@@ -1,0 +1,5 @@
+TITLE: Glacial flows simulated faster
+
+SPEAKER: Ed Bueler, Univerity of Alaska Fairbanks
+
+ABSTRACT:  This is a numerical analysis talk about a climate change topic, but starting with an introduction to several PDE-type models of glaciers and ice sheets.  The essential equations for modeling ice flow will be presented assuming no prior knowledge, accessibly to anyone interested in fluid motion.  These ice flow models are of free-boundary character, with both inequality and equality constraints, and well-posedness is mostly unknown, though progress is being made.  In any case, current-technology numerical models mostly solve Stokes-type problems, often simplified, at every explicit time-step.   Scale analysis shows why this design is inefficient.  Building significantly-faster high-resolution models requires new techniques.  I'll survey some near-term improvements and longer-term strategies.
