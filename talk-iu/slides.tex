@@ -16,7 +16,7 @@
 %\usepackage[svgnames]{xcolor}
 \usepackage{hyperref}
 \hypersetup{
-    pdftitle = {Making ice sheet models scale properly},
+    pdftitle = {Glacial flows, simulated faster},
     pdfauthor = {Ed Bueler},
     pdfsubject = {},
     pdfkeywords = {}
@@ -121,7 +121,7 @@
 \end{frame}
 
 
-\section{the basics of glaciers and ice sheets}
+\section{introduction to glaciers and ice sheets}
 
 \newcommand{\basicglaciers}[1]{
 \begin{frame}{basic facts about glaciers #1}
@@ -229,6 +229,15 @@
 \end{columns}
 \end{frame}
 
+
+\AtBeginSection[]
+{
+  \begin{frame}{Outline}
+    \tableofcontents[currentsection]
+  \end{frame}
+}
+
+\section{the basic glacier model}
 
 \begin{frame}{what is a glacier model?}
 
@@ -422,18 +431,6 @@ s - b &\ge 0 && \text{on $\Omega \subset \RR^2$} \\
 \begin{frame}{basic model: current \emph{thinking}}
 
 \begin{itemize}
-\item to the best of my knowledge, \emph{no} current research groups are studying well-posedness or regularity for this basic model
-    \begin{itemize}
-    \item[$\circ$] most researchers would agree NCP-coupled-to-Stokes is indeed the intended model!
-    \item[$\circ$] progress on well-posedness of the lubrication approximation of the basic model, the so-called \alert{shallow ice approximation}:
-        \begin{itemize}
-        \item 1D well-posedness on flat bed (Calvo et al 2003)
-        \item 2D steady-state existence on general beds (Jouvet \& Bueler 2012)
-        \item 2D well-posedness on flat bed (Piersanti \& Temam 2022)
-        \end{itemize}
-    \end{itemize}
-
-\medskip
 \item numerical modelers tend to think of the Stokes problem separately from surface evolution
     \begin{itemize}
     \item[$\circ$] \emph{time-splitting} or \emph{explicit time-stepping} is often taken for granted
@@ -446,20 +443,13 @@ s - b &\ge 0 && \text{on $\Omega \subset \RR^2$} \\
 \item NCP-coupled-to-Stokes is \emph{not yet} in common use for high-resolution, long-duration ice sheet simulations
     \begin{itemize}
     \item[$\circ$] because it is too slow
-    \item[$\circ$] \alert{can we make it fast enough to use?}
+    \item<2>[$\circ$] \alert{can we make it fast enough to use?}
     \end{itemize}
 \end{itemize}
 \end{frame}
 
 
-\AtBeginSection[]
-{
-  \begin{frame}{Outline}
-    \tableofcontents[currentsection]
-  \end{frame}
-}
-
-\section{time-stepping}
+\section{time-stepping and solver scaling}
 
 \begin{frame}{ice sheet models: the mass-continuity equation view}
 
@@ -622,8 +612,6 @@ s - b \ge 0, \quad \frac{\partial s}{\partial t} + {\color{FireBrick} \Phi(s)} -
 \end{itemize}
 \end{frame}
 
-
-\section{stress-balance solver scaling}
 
 \begin{frame}{the Stokes problem for ice}
 
@@ -897,9 +885,8 @@ implicit & & $\oo{\frac{q\, L^{2+2\beta}}{h^{\,2+2\beta}}} = \oo{q\, m^{1+\beta}
 
 \begin{itemize}
 \item direct attack on the problem seems to require a \alert{multilevel} solver for \alert{variational inequalities} (VIs)
-\item but in the \alert{non-local residual case} \hfill $\gets$ \emph{yesterday's seminar}
+\item but in the non-local residual case this seems not to exist
     \begin{itemize}
-    \item[$\circ$] this seems not to exist
     \item[$\circ$] the \alert{smoother} must reduce a residual formed from surface-motion term $\Phi(s) = - \bu|_s\cdot \bn_s$ (from a scalable Stokes solver)
     \end{itemize}
 \item near-optimal multilevel solvers exist for simpler VI problems
