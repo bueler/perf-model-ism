@@ -417,7 +417,7 @@ s - b &\ge 0 && \text{on $\Omega \subset \RR^2$} \\
 \medskip
 \item<2> progress has been made on well-posedness of the lubrication approximation of the basic model, the so-called \alert{shallow ice approximation}:
     \begin{itemize}
-    \item[$\circ$] 1D well-posedness on flat bed (Calvo et al 2003)
+    \item[$\circ$] 1D well-posedness on flat bed (Calvo et al 2002)
     \item[$\circ$] 2D steady-state existence on general beds (Jouvet \& Bueler 2012)
     \item[$\circ$] 2D well-posedness on flat bed (Piersanti \& Temam 2022)
     \end{itemize}
@@ -749,7 +749,7 @@ how does this metric \alert{scale} in the \alert{high spatial resolution limit} 
 \end{frame}
 
 
-\begin{frame}{explicit ice sheet model performance}
+\begin{frame}{ice sheet models: explicit time-stepping performance}
 
 \begin{tabular}{llll}
 \emph{time-stepping} &  & \emph{flops per model year} \\ \hline
@@ -764,9 +764,10 @@ explicit ({\footnotesize \emph{advective}}) & Stokes \phantom{xxxx} & $\oo{\frac
 
 \vspace{10mm}
 \begin{itemize}
-\item explicit time-stepping implies \alert{many stress-balance solves}
+\item we \emph{want} optimality: \quad $O(m^1)$ flops per model year
+\item explicit time-stepping implies \alert{too many stress-balance solves}
     \begin{itemize}
-    \item[$\circ$] while stress-balance scaling exponent $\alpha$ is important, even optimality ($\alpha=0$) cannot rescue performance
+    \item[$\circ$] while the Stokes (stress-balance) scaling exponent $\alpha$ is important, even Stokes solver optimality ($\alpha=0$) cannot yield optimality
     \end{itemize}
 \end{itemize}
 \end{frame}
@@ -775,12 +776,10 @@ explicit ({\footnotesize \emph{advective}}) & Stokes \phantom{xxxx} & $\oo{\frac
 \begin{frame}{implicit time-stepping for ice sheet models}
 
 \begin{itemize}
-\item switch to \alert{implicit time-stepping} for unconditional stability?
-    \begin{itemize}
-    \item[$\circ$] each step is a \alert{free-boundary} NCP-coupled-to-Stokes problem
-    \item[$\circ$] parameterize cost of these solves as $O(m^{1+\beta})$
-    \end{itemize}
-\item need $q$ model updates per year to integrate climate influences
+\item let us try \alert{implicit time-stepping}, for its unconditional stability
+\item each step is now a \alert{free-boundary NCP-coupled-to-Stokes problem}
+\item let us parameterize cost of these solves as $O(m^{1+\beta})$
+\item we still need $q$ model updates per year to integrate climate influences, and track evolution for the simulation purpose
 \end{itemize}
 \end{frame}
 
@@ -801,7 +800,7 @@ implicit & & $\oo{\frac{q\, L^{2+2\beta}}{h^{\,2+2\beta}}} = \oo{q\, m^{1+\beta}
 
 \bigskip
 \begin{itemize}
-\item goal for optimists: implicit time-stepping \emph{and} build a $\beta \approx 0$ NCP-coupled-to-Stokes solver for the time step problems
+\item new goal: use implicit time-stepping \emph{and}~build a $\beta \approx 0$ NCP-coupled-to-Stokes solver for problem at each time step
 \end{itemize}
 \end{frame}
 
@@ -811,16 +810,14 @@ implicit & & $\oo{\frac{q\, L^{2+2\beta}}{h^{\,2+2\beta}}} = \oo{q\, m^{1+\beta}
 \begin{itemize}
 \item no convincing NCP-coupled-to-Stokes (free-boundary) solvers exist yet
     \begin{itemize}
-    \item[$\circ$] Wirbel \& Jarosch~(2020) is an important attempt \dots
+    \item[$\circ$] however, Wirbel \& Jarosch~(2020) is an important beginning
     \end{itemize}
-\item the Bueler (2016) implicit (free-boundary) SIA solver scales badly: $\beta=0.8$
+\item the Bueler (2016) implicit and NCP SIA solver scales badly: $\beta=0.8$
 \end{itemize}
 \end{frame}
 
 
-\section{a multilevel approach to better performance}
-
-
+\section{a multilevel approach}
 
 \begin{frame}{multilevel NCP-coupled-to-Stokes solvers}
 
@@ -841,34 +838,40 @@ implicit & & $\oo{\frac{q\, L^{2+2\beta}}{h^{\,2+2\beta}}} = \oo{q\, m^{1+\beta}
 \begin{frame}{\alert{summary}}
 
 \begin{itemize}
-\item ice sheet models solve a multi-scale, irregular-data problem with hard-to-observe boundary conditions
+\item glacier simulations are both \alert{important to humanity} and a rich \alert{source of interesting mathematics}
+   \begin{itemize}
+   \item[$\circ$] predict sea level rise!
+   \end{itemize}
+\item<2-> ice sheet models solve a multi-scale, irregular-data problem with hard-to-observe boundary conditions
    \begin{itemize}
    \item[$\circ$] there are \alert{no easy or magic techniques} for performance
    \end{itemize}
-\item<2-> current-technology ice sheet models mostly use \alert{explicit} time stepping, \alert{non-optimal} stress-balance solvers, and \alert{shallow} assumptions
+\item<3-> current-technology ice sheet models mostly use \alert{explicit} time stepping, \alert{non-optimal} stress-balance solvers, and \alert{shallow} assumptions
    \begin{itemize}
-   \item[$\circ$] progress is being made in all of these areas, e.g.~ scalable Stokes solvers (Isaac et al.~2015)
+   \item[$\circ$] progress is being made in all of these areas, e.g.~scalable Stokes solvers (Isaac et al.~2015)
    \end{itemize}
-\item<3> scalable solvers for implicit-step NCP-coupled-to-Stokes models, which would seem to be the recommended numerical design, require \alert{multilevel solvers for non-local variational inequalities}
+\item<4> scalable solvers for implicit-step, NCP-coupled-to-Stokes models require \alert{multilevel solvers for non-local variational inequalities}
+   \begin{itemize}
+   \item[$\circ$] is this the preferred numerical design for the basic glacier model?
+   \end{itemize}
 \end{itemize}
 \end{frame}
 
 
-\begin{frame}{references}
+\begin{frame}{references (partial list)}
 
 {\scriptsize
 \begin{itemize}
 \item E.~Bueler (2016). \emph{Stable finite volume element schemes for the shallow-ice approximation}, J.~Glaciol.~62 (232), 230--242, \href{https://doi.org/10.1017/jog.2015.3}{10.1017/jog.2015.3}
-\item E.~Bueler (2021). \emph{Conservation laws for free-boundary fluid layers}, SIAM J.~Appl.~Math.~81 (5), 2007--2032, \href{https://doi.org/10.1137/20M135217X}{10.1137/20M135217X}
+%\item E.~Bueler (2021). \emph{Conservation laws for free-boundary fluid layers}, SIAM J.~Appl.~Math.~81 (5), 2007--2032, \href{https://doi.org/10.1137/20M135217X}{10.1137/20M135217X}
 \item E.~Bueler (2022). \emph{Performance analysis of high-resolution ice-sheet simulations}, J.~Glaciol., \href{https://doi.org/10.1017/jog.2022.113}{10.1017/jog.2022.113}
 \item E.~Bueler \& P.~Farrell (in preparation). \emph{A full approximation storage multilevel method for nonlinear variational inequalities}
-% Calvo et al 2002
+\item N.~Calvo, J.~D\'iaz, J.~Durany, E.~Schiavi, \& C.~V\'azquez (2002). \emph{On a doubly-nonlinear parabolic obstacle problem modelling ice sheet dynamics}, SIAM J.~Appl.~Math., 63(2), 683--707 \href{https://doi.org/10.1137/S0036139901385345}{10.1137/S0036139901385345}
 \item T.~Isaac, G.~Stadler, \& O.~Ghattas (2015). \emph{Solution of nonlinear Stokes equations discretized by high-order finite elements on nonconforming and anisotropic meshes, with application to ice sheet dynamics}, SIAM J.~Sci.~Comput.~37 (6), B804--B833, \href{https://doi.org/10.1137/140974407}{10.1137/140974407}
 \item G.~Jouvet \& E.~Bueler (2012). \emph{Steady, shallow ice sheets as obstacle problems: well-posedness and finite element approximation}, SIAM J.~Appl.~Math.~72 (4), 1292--1314, \href{https://doi.org/10.1137/110856654}{10.1137/110856654}
 \item P.~Piersanti \& R.~Temam (2022). \emph{On the dynamics of grounded shallow ice
 sheets: modeling and analysis}, Adv.~Nonlinear Analysis 12, \href{https://doi.org/10.1515/anona-2022-0280}{10.1515/anona-2022-0280}
-% Shapero et al ?
-% Wirbel & Jarosch
+\item A.~Wirbel \& A.~Jarosch (2020). \emph{Inequality-constrained free-surface evolution in a full Stokes ice flow model (evolve\_glacier v1.1)}, Geosci.~Model Dev.~13 (12), 6425--6445, \href{https://doi.org/10.5194/gmd-13-6425-2020}{10.5194/gmd-13-6425-2020}
 \end{itemize}
 }
 \end{frame}
