@@ -83,7 +83,7 @@
 
 \title{Glacial flows, simulated faster}
 
-%\subtitle{\emph{x}}
+%\subtitle{}
 
 \author{Ed Bueler}
 
@@ -91,23 +91,11 @@
 
 \date[]{June 2023}
 
-%\titlegraphic{\begin{picture}(0,0)
-%    \put(0,180){\makebox(0,0)[rt]{\includegraphics[width=4cm]{figs/software.png}}}
-%  \end{picture}
-%}
-
 \titlegraphic{\hfill \includegraphics[width=0.15\textwidth]{../images/uafbw.png}}
-
-%% to start section counter at 0 see
-%% https://tex.stackexchange.com/questions/170222/change-the-numbering-in-beamers-table-of-content
 
 
 \begin{document}
 \beamertemplatenavigationsymbolsempty
-
-%\begin{frame}
-%  \maketitle
-%\end{frame}
 
 {
   \usebackgroundtemplate{\includegraphics[height=\paperheight]{../images/fade-moraines-indiana.png}}
@@ -822,14 +810,59 @@ implicit & & $\oo{\frac{q\, L^{2+2\beta}}{h^{\,2+2\beta}}} = \oo{q\, m^{1+\beta}
 \begin{frame}{multilevel NCP-coupled-to-Stokes solvers}
 
 \begin{itemize}
-\item FIXME
-\item direct attack on the problem seems to require a \alert{multilevel} solver for \alert{variational inequalities} (VIs)
-\item but in the non-local residual case this seems not to exist
+\item direct attack on the NCP-coupled-to-Stokes problem, to get an optimal ($\beta=0$) solver, seems to require a \alert{multilevel} solver for \alert{variational inequalities} (VIs)
+\item but in the \alert{non-local residual} case
     \begin{itemize}
-    \item[$\circ$] the \alert{smoother} must reduce a residual formed from surface-motion term $\Phi(s) = - \bu|_s\cdot \bn_s$ (from a scalable Stokes solver)
+    \item[$\circ$] application of the smoother needs to reduce the NCP residual from the surface-motion term $\Phi(s) = - \bu|_s\cdot \bn_s$, where $\bu|_s$ is evaluated from a scalable Stokes solver
     \end{itemize}
-\item near-optimal multilevel solvers exist for simpler VI problems
+\item this seems not to exist, but we are starting to work on it \dots
 \end{itemize}
+\end{frame}
+
+
+\begin{frame}{a \emph{new} multilevel SIA solver (joint with P.~Farrell)}
+
+\begin{block}{FASCD}
+\emph{full approximation storage constraint decomposition}
+
+a multilevel method for box constrained NCPs and VIs
+\end{block}
+
+\begin{itemize}
+\item in preparation, but here are fresh preliminary results \dots
+\end{itemize}
+
+\medskip
+\begin{center}
+\includegraphics[height=0.55\textheight]{../images/siabumps.png}
+\end{center}
+\end{frame}
+
+
+\begin{frame}{a \emph{new} multilevel SIA solver (joint with P.~Farrell)}
+
+\begin{columns}
+\begin{column}{0.6\textwidth}
+\begin{itemize}
+\item results below show FASCD F-cycles give optimal ($\beta=0$) performance for the SIA problem
+    \begin{itemize}
+    \item[$\circ$] \emph{iterations} counts number of V-cycles after F-cycle ``ramp''
+    \item[$\circ$] \emph{time} is for 4 core runs on my laptop
+    \end{itemize}
+\end{itemize}
+\end{column}
+\begin{column}{0.4\textwidth}
+\hfill \input{fullcycle.tex}
+\end{column}
+\end{columns}
+
+\bigskip
+\begin{center}
+\begin{tabular}{c|r|c|r}
+\emph{levels} & $N$ & \emph{iterations} & \emph{time} (s) \\ \hline
+\input{siaresults.txt} \hspace{-2.2mm}
+\end{tabular}
+\end{center}
 \end{frame}
 
 
