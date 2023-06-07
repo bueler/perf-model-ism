@@ -815,7 +815,7 @@ implicit & & $\oo{\frac{q\, L^{2+2\beta}}{h^{\,2+2\beta}}} = \oo{q\, m^{1+\beta}
     \begin{itemize}
     \item[$\circ$] application of the smoother needs to reduce the NCP residual from the surface-motion term $\Phi(s) = - \bu|_s\cdot \bn_s$, where $\bu|_s$ is evaluated from a scalable Stokes solver
     \end{itemize}
-\item this seems not to exist, but we are starting to work on it \dots
+\item this seems not to exist, but we are making progress \dots
 \end{itemize}
 \end{frame}
 
@@ -825,7 +825,7 @@ implicit & & $\oo{\frac{q\, L^{2+2\beta}}{h^{\,2+2\beta}}} = \oo{q\, m^{1+\beta}
 \begin{block}{FASCD}
 \emph{full approximation storage constraint decomposition}
 
-a multilevel method for box constrained NCPs and VIs
+a multilevel method for box-constrained NCPs and VIs
 \end{block}
 
 \begin{itemize}
@@ -844,10 +844,10 @@ a multilevel method for box constrained NCPs and VIs
 \begin{columns}
 \begin{column}{0.6\textwidth}
 \begin{itemize}
-\item results below show FASCD F-cycles give optimal ($\beta=0$) performance for the SIA problem
+\item results below show FASCD F-cycles give optimal ($\beta=0$) performance for the SIA NCP problem
     \begin{itemize}
-    \item[$\circ$] \emph{iterations} counts number of V-cycles after F-cycle ``ramp''
-    \item[$\circ$] \emph{time} is for 4 core runs on my laptop
+    \item[$\circ$] \emph{iterations} $=$ number of V-cycles after F-cycle ``ramp''
+    \item[$\circ$] \emph{time} is for 4-core runs on my laptop
     \end{itemize}
 \end{itemize}
 \end{column}
@@ -859,7 +859,7 @@ a multilevel method for box constrained NCPs and VIs
 \bigskip
 \begin{center}
 \begin{tabular}{c|r|c|r}
-\emph{levels} & $N$ & \emph{iterations} & \emph{time} (s) \\ \hline
+\emph{levels} & $m$ & \emph{iterations} & \emph{time} (s) \\ \hline
 \input{siaresults.txt} \hspace{-2.2mm}
 \end{tabular}
 \end{center}
